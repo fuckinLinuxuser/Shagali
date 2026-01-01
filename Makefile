@@ -1,0 +1,2 @@
+sync:
+	bash ./push.sh
