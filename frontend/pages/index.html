@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Театр Shagali</title>
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <main>
+    <div id="entity-container"></div>
+  </main>
+  
+  <div id="footer-placeholder"></div>
+    <!-- Карточки будут подгружаться сюда через JS -->
+  <script src="../js/main.js"></script>
+  <script>
+    // Подгружаем компоненты через fetch
+    async function loadComponent(path, placeholderId) {
+      const res = await fetch(path);
+      const html = await res.text();
+      document.getElementById(placeholderId).innerHTML = html;
+    }
+
+    loadComponent('../components/header.html', 'header-placeholder');
+    loadComponent('../components/footer.html', 'footer-placeholder');
+
+  </script>
+</body>
+</html>

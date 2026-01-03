@@ -16,11 +16,4 @@ app.listen(PORT, () => {
 });
 
 console.log('API endpoints available at /api/entities/:entity');
-console.log('Example: GET /api/entities/shagali');
-console.log('Available entities: shagali (producer)');
-console.log('Try: curl http://localhost:3000/api/entities/shagali');
-console.log('Try: http://localhost:3000/api/entities/shagali');
-console.log('Try: http://localhost:3000/api/entities/shagali/health');
-console.log('Try: http://localhost:3000/api/entities/shagali/health');
-
 

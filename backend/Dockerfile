@@ -11,7 +11,7 @@ COPY app/package*.json ./
 RUN npm install --production
 
 # Копируем весь код проекта
-COPY /app .
+COPY app/ ./
 
 # Экспонируем порт
 EXPOSE 3000
