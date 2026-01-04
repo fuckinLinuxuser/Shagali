@@ -1,15 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Театр Shagali</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Театральный продюсер</title>
+
   <link rel="stylesheet" href="../css/main.css">
 </head>
+
 <body>
-  <div id="header-placeholder"></div>
+   <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-mark">●</span>
+        <span class="logo-text">Продюсерский центр Елены Шагали</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+<section class="hero">
+  <div class="hero-inner container">
+    <h1 class="hero-title">Имя Продюсера</h1>
+
+    <p class="hero-subtitle">Театральный продюсер</p>
+
+    <p class="hero-quote">
+      Театр начинается не с вешалки.  
+      Он начинается с решения.
+    </p>
+  </div>
+  <div class="hero-photo">
+      <img src="../images/Shagali.jpg" alt="Фото продюсера">
+    </div>
+</section>
+
 
   <main>
-    <div id="entity-container"></div>
+    <section id="producer-section"></section>
+    <section id="production-section"></section>
   </main>
   
   <div id="footer-placeholder"></div>
@@ -23,7 +53,6 @@
       document.getElementById(placeholderId).innerHTML = html;
     }
 
-    loadComponent('../components/header.html', 'header-placeholder');
     loadComponent('../components/footer.html', 'footer-placeholder');
 
   </script>
