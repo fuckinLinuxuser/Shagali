@@ -1,60 +1,146 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Театральный продюсер</title>
-
-  <link rel="stylesheet" href="../css/main.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Театральный Продюсер: Мир За Сценой</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
 </head>
-
 <body>
-   <!-- HEADER -->
-  <header class="site-header">
-    <div class="header-inner">
-      <div class="logo">
-        <span class="logo-mark">●</span>
-        <span class="logo-text">Продюсерский центр Елены Шагали</span>
-      </div>
-    </div>
-  </header>
+    <header class="header">
+        <div class="curtain-left"></div>
+        <div class="curtain-right"></div>
+        <div class="spotlight">
+            <h1>Мир За Сценой</h1>
+            <p>Театральный продюсер, где каждый акт — это жизнь</p>
+        </div>
+        <nav class="nav">
+            <ul>
+                <li><a href="#about">О продюсере</a></li>
+                <li><a href="#projects">Проекты</a></li>
+                <li><a href="#people">Люди</a></li>
+                <li><a href="#tours">Гастроли</a></li>
+                <li><a href="#collaboration">Сотрудничество</a></li>
+                <li><a href="#opportunities">Возможности</a></li>
+                <li><a href="#blog">Блог</a></li>
+            </ul>
+        </nav>
+    </header>
 
-  <!-- HERO -->
-<section class="hero">
-  <div class="hero-inner container">
-    <h1 class="hero-title">Имя Продюсера</h1>
+    <main>
+        <section id="about" class="section about">
+            <div class="container">
+                <img src="../public/images/Shagali.jpg" alt="Елена Шагали" class="producer-photo">
+                <h2>Елена Шагали</h2>
+                <blockquote>"Театр — это не просто сцена, это зеркало души, где каждый зритель видит себя по-новому."</blockquote>
+            </div>
+        </section>
 
-    <p class="hero-subtitle">Театральный продюсер</p>
+        <section id="projects" class="section projects">
+            <div class="container">
+                <h2>Проекты и Билеты</h2>
+                <div class="project-grid">
+                    <div class="project-card">
+                        <h3>Скрипичное Шоу</h3>
+                        <p>Виртуозное сочетание музыки и драмы. Билеты от 1500 руб.</p>
+                        <a href="#" class="btn">Купить билет</a>
+                    </div>
+                    <div class="project-card">
+                        <h3>Родной Мой Кукушонок</h3>
+                        <p>Трогательная история о семье и потере. Билеты от 1200 руб.</p>
+                        <a href="#" class="btn">Купить билет</a>
+                    </div>
+                    <div class="project-card">
+                        <h3>Мамочка, Купи Собаку</h3>
+                        <p>Юмористическая комедия о повседневных желаниях. Билеты от 1000 руб.</p>
+                        <a href="#" class="btn">Купить билет</a>
+                    </div>
+                    <div class="project-card">
+                        <h3>Неделя Испании</h3>
+                        <p>Фламенко, страсть и испанский колорит. Билеты от 2000 руб.</p>
+                        <a href="#" class="btn">Купить билет</a>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <p class="hero-quote">
-      Театр начинается не с вешалки.  
-      Он начинается с решения.
-    </p>
-  </div>
-  <div class="hero-photo">
-      <img src="../images/Shagali.jpg" alt="Фото продюсера">
-    </div>
-</section>
+        <section id="people" class="section people">
+            <div class="container">
+                <h2>Люди</h2>
+                <div class="people-grid">
+                    <div class="person">
+                        <h3>Актер: Анна Драматова</h3>
+                        <p>Звезда "Скрипичного Шоу", мастер импровизации.</p>
+                    </div>
+                    <div class="person">
+                        <h3>Режиссер: Борис Визуал</h3>
+                        <p>Создатель "Недели Испании", инновационные постановки.</p>
+                    </div>
+                    <div class="person">
+                        <h3>Актер: Виктор Комедийный</h3>
+                        <p>Главный в "Мамочка, Купи Собаку", юмор и харизма.</p>
+                    </div>
+                    <div class="person">
+                        <h3>Режиссер: Ольга Семейная</h3>
+                        <p>Автор "Родной Мой Кукушонок", эмоциональные драмы.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
+        <section id="tours" class="section tours">
+            <div class="container">
+                <h2>Гастроли и Выступления</h2>
+                <p>Основная база: Санкт-Петербург</p>
+                <h3>План Гастролей 2026</h3>
+                <ul>
+                    <li>Январь: Москва — "Скрипичное Шоу"</li>
+                    <li>Февраль: Екатеринбург — "Родной Мой Кукушонок"</li>
+                    <li>Март: Санкт-Петербург — "Мамочка, Купи Собаку"</li>
+                    <li>Апрель: Новосибирск — "Неделя Испании"</li>
+                    <li>Май: Владивосток — Все проекты</li>
+                </ul>
+            </div>
+        </section>
 
-  <main>
-    <section id="producer-section"></section>
-    <section id="production-section"></section>
-  </main>
-  
-  <div id="footer-placeholder"></div>
-    <!-- Карточки будут подгружаться сюда через JS -->
-  <script src="../js/main.js"></script>
-  <script>
-    // Подгружаем компоненты через fetch
-    async function loadComponent(path, placeholderId) {
-      const res = await fetch(path);
-      const html = await res.text();
-      document.getElementById(placeholderId).innerHTML = html;
-    }
+        <section id="collaboration" class="section collaboration">
+            <div class="container">
+                <h2>Условия Сотрудничества</h2>
+                <p>Мы принимаем талантливых актеров, режиссеров и спонсоров с опытом в театре. Почему так? Потому что стремимся к высшему качеству, где каждый вклад — часть шедевра.</p>
+            </div>
+        </section>
 
-    loadComponent('../components/footer.html', 'footer-placeholder');
+        <section id="opportunities" class="section opportunities">
+            <div class="container">
+                <h2>Возможности</h2>
+                <p>Мы можем организовать спектакли, гастроли и корпоративные события. Стоимость от 50 000 руб. за проект. Решать с продюсером Александром Сцениным по email: info@mirzasce.ru</p>
+            </div>
+        </section>
 
-  </script>
+        <section id="blog" class="section blog">
+            <div class="container">
+                <h2>Блог</h2>
+                <div class="blog-posts">
+                    <article>
+                        <h3>Рецензия: "Скрипичное Шоу"</h3>
+                        <p>Потрясающая гармония звуков и эмоций. Must-see!</p>
+                    </article>
+                    <article>
+                        <h3>О Нашей Жизни: За Кулисами</h3>
+                        <p>Рассказы о репетициях, смехе и слезах.</p>
+                    </article>
+                    <article>
+                        <h3>Победы и Ошибки: Уроки 2025</h3>
+                        <p>Как мы преодолели провалы и достигли триумфов.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Мир За Сценой. Все права защищены.</p>
+    </footer>
 </body>
 </html>
