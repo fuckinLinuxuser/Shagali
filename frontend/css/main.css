@@ -23,7 +23,7 @@ body {
     top: 0;
     width: 50%;
     height: 100%;
-    background: rgba(139, 0, 0, 0.8); /* Красный занавес */
+    background: rgba(139, 0, 0, 0.53); /* Красный занавес */
     transition: transform 2s ease;
 }
 
@@ -134,7 +134,7 @@ h1 {
 
 .header:hover .beam-left,
 .header:hover .beam-right {
-    animation: beam-fade 5s ease forwards; /* 3 секунды: появление + угасание */
+    animation: beam-fade 7s ease forwards; /* 3 секунды: появление + угасание */
 }
 
 @keyframes beam-fade {
@@ -255,4 +255,82 @@ h1 {
     text-align: center;
     padding: 20px;
     background: #000;
+}
+
+.map-container {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    margin: 40px auto;
+    background: #1e1e1e;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+.russia-map {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.city-dot {
+    fill: gold;
+    stroke: #121212;
+    stroke-width: 3;
+    cursor: pointer;
+    transition: r 0.3s, fill 0.3s;
+}
+
+.city-dot:hover {
+    fill: #ffd700;
+    r: 14;
+}
+
+.tooltip {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 280px;
+    background: #1e1e1e;
+    border: 2px solid gold;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, transform 0.3s;
+    transform: translateY(10px);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.tooltip.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: all;
+}
+
+.tooltip img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.tooltip h4 {
+    margin: 0 0 10px;
+    color: gold;
+    font-size: 1.3rem;
+}
+
+.tooltip p {
+    margin: 0 0 15px;
+    font-size: 1rem;
+}
+
+.tours-list {
+    margin-top: 40px;
 }
