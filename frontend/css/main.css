@@ -86,9 +86,9 @@ h1 {
     padding: 60px 20px;
     min-height: 50vh;
     border-bottom: 1px solid #333;
-    background-image: url('../public/images/back1.jpg');
+    /* background-image: url('../public/images/back1.jpg'); 
     background-size: cover;
-    background-position: center;
+    background-position: center; */
 }
 
 .container {
@@ -293,50 +293,184 @@ h1 {
     r: 14;
 }
 
-.tooltip {
+/* Поповер над точкой города */
+.tour-popover {
     position: absolute;
-    top: 20px;
-    left: 20px;
     width: 280px;
     background: #1e1e1e;
     border: 2px solid gold;
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(255, 215, 0, 0.35);
+    overflow: hidden;
+    z-index: 100;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s, transform 0.3s;
-    transform: translateY(10px);
+    transform: translateY(20px) scale(0.95);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     pointer-events: none;
-    z-index: 10;
 }
 
-.tooltip.visible {
+.tour-popover.visible {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     pointer-events: all;
 }
 
-.tooltip img {
+.popover-content {
+    position: relative;
+    padding: 15px;
+}
+
+.popover-img {
     width: 100%;
-    height: 160px;
+    height: 140px;
     object-fit: cover;
     border-radius: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
-.tooltip h4 {
-    margin: 0 0 10px;
+.popover-title {
+    margin: 0 0 8px;
     color: gold;
-    font-size: 1.3rem;
+    font-size: 1.35rem;
+    font-family: 'Playfair Display', serif;
 }
 
-.tooltip p {
+.popover-desc {
     margin: 0 0 15px;
-    font-size: 1rem;
+    font-size: 0.95rem;
+    color: #ddd;
+    line-height: 1.4;
 }
 
-.tours-list {
-    margin-top: 40px;
+.popover-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+}
+
+.popover-close {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    color: #aaa;
+    font-size: 1.8rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 6px;
+    z-index: 5;
+}
+
+.popover-close:hover {
+    color: gold;
+}
+
+/* Стрелочка */
+.tour-popover::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 10px solid transparent;
+    transition: all 0.3s;
+}
+
+.tour-popover.arrow-bottom::after {
+    bottom: -20px;
+    border-top-color: gold;
+}
+
+.tour-popover.arrow-top::after {
+    top: -20px;
+    border-bottom-color: gold;
+}
+
+/* Мобильная адаптация */
+@media (max-width: 640px) {
+    .tour-popover {
+        width: 90%;
+        max-width: 340px;
+        left: 5% !important;
+        right: 5% !important;
+        transform: none !important;
+        margin: 0 auto;
+    }
+    
+    .tour-popover::after {
+        left: 20px;
+        transform: none;
+    }
+    
+    .tour-popover.arrow-bottom::after,
+    .tour-popover.arrow-top::after {
+        left: 30px;
+    }
+}
+
+.city-label {
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    fill: #ffd700;              /* золотой */
+    stroke: #000;
+    stroke-width: 0.8px;
+    paint-order: stroke fill;   /* обводка для читаемости */
+    pointer-events: none;       /* не мешает кликам по точке */
+    user-select: none;
+}
+
+
+/* Мобильные — чуть меньше и жирнее */
+@media (max-width: 768px) {
+    .city-label {
+        font-size: 11px;
+    }
+}   
+
+/* Посещённый город */
+.city-marker.visited .city-dot {
+    fill: #c41e3a;           /* красный как флаг */
+    stroke: #ffd700;
+    stroke-width: 3;
+    r: 11;                   /* чуть больше обычной точки */
+}
+
+.city-marker.visited .city-dot:hover {
+    fill: #e63946;
+    r: 14;
+}
+
+/* Простой флажок */
+.flag-icon {
+    stroke: #000;
+    stroke-width: 1.5;
+    opacity: 0.9;
+}
+
+.city-marker.visited:hover .flag-icon {
+    opacity: 1;
+    transform: scale(1.15);
+}
+
+/* Поповер для посещённого города */
+.tour-popover.visited-mode {
+    border-color: #c41e3a;
+    background: linear-gradient(135deg, #1e1e1e 0%, #2a0f0f 100%);
+}
+
+.tour-popover.visited-mode .popover-title {
+    color: #ff6666;
+}
+
+.tour-popover.visited-mode .popover-btn {
+    background: #c41e3a;
+    color: white;
+}
+
+.tour-popover.visited-mode .popover-btn:hover {
+    background: #e63946;
 }
