@@ -1,0 +1,46 @@
+.header {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    background-color: #121212;
+}
+
+.section {
+    padding: 60px 20px;
+    min-height: 50vh;
+    border-bottom: 1px solid #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+.nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.nav a:hover {
+    color: gold;
+}
+
+.footer {
+    text-align: center;
+    padding: 20px;
+    background: #000;
+}
