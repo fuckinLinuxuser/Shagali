@@ -1,5 +1,6 @@
 .map-container {
     position: relative;
+    overflow: hidden;
     width: 100%;
     max-width: 1000px;
     margin: 40px auto;
@@ -112,7 +113,7 @@
     opacity: 1;
     visibility: visible;
     transform: translateY(0) scale(1);
-    pointer-events: all;
+    pointer-events: auto;
 }
 
 .popover-content {
