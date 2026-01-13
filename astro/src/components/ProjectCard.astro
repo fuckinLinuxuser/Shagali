@@ -1,0 +1,33 @@
+---
+// src/components/ProjectCard.astro
+
+const { 
+  title, 
+  description, 
+  imageSrc, 
+  imageAlt = title, 
+  ticketLink = "#" 
+} = Astro.props;
+---
+
+<div class="project-card">
+  <div class="project-image-wrapper">
+    <img 
+      src={imageSrc} 
+      alt={imageAlt}
+      class="project-image"
+      loading="lazy"
+      decoding="async"
+      width="400"
+      height="300"
+    />
+  </div>
+
+  <div class="project-content">
+    <h3>{title}</h3>
+    <p>{description}</p>
+    <a href={ticketLink} class="btn" target="_blank" rel="noopener noreferrer">
+      Купить билет
+    </a>
+  </div>
+</div>

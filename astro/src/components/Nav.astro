@@ -1,0 +1,60 @@
+---
+// src/components/Nav.astro
+
+// Если в будущем захочешь сделать активный пункт меню — можно будет передать currentPage
+const { currentPage = '' } = Astro.props;
+---
+
+<nav class="nav">
+  <ul>
+    <li>
+      <a 
+        href="#projects" 
+        class:list={{ active: currentPage === 'projects' }}
+      >
+        Проекты
+      </a>
+    </li>
+    <li>
+      <a 
+        href="#people" 
+        class:list={{ active: currentPage === 'people' }}
+      >
+        Люди
+      </a>
+    </li>
+    <li>
+      <a 
+        href="#tours" 
+        class:list={{ active: currentPage === 'tours' }}
+      >
+        Гастроли
+      </a>
+    </li>
+    <li>
+      <a 
+        href="#collaboration" 
+        class:list={{ active: currentPage === 'collaboration' }}
+      >
+        Сотрудничество
+      </a>
+    </li>
+    <li>
+      <a 
+        href="#opportunities" 
+        class:list={{ active: currentPage === 'opportunities' }}
+      >
+        Возможности
+      </a>
+    </li>
+    <li>
+      <a 
+        href="#blog" 
+        class:list={{ active: currentPage === 'blog' }}
+      >
+        Блог
+      </a>
+    </li>
+  </ul>
+</nav>
+

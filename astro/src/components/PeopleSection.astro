@@ -1,0 +1,39 @@
+---
+// src/components/PeopleSection.astro
+
+const people = [
+  {
+    name: "Антонио Вивальди",
+    role: "Скрипач",
+    description: "Звезда «Скрипичного Шоу», мастер скрипки."
+  },
+  {
+    name: "Елена Шагали",
+    role: "Режиссёр",
+    description: "Создатель «Недели Испании», страсть, танцы, Испания."
+  },
+  {
+    name: "Роман Самотуга",
+    role: "Актёр",
+    description: "Главный герой «Мамочка, Купи Собаку»."
+  }
+];
+---
+
+<section id="people" class="section people">
+  <div class="container">
+    <h2>Наши Люди</h2>
+
+    <div class="people-grid">
+      {
+        people.map(person => (
+          <div class="person">
+            <h3>{person.name}</h3>
+            <div class="role">{person.role}</div>
+            <p>{person.description}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
