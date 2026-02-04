@@ -24,3 +24,12 @@ pnpm-debug.log*
 .idea/
 
 ./astro/public/videos/
+
+# Все видео-файлы по расширениям (самое универсальное)
+*.mp4
+*.mov
+*.webm
+*.mkv
+*.avi
+*.flv
+*.wmv
