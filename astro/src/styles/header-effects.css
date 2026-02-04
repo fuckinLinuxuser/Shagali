@@ -1,0 +1,107 @@
+.curtain-left, .curtain-right {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background: rgba(139, 0, 0, 0.53);
+    transition: transform 2s ease;
+}
+
+.curtain-left {
+    left: 0;
+    transform: translateX(0);
+}
+
+.curtain-right {
+    right: 0;
+    transform: translateX(0);
+}
+
+.header:hover .curtain-left {
+    transform: translateX(-100%);
+}
+
+.header:hover .curtain-right {
+    transform: translateX(100%);
+}
+
+.spotlight {
+    position: relative;
+    z-index: 1;
+    animation: spotlight 2s infinite alternate;
+}
+
+@keyframes spotlight {
+    0% { text-shadow: 0 0 10px gold; }
+    100% { text-shadow: 0 0 20px gold; }
+}
+
+.beam-left,
+.beam-right {
+    position: absolute;
+    bottom: 0;
+    width: 50%;
+    height: 100%;
+    opacity: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: linear-gradient(to top, rgba(255, 215, 0, 0.8) 0%, rgba(255, 215, 0, 0.4) 30%, transparent 70%);
+    filter: blur(12px);
+    transition: opacity 2.5s ease-out;
+}
+
+.header:hover .beam-left,
+.header:hover .beam-right {
+    opacity: 0.75;
+    transition-duration: 4s;
+}
+
+.beam-left {
+    left: 0;
+    clip-path: polygon(0 100%, 100% 100%, 70% 0);
+}
+
+.beam-right {
+    right: 0;
+    clip-path: polygon(0 100%, 100% 100%, 30% 0);
+}
+
+.about-producer {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(30px);
+    filter: blur(5px);
+    transition: opacity 1.5s ease 0.5s, transform 1.5s ease 0.5s, filter 1.5s ease 0.5s;
+    margin-top: 20px;
+    z-index: 1;
+    position: relative;
+}
+
+.header:hover .about-producer {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+}
+
+.producer-photo {
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border: 3px solid gold;
+}
+
+.about-producer h2 {
+    font-size: 2.5rem;
+    color: gold;
+    margin: 10px 0;
+}
+
+.about-producer blockquote {
+    font-style: italic;
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    color: #ccc;
+}

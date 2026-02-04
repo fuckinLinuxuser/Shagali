@@ -1,0 +1,36 @@
+---
+// src/components/Footer.astro
+
+const currentYear = new Date().getFullYear();
+const producerName = "Мир За Сценой";
+const email = "info@mirzasce.ru";
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <p class="copyright">
+        © {currentYear} {producerName}. Все права защищены.
+      </p>
+
+      <div class="footer-links">
+        <a href="mailto:{email}" class="footer-link">
+          Связаться с продюсером
+        </a>
+        <span class="separator">•</span>
+        <a href="#projects" class="footer-link">
+          Проекты
+        </a>
+        <span class="separator">•</span>
+        <a href="#tours" class="footer-link">
+          Гастроли
+        </a>
+      </div>
+
+      <p class="made-with">
+        С любовью к театру • Сделано в {currentYear}
+      </p>
+    </div>
+  </div>
+</footer>
+

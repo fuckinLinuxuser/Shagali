@@ -1,0 +1,33 @@
+---
+// src/components/Header.astro
+// Компонент содержит шапку сайта с эффектами занавеса, прожекторов и блоком о продюсере
+
+const { title = "Мир За Сценой" } = Astro.props;
+---
+
+<header class="header">
+  <div class="curtain-left"></div>
+  <div class="curtain-right"></div>
+
+  <div class="spotlight">
+    <h1>{title}</h1>
+    <p>Театральный продюсер, чьи проекты захватят ваши сердца</p>
+  </div>
+
+  <div class="about-producer">
+    <img
+      src="/images/Shagali.jpg"
+      alt="Елена Шагали"
+      class="producer-photo"
+    />
+
+    <h2>Елена Шагали</h2>
+
+    <blockquote>
+      "Театр — это не просто сцена, это зеркало души, где каждый зритель видит себя по-новому."
+    </blockquote>
+  </div>
+
+  <div class="beam-left"></div>
+  <div class="beam-right"></div>
+</header>

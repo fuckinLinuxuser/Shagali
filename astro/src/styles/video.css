@@ -1,0 +1,138 @@
+.section-title {
+      text-align: center;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 800;
+      margin-bottom: 3rem;
+      background: linear-gradient(90deg, #c084fc, #8b5cf6, #ec4899);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -1px;
+    }
+
+    .slider-container {
+      position: relative;
+      max-width: 1400px;
+      margin: 0 auto;
+      overflow: hidden;
+      padding: 0 1rem;
+    }
+
+    .slider-wrapper {
+      display: flex;
+      transition: transform 0.75s cubic-bezier(0.23, 1, 0.32, 1);
+      will-change: transform;
+      gap: 1.5rem;
+      padding: 1rem 0;
+    }
+
+    .video-card {
+      flex: 0 0 320px;
+      height: 480px;               /* базовая высота для вертикальных */
+      border-radius: 1.2rem;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      background: #111;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+      transition: all 0.4s ease;
+      transform: scale(0.92);
+      opacity: 0.75;
+    }
+
+    /* Активный / ближайший к центру слайд */
+    .video-card.active,
+    .video-card:hover {
+      transform: scale(1.04);
+      opacity: 1;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.9),
+                  0 0 0 2px rgba(168,85,247,0.4);
+    }
+
+    .video-wrapper {
+      width: 50%;
+      height: 100%;
+      position: relative;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.15) 50%, transparent 90%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 1.8rem;
+    }
+
+    .video-card:hover .overlay,
+    .video-card.active .overlay {
+      opacity: 1;
+    }
+
+    .title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+      max-width: 90%;
+      text-align: center;
+      line-height: 1.35;
+    }
+
+    /* Кнопки управления */
+    .slider-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    .slider-btn {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: white;
+      font-size: 1.8rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slider-btn:hover {
+      background: rgba(168,85,247,0.25);
+      border-color: #a855f7;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(168,85,247,0.3);
+    }
+
+    .slider-btn:active {
+      transform: scale(0.92);
+    }
+
+    @media (max-width: 640px) {
+      .video-card {
+        flex: 0 0 280px;
+        height: 420px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .video-card {
+        flex: 0 0 380px;
+        height: 570px;
+      }
+    }

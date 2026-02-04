@@ -1,0 +1,8 @@
+/* main.css — точка входа */
+
+@import url("base.css");
+@import url("layout.css");
+@import url("header-effects.css");
+@import url("components.css");
+@import url("map.css");
+@import url("video.css");
