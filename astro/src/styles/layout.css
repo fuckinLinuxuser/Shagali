@@ -27,14 +27,14 @@ top: 0;
 z-index: 1000;
 background-color: #121212;
 width: 100%;
-padding: 20px 0;
+padding: 10px 0;
 }
 
 .nav ul {
 list-style: none;
 padding: 0;
 display: flex;
-gap: 20px;
+gap: 30px;
 justify-content: center;
 }
 
@@ -42,7 +42,7 @@ justify-content: center;
 color: #fff;
 text-decoration: none;
 font-weight: bold;
-transition: color 0.3s;
+transition: color 0.5s;
 }
 
 .nav a:hover {
@@ -53,6 +53,11 @@ color: gold;
 color: gold;
 }
 
+@media (max-width: 768px) {
+    .nav ul {
+        gap: 15px;
+    }
+}
 .footer {
     text-align: center;
     padding: 20px;

@@ -84,10 +84,10 @@
 }
 
 .producer-photo {
-    border-radius: 50%;
+    border-radius: 100%;
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-    width: 200px;
-    height: 200px;
+    width: 350px;
+    height: 350px;
     object-fit: cover;
     border: 3px solid gold;
 }
