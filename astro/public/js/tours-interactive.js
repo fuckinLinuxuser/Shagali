@@ -22,13 +22,13 @@ document.addEventListener('DOMContentLoaded', () => {
     "Родной Мой Кукушонок": {
       title: "Родной Мой Кукушонок",
       desc: "Трогательная история о семье и потере. Билеты от 1200 руб.",
-      img: "/images/projects/kukushonok.jpg",
+      img: "/dist/images/projects/kukushonok.jpeg",
       link: "#"
     },
     "Мамочка, Купи Собаку": {
       title: "Мамочка, Купи Собаку",
       desc: "Юмористическая комедия о повседневных желаниях. Билеты от 1000 руб.",
-      img: "/images/projects/mamochka-sobaka.jpg",
+      img: "/dist/images/projects/doggy.jpeg",
       link: "#"
     },
     "Неделя Испании": {
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     vladivostok: {
       title: "Спасибо, Владивосток!",
       comment: "Ваш город встретил нас невероятной энергией и потрясающей атмосферой у моря. Зал пел вместе с нами — это было незабываемо! Возвращаемся обязательно ♥",
-      img: "/cities/vladivostok.jpg",
+      img: "/dist/images/cities/vladivostok.jpg",
       type: "visited"
     }
   };

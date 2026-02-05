@@ -29,6 +29,7 @@
     position: relative;
     z-index: 1;
     animation: spotlight 2s infinite alternate;
+    color: rgb(253, 245, 199);
 }
 
 @keyframes spotlight {

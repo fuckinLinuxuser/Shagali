@@ -1,162 +1,235 @@
----
-// src/components/PeopleSection.astro
+<style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1e1e17ec;
+            color: #f3e5e5;
+            margin: 0;
+            padding: 0;
+        }
 
-const people = [
-  {
-    name: "Антонио Вивальди",
-    role: "Скрипач",
-    description: "Звезда «Скрипичного Шоу», мастер скрипки.",
-    photo: "/dist/images/vivaldi.jpg"   // ← подставь реальные пути
-  },
-  {
-    name: "Елена Шагали",
-    role: "Режиссёр",
-    description: "Создатель «Недели Испании», страсть, танцы, Испания.",
-    photo: "/dist/images/Shagali.jpg"
-  },
-  {
-    name: "Роман Самотуга",
-    role: "Актёр",
-    description: "Главный герой «Мамочка, Купи Собаку».",
-    photo: "/dist/images/samotuga.jpg"
-  }
-];
----
+        .our-people {
+            max-width: 1400px;
+            margin: 60px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
 
-<section id="people" class="section people">
-  <div class="container">
-    <h2>Наши Люди</h2>
+        .our-people h1 {
+            font-size: 2.8em;
+            margin-bottom: 50px;
+            color: #f84a4a;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+        }
+
+        .our-people h1::after {
+            content: '';
+            width: 120px;
+            height: 3px;
+            background: #d4af37;
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .people-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, 340px); /* фиксированная ширина карточек */
+            gap: 35px;
+            justify-content: center;          /* центрируем карточки */
+            padding: 0 10px;
+        }
+
+        .person-card {
+            width: 340px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+            transition: all 0.28s ease;
+            cursor: pointer;
+        }
+
+        .person-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+        }
+
+        .person-image {
+            width: 100%;
+            height: 340px;
+            object-fit: cover;
+        }
+
+        .person-info {
+            padding: 22px 20px;
+            text-align: center;
+        }
+
+        .person-name {
+            font-size: 1.65em;
+            margin: 0 0 8px;
+            color: #222;
+        }
+
+        .person-role {
+            font-size: 1.15em;
+            color: #d4af37;
+            font-weight: 500;
+            margin-bottom: 14px;
+        }
+
+        .person-short {
+            font-size: 0.97em;
+            color: #555;
+            line-height: 1.45;
+            margin: 0;
+        }
+
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.78);
+            overflow: auto;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 6% auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 720px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #1a1a1a, #333);
+            color: white;
+            padding: 30px 40px 20px;
+            text-align: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 2.1em;
+        }
+
+        .modal-header .role {
+            color: #d4af37;
+            font-size: 1.3em;
+            margin-top: 8px;
+        }
+
+        .modal-body {
+            padding: 30px 40px;
+            font-size: 1.03em;
+            line-height: 1.7;
+            color: #333;
+        }
+
+        .close {
+            position: absolute;
+            right: 25px;
+            top: 18px;
+            color: white;
+            font-size: 38px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #d4af37;
+        }
+
+        @media (max-width: 480px) {
+            .people-grid {
+                grid-template-columns: 1fr;
+            }
+            .person-card {
+                width: 100%;
+                max-width: 360px;
+            }
+            .modal-content {
+                margin: 10% auto;
+                width: 94%;
+            }
+            .modal-header, .modal-body {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<section class="our-people">
+    <h1>Наши люди</h1>
 
     <div class="people-grid">
-      {
-        people.map(person => (
-          <div class="person-card">
-            <div class="card-inner">
-              <img 
-                src={person.photo} 
-                alt={person.name} 
-                class="person-photo" 
-                loading="lazy"
-              />
-              <div class="diagonal-overlay"></div>
-              <div class="info">
-                <h3 class="name">{person.name}</h3>
-                <div class="role">{person.role}</div>
-                <p class="description">{person.description}</p>
-              </div>
+
+        <!-- Пример одной карточки -->
+        <div class="person-card" 
+             data-name="Елена Владимировна ШАГАЛИ" 
+             data-role="Театральный продюсер. Драматург. Режиссер." 
+             data-bio="Одни птицы больше думают о красоте своих перьев. Другие хотят укрепить своё гнездо. А я отношусь к тем птицам, которые всю жизнь рвутся в небо, чтобы петь свою любовную песню прямо в светлые улыбающиеся глаза Солнца. 
+Да. Некоторые не долетают. Бывает.
+Но кто-то обязательно споёт. 
+И Солнцу будет ради чего рождаться каждое утро.">
+            <img src="dist/images/Shagali.jpg" alt="Елена Шагали" class="person-image">
+            <div class="person-info">
+                <h2 class="person-name">Елена Шагали</h2>
+                <div class="person-role">Театральный продюсер. Драматург. Режиссер. </div>
+                <p class="person-short">Никто не спросил, хотела ли я всё это уметь. Но без этого - не зажигалось и не пылало.</p>
             </div>
-          </div>
-        ))
-      }
+        </div>
+
+        <!-- Добавляй следующие карточки точно так же -->
+
     </div>
-  </div>
 </section>
 
-<style is:global>
-  .people-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2.5rem 2rem;
-  padding: 1rem 0;
-}
+<!-- Модальное окно (одно на всю страницу) -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="modal-header">
+            <h2 id="modal-name"></h2>
+            <div class="role" id="modal-role"></div>
+        </div>
+        <div class="modal-body" id="modal-bio"></div>
+    </div>
+</div>
 
-.person-card {
-  position: relative;
-  border-radius: 16px;
-  overflow: hidden;
-  background: #1a1a1a;
-  transition: all 0.4s ease;
-  aspect-ratio: 3 / 4;           /* красивая пропорция для портретов */
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-}
+<script is:inline>
+    // Открытие модального окна
+    document.querySelectorAll('.person-card').forEach(card => {
+        card.addEventListener('click', () => {
+            document.getElementById('modal-name').textContent = card.dataset.name;
+            document.getElementById('modal-role').textContent = card.dataset.role;
+            document.getElementById('modal-bio').innerHTML = card.dataset.bio;
+            document.getElementById('modal').style.display = 'block';
+        });
+    });
 
-.person-card:hover {
-  transform: translateY(-12px);
-  box-shadow: 0 20px 50px rgba(255, 215, 0, 0.15);
-}
+    // Закрытие модального окна
+    document.querySelector('.close').addEventListener('click', () => {
+        document.getElementById('modal').style.display = 'none';
+    });
 
-.card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.person-photo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s ease;
-  filter: brightness(0.92) contrast(1.05);
-}
-
-.person-card:hover .person-photo {
-  transform: scale(1.08);
-}
-
-/* Диагональный акцент */
-.diagonal-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    135deg,
-    transparent 38%,
-    rgba(255, 215, 0, 0.18) 52%,
-    rgba(255, 215, 0, 0.08) 70%,
-    transparent 85%
-  );
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  pointer-events: none;
-  mix-blend-mode: soft-light;     /* красиво смешивается с фото */
-}
-
-.person-card:hover .diagonal-overlay {
-  opacity: 1;
-}
-
-/* Информация */
-.info {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 2.2rem 1.8rem 1.8rem;
-  background: linear-gradient(to top, rgba(18,18,18,0.95) 30%, transparent);
-  color: white;
-}
-
-.name {
-  margin: 0 0 0.4rem;
-  font-size: 1.55rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.role {
-  color: gold;
-  font-size: 1.05rem;
-  font-weight: 500;
-  margin-bottom: 0.9rem;
-  opacity: 0.95;
-}
-
-.description {
-  margin: 0;
-  font-size: 0.97rem;
-  line-height: 1.5;
-  color: #ddd;
-  opacity: 0.92;
-}
-
-/* Адаптивность */
-@media (max-width: 600px) {
-  .people-grid {
-    gap: 2rem 1.2rem;
-  }
-  .person-card {
-    aspect-ratio: 3 / 4.2;
-  }
-}
-</style>
+    // Закрытие по клику вне окна
+    window.addEventListener('click', (e) => {
+        if (e.target === document.getElementById('modal')) {
+            document.getElementById('modal').style.display = 'none';
+        }
+    });
+</script>

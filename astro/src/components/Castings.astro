@@ -1,373 +1,329 @@
----
-// CastingsSlider.astro
+<style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f8f8f8;
+            color: #222;
+            margin: 0;
+            padding: 0;
+        }
 
-const items = [
-  {
-    poster: '/posters/Foxes_preview.jpg',
-    title: 'Вертикальный кастинг #1',
-    subtitle: 'Танго с лисами • 4K vertical',
-  },
-  {
-    poster: '/posters/Show_scripka.png',
-    title: 'Скрипичный перформанс',
-    subtitle: 'Горизонтальный шоу-проект • 2025',
-  },
-  {
-    poster: '/posters/Komarovo.png',
-    title: 'Комарово Open Air',
-    subtitle: 'Вертикальный кастинг #2 • лето 2025',
-  },
-];
----
+        .castings-section {
+            max-width: 1400px;
+            margin: 60px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .castings-section h1 {
+            font-size: 2.8em;
+            margin-bottom: 50px;
+            color: #222;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+        }
+
+        .castings-section h1::after {
+            content: '';
+            width: 140px;
+            height: 3px;
+            background: #d4af37;
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Контейнер timeline */
+        .timeline-container {
+            position: relative;
+            overflow: hidden;
+            padding: 40px 0;
+        }
+
+        .timeline-wrapper {
+            display: flex;
+            transition: transform 0.5s ease;
+            width: max-content; /* чтобы не сжимался */
+        }
+
+        .timeline-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, #d4af37, #b8972e);
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .timeline-item {
+            position: relative;
+            width: 360px;
+            min-width: 360px;
+            margin: 0 30px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            z-index: 2;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-item:nth-child(odd)  { margin-top: -140px; } /* сверху */
+        .timeline-item:nth-child(even) { margin-top:  100px; } /* снизу  */
+
+        .timeline-dot {
+            width: 24px;
+            height: 24px;
+            background: white;
+            border: 4px solid #d4af37;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+            box-shadow: 0 0 0 6px rgba(212,175,55,0.2);
+        }
+
+        .timeline-date {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #d4af37;
+            margin-bottom: 12px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .timeline-content {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+            border: 1px solid #d4af37;
+        }
+
+        .timeline-thumbnail {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 14px;
+        }
+
+        .timeline-title {
+            font-size: 1.45em;
+            margin: 0 0 10px;
+            color: #222;
+        }
+
+        .timeline-teaser {
+            font-size: 0.97em;
+            color: #555;
+            line-height: 1.45;
+            margin: 0 0 16px;
+        }
+
+        .btn-detail {
+            background: #d4af37;
+            color: #1a1a1a;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-detail:hover {
+            background: #b8972e;
+            transform: scale(1.05);
+        }
+
+        /* Стрелки */
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            cursor: pointer;
+            z-index: 10;
+            transition: background 0.3s;
+        }
+
+        .nav-arrow:hover { background: rgba(0,0,0,0.8); }
+        .nav-arrow.left  { left: 10px; }
+        .nav-arrow.right { right: 10px; }
+
+        @media (max-width: 900px) {
+            .timeline-item {
+                margin: 0 20px;
+                width: 320px;
+                min-width: 320px;
+            }
+            .timeline-item:nth-child(odd)  { margin-top: -120px; }
+            .timeline-item:nth-child(even) { margin-top:  80px; }
+        }
+
+        @media (max-width: 600px) {
+            .timeline-container { padding: 20px 0; }
+            .nav-arrow { display: none; } /* на мобильных — просто свайп */
+        }
+    </style>
 
 <section class="castings-section">
-  <h2 class="section-title">Пробы и кастинги</h2>
+    <h1>Пробы и кастинги</h1>
 
-  <div class="slider-container">
-    <div class="slider-viewport">
-      <div class="slide left"   id="slide-left"></div>
-      <div class="slide center" id="slide-center"></div>
-      <div class="slide right"  id="slide-right"></div>
+    <div class="timeline-container">
+        <div class="timeline-line"></div>
+
+        <div class="timeline-wrapper" id="timelineWrapper">
+
+            <!-- Кастинг 1 -->
+            <div class="timeline-item" data-name="Кастинг: Ромео и Джульетта" 
+                 data-date="15 октября 2025" 
+                 data-teaser="Ищем молодых актёров 18–25 лет на главные роли. Опыт не обязателен, важен огонь в глазах." 
+                 data-video="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                 data-desc="Полное описание кастинга: дата, время, место, что готовить, контакты для записи...">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">15 октября 2025</div>
+                <div class="timeline-content">
+                    <img src="https://via.placeholder.com/360x180/333/eee?text=Ромео+и+Джульетта" alt="Thumbnail" class="timeline-thumbnail">
+                    <h3 class="timeline-title">Ромео и Джульетта</h3>
+                    <p class="timeline-teaser">Ищем молодых актёров 18–25 лет на главные роли...</p>
+                    <button class="btn-detail">Подробнее</button>
+                </div>
+            </div>
+
+            <!-- Кастинг 2 -->
+            <div class="timeline-item" data-name="Проба: Арбенин — Маскарад" 
+                 data-date="2 ноября 2025" 
+                 data-teaser="Требуется мужчина 30–45 лет с сильной дикцией и драматическим темпераментом." 
+                 data-video="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                 data-desc="Подробности: характер роли, реперные отрывки, дата и адрес пробы...">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">2 ноября 2025</div>
+                <div class="timeline-content">
+                    <img src="https://via.placeholder.com/360x180/444/eee?text=Маскарад" alt="Thumbnail" class="timeline-thumbnail">
+                    <h3 class="timeline-title">Арбенин — Маскарад</h3>
+                    <p class="timeline-teaser">Требуется мужчина 30–45 лет с сильной дикцией...</p>
+                    <button class="btn-detail">Подробнее</button>
+                </div>
+            </div>
+
+            <!-- Кастинг 3 -->
+            <div class="timeline-item" data-name="Открытый кастинг — Новая пьеса" 
+                 data-date="20 ноября 2025" 
+                 data-teaser="Приходите без подготовки. Берём всех желающих от 16 лет." 
+                 data-video="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                 data-desc="Свободный формат, много ролей второго плана, экспериментальный проект...">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">20 ноября 2025</div>
+                <div class="timeline-content">
+                    <img src="https://via.placeholder.com/360x180/555/eee?text=Новая+пьеса" alt="Thumbnail" class="timeline-thumbnail">
+                    <h3 class="timeline-title">Открытый кастинг</h3>
+                    <p class="timeline-teaser">Приходите без подготовки. Берём всех...</p>
+                    <button class="btn-detail">Подробнее</button>
+                </div>
+            </div>
+
+            <!-- Добавляй новые .timeline-item сюда -->
+
+        </div>
+
+        <div class="nav-arrow left" id="prev">←</div>
+        <div class="nav-arrow right" id="next">→</div>
     </div>
-
-    <div class="dots" id="dots"></div>
-
-    <button class="nav-btn prev" id="prev">←</button>
-    <button class="nav-btn next" id="next">→</button>
-  </div>
 </section>
 
-<style is:global>
-  .castings-section {
-    padding: 5rem 0 9rem;
-    background: #0a0a0f;
-  }
+<!-- Модальное окно (одно на страницу) -->
+<div id="modal" class="modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; overflow:auto;">
+    <div style="background:white; margin:6% auto; padding:0; border-radius:12px; width:90%; max-width:760px; max-height:88vh; overflow-y:auto; position:relative; box-shadow:0 10px 40px rgba(0,0,0,0.5);">
+        <span id="closeModal" style="position:absolute; right:20px; top:10px; font-size:42px; color:#d4af37; cursor:pointer;">×</span>
+        <div style="padding:30px 40px; text-align:center;">
+            <h2 id="modalTitle" style="margin:0 0 10px; color:#222;"></h2>
+            <div id="modalDate" style="color:#d4af37; font-size:1.2em; margin-bottom:20px;"></div>
+            <iframe id="modalVideo" width="100%" height="420" frameborder="0" allowfullscreen style="border-radius:8px;"></iframe>
+            <p id="modalDesc" style="margin-top:25px; line-height:1.7; color:#444; font-size:1.05em;"></p>
+        </div>
+    </div>
+</div>
 
-  .section-title {
-    text-align: center;
-    font-size: clamp(2.8rem, 7vw, 5.5rem);
-    font-weight: 900;
-    background: linear-gradient(90deg, #d8b4fe, #c084fc, #f472b6);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    margin-bottom: 4rem;
-  }
-
-  .slider-container {
-    position: relative;
-    height: 70vh;
-    min-height: 520px;
-    max-height: 840px;
-    margin: 0 auto;
-    perspective: 1400px;
-    overflow: hidden;
-  }
-
-  .slider-viewport {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2.5rem;
-    position: relative;
-  }
-
-  .slide {
-    width: 320px;
-    aspect-ratio: 9 / 16;
-    border-radius: 1.4rem;
-    overflow: hidden;
-    background: rgba(30,30,50,0.4);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(192,132,252,0.18);
-    box-shadow: 0 20px 70px rgba(0,0,0,0.6);
-    position: relative;
-    transition: all 0.9s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .slide.center {
-    width: 380px;
-    transform: scale(1.06) translateZ(80px);
-    opacity: 1;
-    box-shadow: 0 50px 140px rgba(0,0,0,0.9),
-                0 0 0 2px rgba(192,132,252,0.45);
-    z-index: 3;
-  }
-
-  .slide.left,
-  .slide.right {
-    transform: scale(0.86) translateZ(-100px);
-    opacity: 0.82;
-  }
-
-  .slide.left  { transform: scale(0.86) translateX(-15%) translateZ(-120px) rotateY(10deg); }
-  .slide.right { transform: scale(0.86) translateX( 15%) translateZ(-120px) rotateY(-10deg); }
-
-  /* Анимация содержимого */
-  .slide-content {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transform: scale(0.96);
-    transition: opacity 0.55s ease, transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
-    pointer-events: none;
-  }
-
-  .slide-content.visible {
-    opacity: 1;
-    transform: scale(1);
-    pointer-events: auto;
-  }
-
-  .poster {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .play-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0,0,0,0.18);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-  }
-
-  .slide.center .play-overlay {
-    opacity: 1;
-  }
-
-  .play-circle {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: rgba(30,30,50,0.75);
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255,255,255,0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    transition: all 0.35s ease;
-  }
-
-  .slide.center .play-circle {
-    transform: scale(1.1);
-    background: rgba(192,132,252,0.45);
-    border-color: #c084fc;
-  }
-
-  .play-circle svg {
-    width: 42px;
-    height: 42px;
-  }
-
-  .content-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 2.4rem 1.8rem 1.8rem;
-    background: linear-gradient(to top, rgba(8,8,18,0.92) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .title {
-    font-size: 1.38rem;
-    font-weight: 700;
-    margin-bottom: 0.4rem;
-    background: linear-gradient(90deg, white, #e9d5ff);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: 0 2px 10px black;
-  }
-
-  .subtitle {
-    font-size: 0.94rem;
-    opacity: 0.9;
-  }
-
-  .nav-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: rgba(30,30,50,0.7);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(192,132,252,0.35);
-    color: white;
-    font-size: 1.9rem;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    z-index: 10;
-  }
-
-  .nav-btn.prev { left: 1.5rem; }
-  .nav-btn.next { right: 1.5rem; }
-
-  .nav-btn:hover {
-    background: rgba(192,132,252,0.4);
-    border-color: #c084fc;
-    transform: translateY(-50%) scale(1.12);
-  }
-
-  .dots {
-    position: absolute;
-    bottom: 2.2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 1rem;
-    z-index: 10;
-  }
-
-  .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.25);
-    border: 2px solid transparent;
-    transition: all 0.35s ease;
-    cursor: pointer;
-  }
-
-  .dot.active {
-    background: #c084fc;
-    border-color: white;
-    transform: scale(1.4);
-  }
-
-  @media (max-width: 900px) {
-    .slider-viewport { gap: 1.2rem; }
-    .slide { width: 260px; }
-    .slide.center { width: 320px; }
-    .slide.left  { transform: scale(0.84) translateX(-22%) translateZ(-140px) rotateY(14deg); }
-    .slide.right { transform: scale(0.84) translateX( 22%) translateZ(-140px) rotateY(-14deg); }
-    .nav-btn { width: 56px; height: 56px; font-size: 1.7rem; }
-  }
-</style>
-
-<script is:inline define:vars={{ items }}>
-  const left   = document.getElementById('slide-left');
-  const center = document.getElementById('slide-center');
-  const right  = document.getElementById('slide-right');
-
-  const dotsContainer = document.getElementById('dots');
-  const prevBtn = document.getElementById('prev');
-  const nextBtn = document.getElementById('next');
-
-  let current = 0;
-  const n = items.length;
-
-  let animationTimeout = null;
-
-  function renderSlides() {
-    const prevIdx = (current - 1 + n) % n;
-    const nextIdx = (current + 1) % n;
-
-    // Сначала убираем видимое содержимое (запускаем fade-out)
-    document.querySelectorAll('.slide-content').forEach(el => {
-      el.classList.remove('visible');
-    });
-
-    // Ждём завершения fade-out
-    clearTimeout(animationTimeout);
-    animationTimeout = setTimeout(() => {
-      // Очищаем старое содержимое
-      [left, center, right].forEach(el => {
-        el.innerHTML = '';
-        el.classList.remove('center');
-      });
-
-      // Создаём новое содержимое
-      left.innerHTML   = createSlideHTML(items[prevIdx]);
-      center.innerHTML = createSlideHTML(items[current]);
-      right.innerHTML  = createSlideHTML(items[nextIdx]);
-
-      center.classList.add('center');
-
-      // Запускаем fade-in
-      setTimeout(() => {
-        document.querySelectorAll('.slide-content').forEach(el => {
-          el.classList.add('visible');
+<script>
+    // Fade-in при скролле/загрузке
+    const items = document.querySelectorAll('.timeline-item');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
         });
-      }, 50);
+    }, { threshold: 0.2 });
 
-      // Обновляем точки
-      document.querySelectorAll('.dot').forEach((d, i) => {
-        d.classList.toggle('active', i === current);
-      });
-    }, 600); // должно быть чуть больше, чем transition в CSS
-  }
+    items.forEach(item => observer.observe(item));
 
-  function createSlideHTML(item) {
-    return `
-      <div class="slide-content visible">
-        <img src="${item.poster}" alt="${item.title}" class="poster" loading="lazy">
-        <div class="play-overlay">
-          <div class="play-circle">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </div>
-        </div>
-        <div class="content-overlay">
-          <h3 class="title">${item.title}</h3>
-          <p class="subtitle">${item.subtitle}</p>
-        </div>
-      </div>
-    `;
-  }
+    // Навигация стрелками
+    const wrapper = document.getElementById('timelineWrapper');
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+    let scrollPos = 0;
+    const itemWidth = 360 + 60; // ширина + margin
 
-  function createDots() {
-    dotsContainer.innerHTML = '';
-    items.forEach((_, i) => {
-      const dot = document.createElement('div');
-      dot.classList.add('dot');
-      if (i === current) dot.classList.add('active');
-      dot.addEventListener('click', () => {
-        current = i;
-        renderSlides();
-      });
-      dotsContainer.appendChild(dot);
+    if (next) next.addEventListener('click', () => {
+        scrollPos += itemWidth;
+        if (wrapper) wrapper.style.transform = `translateX(-${scrollPos}px)`;
     });
-  }
 
-  function next() {
-    current = (current + 1) % n;
-    renderSlides();
-  }
+    if (prev) prev.addEventListener('click', () => {
+        scrollPos = Math.max(0, scrollPos - itemWidth);
+        if (wrapper) wrapper.style.transform = `translateX(-${scrollPos}px)`;
+    });
 
-  function prev() {
-    current = (current - 1 + n) % n;
-    renderSlides();
-  }
+    // Модалка
+    document.querySelectorAll('.btn-detail').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const item = e.target.closest('.timeline-item');
+            if (document.getElementById('modalTitle')) document.getElementById('modalTitle').textContent = item.dataset.name;
+            if (document.getElementById('modalDate')) document.getElementById('modalDate').textContent = item.dataset.date;
+            if (document.getElementById('modalVideo')) document.getElementById('modalVideo').src = item.dataset.video;
+            if (document.getElementById('modalDesc')) document.getElementById('modalDesc').textContent = item.dataset.desc;
+            if (document.getElementById('modal')) document.getElementById('modal').style.display = 'block';
+        });
+    });
 
-  prevBtn.addEventListener('click', prev);
-  nextBtn.addEventListener('click', next);
+    if (document.getElementById('closeModal')) document.getElementById('closeModal').addEventListener('click', () => {
+        if (document.getElementById('modal')) document.getElementById('modal').style.display = 'none';
+        if (document.getElementById('modalVideo')) document.getElementById('modalVideo').src = ''; // остановка видео
+    });
 
-  // Свайп
-  let touchStartX = 0;
-  document.querySelector('.slider-viewport').addEventListener('touchstart', e => {
-    touchStartX = e.touches[0].clientX;
-  });
-
-  document.querySelector('.slider-viewport').addEventListener('touchend', e => {
-    const diff = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(diff) > 60) {
-      if (diff > 0) prev();
-      else next();
-    }
-  });
-
-  // Инициализация
-  createDots();
-  renderSlides();
+    if (document.getElementById('modal')) document.getElementById('modal').addEventListener('click', (e) => {
+        if (e.target === document.getElementById('modal')) {
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('modalVideo').src = '';
+        }
+    });
 </script>

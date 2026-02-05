@@ -28,7 +28,7 @@ const slides = [
 
           <div class="slide-content">
             {slide.soon && (
-              <div class="soon-badge">скоро...</div>
+              <div class="soon-badge">Скоро...</div>
             )}
 
             <h2>{slide.title}</h2>
@@ -63,7 +63,7 @@ const slides = [
 
     const swiper = new Swiper('.hero-slider', {
       loop: true,
-      speed: 800,
+      speed: 2500,
       grabCursor: true,
       autoplay: {
         delay: 5000,
@@ -112,6 +112,7 @@ const slides = [
   }
 
   .slide-content {
+    
     position: absolute;
     inset: 0;
     display: flex;
@@ -129,6 +130,19 @@ const slides = [
     );
   }
 
+  .slide-content h2 {
+    font-family: 'Playfair Display', serif;
+    
+  }
+
+  .slide-content p {
+    font-family: 'Times New Roman', serif;
+  }
+
+  .slide-content blockquote {
+    font-family: 'Times New Roman', serif;
+    font-style: italic;
+  }
   /* ────────────────────────────────────────────── */
   /*        НАДПИСЬ "скоро..." в правом верхнем углу  */
   /* ────────────────────────────────────────────── */
@@ -136,6 +150,7 @@ const slides = [
     position: absolute;
     top: 1.2rem;
     right: 1.2rem;
+    font-family: 'Playfair Display', serif;
 
     background: #c22431;
     opacity: 0.85;
@@ -145,7 +160,7 @@ const slides = [
     padding: 0.4rem 1rem;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-    text-transform: uppercase;
+    
     letter-spacing: 0.6px;
     line-height: 1.3;
     white-space: nowrap;
