@@ -6,14 +6,12 @@
         margin: 0;
         padding: 0;
     }
-
     .castings-section {
         max-width: 1400px;
         margin: 60px auto;
         padding: 0 20px;
         text-align: center;
     }
-
     .castings-section h1 {
         font-size: 2.8em;
         margin-bottom: 50px;
@@ -22,7 +20,6 @@
         letter-spacing: 3px;
         position: relative;
     }
-
     .castings-section h1::after {
         content: '';
         width: 140px;
@@ -33,20 +30,17 @@
         left: 50%;
         transform: translateX(-50%);
     }
-
     .timeline-container {
         position: relative;
         overflow: hidden;
         padding: 140px 0 100px;
     }
-
     .timeline-wrapper {
         display: flex;
         transition: transform 0.6s ease-out;
         width: max-content;
         position: relative;
     }
-
     .timeline-line {
         position: absolute;
         top: 50%;
@@ -58,7 +52,6 @@
         transform: translateY(-50%);
         z-index: 0;
     }
-
     .timeline-item {
         position: relative;
         width: 360px;
@@ -70,17 +63,12 @@
         transition: opacity 0.8s ease, transform 0.8s ease, box-shadow 0.4s ease;
         z-index: 2;
     }
-
     .timeline-item.visible {
         opacity: 1;
         transform: translateY(0);
     }
-
-    .timeline-item:nth-child(odd)  { margin-top: -140px; }
-    .timeline-item:nth-child(even) { margin-top:  100px; }
-
-
-
+    .timeline-item:nth-child(odd) { margin-top: -140px; }
+    .timeline-item:nth-child(even) { margin-top: 100px; }
     .timeline-date {
         font-size: 1.1em;
         font-weight: bold;
@@ -92,7 +80,6 @@
         border-radius: 20px;
         display: inline-block;
     }
-
     .timeline-content {
         background: white;
         border-radius: 12px;
@@ -101,13 +88,11 @@
         transition: all 0.4s ease;
         cursor: pointer;
     }
-
     .timeline-content:hover {
         transform: translateY(-8px);
         box-shadow: 0 12px 28px rgba(0,0,0,0.18);
         border: 1px solid #d4af37;
     }
-
     .timeline-thumbnail {
         width: 100%;
         height: 180px;
@@ -115,20 +100,17 @@
         border-radius: 8px;
         margin-bottom: 14px;
     }
-
     .timeline-title {
         font-size: 1.45em;
         margin: 0 0 10px;
         color: #222;
     }
-
     .timeline-teaser {
         font-size: 0.97em;
         color: #555;
         line-height: 1.45;
         margin: 0 0 16px;
     }
-
     .btn-detail {
         background: #d4af37;
         color: #1a1a1a;
@@ -139,13 +121,10 @@
         cursor: pointer;
         transition: all 0.3s;
     }
-
     .btn-detail:hover {
         background: #b8972e;
         transform: scale(1.05);
     }
-
-    /* Год прикреплён к первой карточке — не трогаем твоё положение */
     .timeline-year {
         font-family: 'Playfair Display', serif;
         position: absolute;
@@ -162,7 +141,6 @@
         z-index: 3;
         text-shadow: 0 2px 6px rgba(0,0,0,0.5);
     }
-
     .nav-arrow {
         position: absolute;
         top: 50%;
@@ -180,16 +158,12 @@
         z-index: 10;
         transition: all 0.3s;
     }
-
     .nav-arrow:hover {
         background: rgba(0,0,0,0.8);
         transform: translateY(-50%) scale(1.1);
     }
-
-    .nav-arrow.left  { left: 10px; }
+    .nav-arrow.left { left: 10px; }
     .nav-arrow.right { right: 10px; }
-
-    /* Прогресс (опционально, можно удалить) */
     .timeline-progress {
         position: absolute;
         bottom: 15px;
@@ -201,247 +175,238 @@
         border-radius: 2px;
         overflow: hidden;
     }
-
     .progress-fill {
         height: 100%;
         width: 0%;
         background: #d4af37;
         transition: width 0.4s ease;
     }
-
-    /* ────────────────────────────── Новые стили для фич ────────────────────────────── */
-
-
-
     .timeline-item.nearest .timeline-content {
         border: 1px solid #d4af37;
     }
-
- 
-
     @media (max-width: 900px) {
         .timeline-item {
             margin: 0 20px;
             width: 320px;
             min-width: 320px;
         }
-        .timeline-item:nth-child(odd)  { margin-top: -120px; }
-        .timeline-item:nth-child(even) { margin-top:  80px; }
+        .timeline-item:nth-child(odd) { margin-top: -120px; }
+        .timeline-item:nth-child(even) { margin-top: 80px; }
         .timeline-year { font-size: 2.4em; right: -100px; }
     }
-
     @media (max-width: 600px) {
         .timeline-container { padding: 120px 0 80px; }
         .nav-arrow { display: none; }
-        .timeline-year { 
-            left: 20px; 
-            top: -60px; 
-            transform: none; 
-            font-size: 2.2em; 
+        .timeline-year {
+            left: 20px;
+            top: -60px;
+            transform: none;
+            font-size: 2.2em;
         }
         .timeline-progress { width: 90%; }
     }
-</style>
+  </style>
+</head>
+<body>
 
 <section class="castings-section">
     <h1>Пробы и кастинги</h1>
-
     <div class="timeline-container">
         <div class="timeline-line"></div>
-
         <div class="timeline-wrapper" id="timelineWrapper">
 
-            <!-- Первая карточка с годом — положение не трогаем -->
-            <div class="timeline-item" 
-                 data-name="Кастинг: Ромео и Джульетта" 
-                 data-date="15 октября 2025" 
-                 data-teaser="Ищем молодых актёров 18–25 лет на главные роли. Опыт не обязателен, важен огонь в глазах." 
-                 data-video="https://www.youtube.com/embed/dQw4w9WgXcQ" 
-                 data-desc="Полное описание кастинга: дата, время, место, что готовить, контакты для записи...">
-                <div class="timeline-dot"></div>
+            <!-- Карточка 1 -->
+            <div class="timeline-item"
+                data-name="Лисье Танго"
+                data-date="15 октября 2025"
+                data-teaser="Удивительная история про танец из детского спектакля «Зверский детектив», в который я влюбилась с первого взгляда."
+                data-description="Удивительная история про танец из детского спектакля «Зверский детектив», в который я влюбилась с первого взгляда. В оригинале Лисичка танцевала с Барсукотом – и это был совершенно очаровательный и забавный дуэт. Подумалось – а вдруг из этого может появиться нечто более… взрослое?
+Спрашиваю стажеров: «Сможете?» Без раздумий кивают. Оглядываюсь: «Где попробуем?» Скидывают сумки и куртки прямо на пол – и пробуют прямо в метро. Не сходя с места… 
+Танго снималось несколько раз – в концертном зале, в лесу под проливным дождем. 
+В этой творческой отваге было чудо. 
+На память остались эти кадры. "
+                data-video="https://rutube.ru/play/embed/65f7d0fc843441125fe06a41536de967/"
+            >
                 <div class="timeline-date">15 октября 2025</div>
                 <div class="timeline-content">
-                    <img src="/dist/images/castings/foxes_tango.JPG" alt="Thumbnail" class="timeline-thumbnail">
+                    <!-- iframe убрали -->
+                    <img src="/dist/images/castings/foxes_tango.JPG" alt="Лисье Танго" class="timeline-thumbnail">
                     <h3 class="timeline-title">Лисье Танго</h3>
-                    <p class="timeline-teaser">Удивительная история про танец из детского спектакля «Зверский детектив», в который я влюбилась с первого взгляда.</p>
+                    <p class="timeline-teaser">Удивительная история про танец...</p>
                     <button class="btn-detail">Подробнее</button>
                 </div>
             </div>
 
-            <div class="timeline-item" 
-                 data-name="Проба: Арбенин — Маскарад" 
-                 data-date="2 ноября 2025" 
-                 data-teaser="Требуется мужчина 30–45 лет с сильной дикцией и драматическим темпераментом." 
-                 data-video="https://www.youtube.com/embed/dQw4w9WgXcQ" 
-                 data-desc="Подробности: характер роли, реперные отрывки, дата и адрес пробы...">
-                <div class="timeline-dot"></div>
+
+            <!-- Карточка 2 -->
+            <div class="timeline-item"
+                 data-name="Шоу Скрипки"
+                 data-date="2 ноября 2025"
+                 data-teaser="Несколько симпатичных и заряженных молодых творцов – актеры, танцоры, музыканты – решили подать заявку на конкурс синтетического искусства во Франции."
+                 data-video="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                 data-description="
+Идея просто витала в воздухе. 
+Несколько симпатичных и заряженных молодых творцов – актеры, танцоры, музыканты – решили подать заявку на конкурс синтетического искусства во Франции. 
+Результат пока неизвестен, но сама идея осталась и вдохновила на продолжение. 
+Поедем ли в Париж – это вопрос. 
+Но нам хочется увидеть эту красоту на сцене. И мы знаем, как сказку сделать проектом.
+                 ">
                 <div class="timeline-date">2 ноября 2025</div>
                 <div class="timeline-content">
-                    <img src="/dist/images/castings/skripka.jpg" alt="Thumbnail" class="timeline-thumbnail">
+                    <img src="/dist/images/castings/skripka.jpg" alt="Шоу Скрипки" class="timeline-thumbnail">
                     <h3 class="timeline-title">Шоу Скрипки</h3>
-                    <p class="timeline-teaser">Несколько симпатичных и заряженных молодых творцов – актеры, танцоры, музыканты – решили подать заявку на конкурс синтетического искусства во Франции.</p>
+                    <p class="timeline-teaser">Несколько симпатичных и заряженных молодых творцов...</p>
                     <button class="btn-detail">Подробнее</button>
                 </div>
             </div>
 
-            <div class="timeline-item" 
-                 data-name="Открытый кастинг — Новая пьеса" 
-                 data-date="20 ноября 2025" 
-                 data-teaser="Приходите без подготовки. Берём всех желающих от 16 лет." 
-                 data-video="https://www.youtube.com/embed/dQw4w9WgXcQ" 
-                 data-desc="Свободный формат, много ролей второго плана, экспериментальный проект...">
-                <div class="timeline-dot"></div>
+            <!-- Карточка 3 -->
+            <div class="timeline-item"
+                 data-name="Комарово"
+                 data-date="20 ноября 2025"
+                 data-teaser="Летний отдых на природе – дело хорошее… для лентяев."
+                 data-video="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                 data-description="
+Летний отдых на природе – дело хорошее… для лентяев. 
+А для молодых актёров лето – это маленькая жизнь, наполненная творчеством, впечатлениями и приключениями. 
+Мы сняли домик в Комарово, где сам воздух пропитан вдохновением, где творили в своё время Ахматова и Бродский, братья Стругацкие и Шостакович…
+Солнечным утром мы успели позавтракать и порадоваться хорошей погоде. 
+Как только выдвинулись на съемки – начался (и потом только усиливался) дождь. 
+«Не сахарные, не растаем», - отважно решили актеры. 
+Планов были полные карманы:
+- научиться работать в границах кадра (а это очень непросто без опыта съемок);
+- попрактиковаться в записи актерских видеовизиток;
+- сделать подсъемку для портфолио.
+Успели – всё. 
+Устали – до дрожи в коленях. 
+Довольны – по самую макушку)
+                 ">
                 <div class="timeline-year">2025</div>
                 <div class="timeline-date">20 ноября 2025</div>
                 <div class="timeline-content">
-                    <img src="/dist/images/castings/komarovo.JPG" alt="Thumbnail" class="timeline-thumbnail">
+                    <img src="/dist/images/castings/komarovo.JPG" alt="Комарово" class="timeline-thumbnail">
                     <h3 class="timeline-title">Комарово</h3>
                     <p class="timeline-teaser">Летний отдых на природе – дело хорошее… для лентяев.</p>
                     <button class="btn-detail">Подробнее</button>
                 </div>
             </div>
 
-            <!-- новые карточки сюда -->
-
         </div>
 
         <div class="nav-arrow left" id="prev">←</div>
         <div class="nav-arrow right" id="next">→</div>
-
-        <!-- Прогресс-бар (можно удалить целиком, если не нужен) -->
         <div class="timeline-progress">
             <div class="progress-fill" id="progressFill"></div>
         </div>
     </div>
 </section>
 
-<!-- Модальное окно без изменений -->
-<div id="modal" class="modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; overflow:auto;">
+
+<!-- Модальное окно -->
+<div id="castings-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; overflow:auto;">
     <div style="background:white; margin:6% auto; padding:0; border-radius:12px; width:90%; max-width:760px; max-height:88vh; overflow-y:auto; position:relative; box-shadow:0 10px 40px rgba(0,0,0,0.5);">
-        <span id="closeModal" style="position:absolute; right:20px; top:10px; font-size:42px; color:#d4af37; cursor:pointer;">×</span>
+        <span class="close" style="position:absolute; right:20px; top:10px; font-size:42px; color:#d4af37; cursor:pointer;">×</span>
         <div style="padding:30px 40px; text-align:center;">
             <h2 id="modalTitle" style="margin:0 0 10px; color:#222;"></h2>
             <div id="modalDate" style="color:#d4af37; font-size:1.2em; margin-bottom:20px;"></div>
-            <iframe id="modalVideo" width="100%" height="420" frameborder="0" allowfullscreen style="border-radius:8px;"></iframe>
-            <p id="modalDesc" style="margin-top:25px; line-height:1.7; color:#444; font-size:1.05em;"></p>
+            
+            <!-- Важно: src пустой изначально + id для управления -->
+            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius:8px;">
+                <iframe 
+                    id="modalVideo" 
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+                    frameborder="0" 
+                    allowfullscreen 
+                    allow="clipboard-write; autoplay; encrypted-media; picture-in-picture">
+                </iframe>
+            </div>
+
+            <div id="modalDesc" style="margin-top:25px; line-height:1.7; color:#444; font-size:1.05em; text-align:left;"></div>
         </div>
     </div>
 </div>
 
 <script>
-// Появление элементов при скролле
-const items = document.querySelectorAll('.timeline-item');
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-        }
-    });
-}, { threshold: 0.2 });
-items.forEach(item => observer.observe(item));
+    // Появление элементов при скролле
+    const items = document.querySelectorAll('.timeline-item');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.2 });
+    items.forEach(item => observer.observe(item));
 
-// Навигация + прогресс
-const wrapper = document.getElementById('timelineWrapper');
-const prev = document.getElementById('prev');
-const next = document.getElementById('next');
-const progressFill = document.getElementById('progressFill');
+    // Навигация + прогресс
+    const wrapper = document.getElementById('timelineWrapper');
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+    const progressFill = document.getElementById('progressFill');
+    let scrollPos = 0;
+    const itemWidth = 360 + 60; // ширина карточки + margin
+    const maxScroll = (items.length - 1) * itemWidth;
 
-let scrollPos = 0;
-const itemWidth = 360 + 60;
-const maxScroll = (items.length - 1) * itemWidth;
+    function updateProgress() {
+        if (!progressFill) return;
+        const percent = Math.min(100, (scrollPos / maxScroll) * 100);
+        progressFill.style.width = `${percent}%`;
+    }
 
-function updateProgress() {
-    if (!progressFill) return;
-    const percent = Math.min(100, (scrollPos / maxScroll) * 100);
-    progressFill.style.width = `${percent}%`;
-}
-
-next?.addEventListener('click', () => {
-    scrollPos = Math.min(maxScroll, scrollPos + itemWidth);
-    wrapper.style.transform = `translateX(-${scrollPos}px)`;
-    updateProgress();
-});
-
-prev?.addEventListener('click', () => {
-    scrollPos = Math.max(0, scrollPos - itemWidth);
-    wrapper.style.transform = `translateX(-${scrollPos}px)`;
-    updateProgress();
-});
-
-updateProgress();
-
-// ──────────────── Центрирование карточки по клику ────────────────
-items.forEach((item, index) => {
-    item.addEventListener('click', (e) => {
-        // если кликнули по кнопке "Подробнее" — не центрируем
-        if (e.target.closest('.btn-detail')) return;
-
-        const container = document.querySelector('.timeline-container');
-        const containerWidth = container.offsetWidth;
-        const targetScroll = index * itemWidth - (containerWidth / 2 - itemWidth / 2) + 30;
-
-        scrollPos = Math.max(0, Math.min(maxScroll, targetScroll));
+    next?.addEventListener('click', () => {
+        scrollPos = Math.min(maxScroll, scrollPos + itemWidth);
         wrapper.style.transform = `translateX(-${scrollPos}px)`;
         updateProgress();
-    });
-});
-
-// ──────────────── Подсветка ближайшей карточки ────────────────
-function highlightNearestCard() {
-    if (!wrapper) return;
-
-    const container = document.querySelector('.timeline-container');
-    const containerRect = container.getBoundingClientRect();
-    const centerX = containerRect.left + containerRect.width / 2;
-
-    let closest = null;
-    let minDist = Infinity;
-
-    items.forEach(item => {
-        const rect = item.getBoundingClientRect();
-        const itemCenter = rect.left + rect.width / 2;
-        const dist = Math.abs(itemCenter - centerX);
-
-        if (dist < minDist) {
-            minDist = dist;
-            closest = item;
-        }
+        setTimeout(highlightNearestCard, 650);
     });
 
-    items.forEach(i => i.classList.remove('nearest'));
-    if (closest) closest.classList.add('nearest');
-}
-
-// обновляем при изменении положения
-window.addEventListener('resize', highlightNearestCard);
-['click', 'scroll'].forEach(ev => window.addEventListener(ev, highlightNearestCard));
-
-// запускаем после анимации стрелок и сразу
-next?.addEventListener('click', () => setTimeout(highlightNearestCard, 650));
-prev?.addEventListener('click', () => setTimeout(highlightNearestCard, 650));
-highlightNearestCard();
-
-// ──────────────── Модальное окно ────────────────
-document.querySelectorAll('.btn-detail').forEach(btn => {
-    btn.addEventListener('click', e => {
-        const item = e.target.closest('.timeline-item');
-        document.getElementById('modalTitle').textContent = item.dataset.name;
-        document.getElementById('modalDate').textContent = item.dataset.date;
-        document.getElementById('modalVideo').src = item.dataset.video;
-        document.getElementById('modalDesc').textContent = item.dataset.desc;
-        document.getElementById('modal').style.display = 'block';
+    prev?.addEventListener('click', () => {
+        scrollPos = Math.max(0, scrollPos - itemWidth);
+        wrapper.style.transform = `translateX(-${scrollPos}px)`;
+        updateProgress();
+        setTimeout(highlightNearestCard, 650);
     });
-});
 
-document.getElementById('closeModal')?.addEventListener('click', () => {
-    document.getElementById('modal').style.display = 'none';
-    document.getElementById('modalVideo').src = '';
-});
+    updateProgress();
 
-document.getElementById('modal')?.addEventListener('click', e => {
-    if (e.target === document.getElementById('modal')) {
-        document.getElementById('modal').style.display = 'none';
-        document.getElementById('modalVideo').src = '';
+    // Центрирование карточки по клику
+    items.forEach((item, index) => {
+        item.addEventListener('click', (e) => {
+            if (e.target.closest('.btn-detail')) return;
+            const container = document.querySelector('.timeline-container');
+            const containerWidth = container.offsetWidth;
+            const targetScroll = index * itemWidth - (containerWidth / 2 - itemWidth / 2) + 30;
+            scrollPos = Math.max(0, Math.min(maxScroll, targetScroll));
+            wrapper.style.transform = `translateX(-${scrollPos}px)`;
+            updateProgress();
+            setTimeout(highlightNearestCard, 650);
+        });
+    });
+
+    // Подсветка ближайшей карточки
+    function highlightNearestCard() {
+        if (!wrapper) return;
+        const container = document.querySelector('.timeline-container');
+        const containerRect = container.getBoundingClientRect();
+        const centerX = containerRect.left + containerRect.width / 2;
+        let closest = null;
+        let minDist = Infinity;
+        items.forEach(item => {
+            const rect = item.getBoundingClientRect();
+            const itemCenter = rect.left + rect.width / 2;
+            const dist = Math.abs(itemCenter - centerX);
+            if (dist < minDist) {
+                minDist = dist;
+                closest = item;
+            }
+        });
+        items.forEach(i => i.classList.remove('nearest'));
+        if (closest) closest.classList.add('nearest');
     }
-});
+
+    window.addEventListener('resize', highlightNearestCard);
+    ['click', 'scroll'].forEach(ev => window.addEventListener(ev, highlightNearestCard));
+    next?.addEventListener('click', () => setTimeout(highlightNearestCard, 650));
+    prev?.addEventListener('click', () => setTimeout(highlightNearestCard, 650));
+    highlightNearestCard();
 </script>

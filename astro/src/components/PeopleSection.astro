@@ -200,7 +200,7 @@
 </section>
 
 <!-- Модальное окно (одно на всю страницу) -->
-<div id="modal" class="modal">
+<div id="people-modal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
         <div class="modal-header">
@@ -211,26 +211,3 @@
     </div>
 </div>
 
-<script is:inline>
-    // Открытие модального окна
-    document.querySelectorAll('.person-card').forEach(card => {
-        card.addEventListener('click', () => {
-            document.getElementById('modal-name').textContent = card.dataset.name;
-            document.getElementById('modal-role').textContent = card.dataset.role;
-            document.getElementById('modal-bio').innerHTML = card.dataset.bio;
-            document.getElementById('modal').style.display = 'block';
-        });
-    });
-
-    // Закрытие модального окна
-    document.querySelector('.close').addEventListener('click', () => {
-        document.getElementById('modal').style.display = 'none';
-    });
-
-    // Закрытие по клику вне окна
-    window.addEventListener('click', (e) => {
-        if (e.target === document.getElementById('modal')) {
-            document.getElementById('modal').style.display = 'none';
-        }
-    });
-</script>
