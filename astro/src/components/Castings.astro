@@ -34,6 +34,9 @@
         position: relative;
         overflow: hidden;
         padding: 140px 0 100px;
+        -webkit-overflow-scrolling: touch;   
+        scrollbar-width: none;                
+        -ms-overflow-style: none;             
     }
     .timeline-wrapper {
         display: flex;
@@ -41,7 +44,7 @@
         width: max-content;
         position: relative;
         will-change: transform;
-    touch-action: pan-x;
+        touch-action: pan-x;
     }
     .timeline-line {
         position: absolute;
@@ -284,8 +287,6 @@
         }
     }
   </style>
-</head>
-<body>
 
 <section class="castings-section">
     <h1>Пробы и кастинги</h1>
@@ -303,11 +304,10 @@
 Танго снималось несколько раз – в концертном зале, в лесу под проливным дождем. 
 В этой творческой отваге было чудо. 
 На память остались эти кадры. "
-                data-video="https://vk.com/video_ext.php?oid=-235880171&id=456239020&hash=bdc3fec7167b7a38"
+                data-video="https://vk.com/video-235880171_456239018?list=ln-oAkjfLCqUQTYzCzwoH"
             >
                 <div class="timeline-date">15 октября 2025</div>
                 <div class="timeline-content">
-                    <!-- iframe убрали -->
                     <img src="/dist/images/castings/foxes_tango.JPG" alt="Лисье Танго" class="timeline-thumbnail">
                     <h3 class="timeline-title">Лисье Танго</h3>
                     <p class="timeline-teaser">Удивительная история про танец...</p>
@@ -321,7 +321,7 @@
                  data-name="Шоу Скрипки"
                  data-date="2 ноября 2025"
                  data-teaser="Несколько симпатичных и заряженных молодых творцов – актеры, танцоры, музыканты – решили подать заявку на конкурс синтетического искусства во Франции."
-                 data-video="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                 data-video="https://vk.com/video_ext.php?oid=-235880171&id=456239020&hash=bdc3fec7167b7a38"
                  data-description="
 Идея просто витала в воздухе. 
 Несколько симпатичных и заряженных молодых творцов – актеры, танцоры, музыканты – решили подать заявку на конкурс синтетического искусства во Франции. 
@@ -343,7 +343,7 @@
                  data-name="Комарово"
                  data-date="20 ноября 2025"
                  data-teaser="Летний отдых на природе – дело хорошее… для лентяев."
-                 data-video="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                 data-video="https://vk.com/video_ext.php?oid=-235880171&id=456239020&hash=bdc3fec7167b7a38"
                  data-description="
 Летний отдых на природе – дело хорошее… для лентяев. 
 А для молодых актёров лето – это маленькая жизнь, наполненная творчеством, впечатлениями и приключениями. 
@@ -450,17 +450,22 @@
     // Центрирование карточки по клику
     items.forEach((item, index) => {
         item.addEventListener('click', (e) => {
+            // Если нажали на кнопку «Подробнее» — ничего не делаем здесь
             if (e.target.closest('.btn-detail')) return;
-            const container = document.querySelector('.timeline-container');
-            const containerWidth = container.offsetWidth;
-            const targetScroll = index * itemWidth - (containerWidth / 2 - itemWidth / 2) + 30;
-            scrollPos = Math.max(0, Math.min(maxScroll, targetScroll));
-            wrapper.style.transform = `translateX(-${scrollPos}px)`;
-            updateProgress();
-            setTimeout(highlightNearestCard, 650);
+
+            // Проверяем ширину экрана
+            if (window.innerWidth > 900) {           // ← только на десктопе центрируем
+                const container = document.querySelector('.timeline-container');
+                const containerWidth = container.offsetWidth;
+                const targetScroll = index * itemWidth - (containerWidth / 2 - itemWidth / 2) + 30;
+                scrollPos = Math.max(0, Math.min(maxScroll, targetScroll));
+                wrapper.style.transform = `translateX(-${scrollPos}px)`;
+                updateProgress();
+                setTimeout(highlightNearestCard, 650);
+            }
+            // на мобильных — просто игнорируем клик по карточке (кроме кнопки)
         });
     });
-
     // Подсветка ближайшей карточки
     function highlightNearestCard() {
         if (!wrapper) return;

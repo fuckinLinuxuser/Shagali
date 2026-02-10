@@ -1,8 +1,14 @@
 // tours-interactive.js
+
 document.addEventListener('DOMContentLoaded', () => {
+  console.log("Скрипт запустился — время:", new Date().toLocaleTimeString());
+
   const dots = document.querySelectorAll('.city-dot');
   const popover = document.getElementById('tour-popover');
   const mapContainer = document.querySelector('.map-container');
+
+  console.log("Точек найдено:", dots.length);
+  console.log("popover по getElementById:", popover);
 
   if (!popover || !mapContainer) {
     console.warn('Popover или map-container не найдены');
@@ -11,13 +17,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const closeBtn = popover.querySelector('.popover-close');
 
-  // Данные будущих гастролей
+  // ────────────────────────────────────────────────
+  // Данные спектаклей и городов (без изменений)
+  // ────────────────────────────────────────────────
   const showsData = {
     "Скрипичное Шоу": {
       title: "Скрипичное Шоу",
       desc: "Виртуозное сочетание музыки и драмы. Билеты от 1500 руб.",
       img: "/images/projects/skripka-show.jpg",
-      link: "#" // ← замени на реальную ссылку
+      link: "#" 
     },
     "Родной Мой Кукушонок": {
       title: "Родной Мой Кукушонок",
@@ -39,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Связь data-city → название спектакля
   const cityToShow = {
     moscow:     "Скрипичное Шоу",
     spb:        "Мамочка, Купи Собаку",
@@ -47,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
     novosib:    "Неделя Испании",
   };
 
-  // Данные для уже состоявшихся гастролей
   const visitedCitiesData = {
     vladivostok: {
       title: "Спасибо, Владивосток!",
@@ -57,6 +63,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // ────────────────────────────────────────────────
+  // Функции popover (без изменений)
+  // ────────────────────────────────────────────────
   function hidePopover() {
     popover.classList.remove('visible', 'arrow-top', 'arrow-bottom', 'visited-mode');
     popover.querySelector('.popover-btn').style.display = 'block';
@@ -66,33 +75,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const containerRect = mapContainer.getBoundingClientRect();
     const triggerRect   = triggerElement.getBoundingClientRect();
 
-    // Берём актуальные размеры уже видимого поповера
-    const pw = popover.offsetWidth  || 280;   // fallback, если 0
-    const ph = popover.offsetHeight || 240;   // fallback
+    const pw = popover.offsetWidth  || 280;
+    const ph = popover.offsetHeight || 240;
 
-    const PADDING       = 16;
-    const ARROW_GAP     = 12;
+    const PADDING    = 16;
+    const ARROW_GAP  = 12;
 
-    // Базовая позиция — сверху по центру
     let x = triggerRect.left - containerRect.left + (triggerRect.width / 2) - (pw / 2);
     let y = triggerRect.top  - containerRect.top  - ph - ARROW_GAP;
 
     let arrow = 'bottom';
 
-    // Горизонтальная корректировка
-    x = Math.max(PADDING, x);
-    x = Math.min(x, containerRect.width - pw - PADDING);
+    x = Math.max(PADDING, Math.min(x, containerRect.width - pw - PADDING));
 
-    // Вертикальная: если сверху не влезает → показываем снизу
     if (y < PADDING) {
-        y = triggerRect.bottom - containerRect.top + ARROW_GAP;
-        arrow = 'top';
+      y = triggerRect.bottom - containerRect.top + ARROW_GAP;
+      arrow = 'top';
     }
 
-    // Дополнительная защита: если и снизу не влезает — хотя бы не улетать сильно вниз
     if (y + ph > containerRect.height - PADDING) {
-        y = containerRect.height - ph - PADDING;
-        // Можно здесь оставить arrow='top' или добавить логику бокового позиционирования позже
+      y = containerRect.height - ph - PADDING;
     }
 
     popover.style.left = `${x}px`;
@@ -105,22 +107,16 @@ document.addEventListener('DOMContentLoaded', () => {
   function showPopoverForCity(cityDot) {
     const cityKey = cityDot.dataset.city;
 
-    // Сбрасываем состояние
     popover.classList.remove('visited-mode');
 
-    // 1. Посещённый город
     if (visitedCitiesData[cityKey]) {
       const data = visitedCitiesData[cityKey];
-
       popover.querySelector('.popover-title').textContent = data.title;
       popover.querySelector('.popover-desc').textContent = data.comment;
       popover.querySelector('.popover-img').src = data.img;
       popover.querySelector('.popover-btn').style.display = 'none';
-
       popover.classList.add('visited-mode');
-    }
-    // 2. Будущая гастроль
-    else {
+    } else {
       const showName = cityToShow[cityKey];
       if (!showName || !showsData[showName]) {
         hidePopover();
@@ -128,7 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const show = showsData[showName];
-
       popover.querySelector('.popover-title').textContent = show.title;
       popover.querySelector('.popover-desc').textContent = show.desc;
       popover.querySelector('.popover-img').src = show.img;
@@ -136,31 +131,41 @@ document.addEventListener('DOMContentLoaded', () => {
       popover.querySelector('.popover-btn').style.display = 'block';
     }
 
-    // Показываем и позиционируем
     popover.classList.add('visible');
-    // Даём браузеру отрендерить размеры
+
+    // Даём браузеру время на расчёт размеров после visible
     requestAnimationFrame(() => {
       positionPopover(cityDot);
     });
   }
 
-  // События
-  dots.forEach(dot => {
-    dot.addEventListener('click', () => showPopoverForCity(dot));
+  // ────────────────────────────────────────────────
+  // Клик по точкам (делегирование через svg)
+  // ────────────────────────────────────────────────
+  const svg = document.querySelector('.map-container svg');
 
-    // Для мобильных устройств
-    dot.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      showPopoverForCity(dot);
+  if (svg) {
+    svg.addEventListener('click', (e) => {
+      const dot = e.target.closest('.city-dot');
+      if (dot) {
+        showPopoverForCity(dot);
+      }
+    });
+
+    svg.addEventListener('touchstart', (e) => {
+      const dot = e.target.closest('.city-dot');
+      if (dot) {
+        e.preventDefault();
+        showPopoverForCity(dot);
+      }
     }, { passive: false });
-  });
+  }
 
-  // Закрытие
+  // Закрытие поповера
   if (closeBtn) {
     closeBtn.addEventListener('click', hidePopover);
   }
 
-  // Клик вне поповера и точек → закрыть
   document.addEventListener('click', (e) => {
     if (
       !popover.contains(e.target) &&
@@ -169,4 +174,60 @@ document.addEventListener('DOMContentLoaded', () => {
       hidePopover();
     }
   });
+
+  // ────────────────────────────────────────────────
+  // svg-pan-zoom ТОЛЬКО НА МОБИЛЬНЫХ
+  // ────────────────────────────────────────────────
+  if (typeof svgPanZoom !== 'undefined' && svg) {
+    const isMobile = window.innerWidth <= 1024;  // можно изменить порог: 768, 900, 1024...
+
+    if (isMobile) {
+      try {
+        const panZoom = svgPanZoom(svg, {
+          zoomEnabled:            true,
+          panEnabled:             true,
+          controlIconsEnabled:    false,       // ← никаких кнопок + / -
+          fit:                    1,
+          center:                 true,
+          dblClickZoomEnabled:    false,       // двойной тап → не зумить
+          mouseWheelZoomEnabled:  false,       // колёсико мыши не влияет (на моб. не актуально)
+          minZoom:                0.6,
+          maxZoom:                8,
+          zoomScaleSensitivity:   0.65,
+
+          // Прячем поповер при любом изменении вида (чтобы не висел в странном месте)
+          beforeZoom: function() {
+            if (popover.classList.contains('visible')) {
+              hidePopover();
+            }
+            return true;
+          },
+          beforePan: function() {
+            if (popover.classList.contains('visible')) {
+              hidePopover();
+            }
+            return true;
+          }
+        });
+
+        console.log("svg-pan-zoom активирован только для мобильных устройств");
+
+        // Опционально: ресайз окна → проверяем заново
+        window.addEventListener('resize', () => {
+          const nowMobile = window.innerWidth <= 1024;
+          if (nowMobile !== isMobile) {
+            // Если перешли с моб. на десктоп или обратно — можно destroy / re-init
+            // но для простоты оставляем как есть (библиотека не сильно мешает на десктопе)
+          }
+        });
+
+      } catch (err) {
+        console.error("Ошибка при запуске svg-pan-zoom:", err);
+      }
+    } else {
+      console.log("Десктоп: svg-pan-zoom отключён");
+    }
+  } else {
+    console.warn("svgPanZoom не загружен или SVG не найден");
+  }
 });
