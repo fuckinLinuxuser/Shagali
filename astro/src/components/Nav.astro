@@ -1,55 +1,59 @@
 ---
 // src/components/Nav.astro
-
-// Если в будущем захочешь сделать активный пункт меню — можно будет передать currentPage
 const { currentPage = '' } = Astro.props;
 ---
 
 <nav class="nav">
-  <ul>
+  <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+
+  <label for="menu-toggle" class="hamburger" aria-label="Открыть меню">
+    <span></span>
+  </label>
+
+  <ul class="nav-list">
     <li>
-      <a 
-        href="#projects" 
-        class:list={{ active: currentPage === 'projects' }}
+      <a
+        href="#projects"
+        class:list={{ active: currentPage === 'hero-slider swiper' }}
       >
         Проекты
       </a>
     </li>
     <li>
-      <a 
-        href="#people" 
+      <a
+        href="#people"
         class:list={{ active: currentPage === 'people' }}
       >
         Люди
       </a>
     </li>
     <li>
-      <a 
-        href="#tours" 
+      <a
+        href="#tours"
         class:list={{ active: currentPage === 'tours' }}
       >
         Гастроли
       </a>
     </li>
     <li>
-      <a 
-        href="#collaboration" 
+      <a
+        href="#collaboration"
         class:list={{ active: currentPage === 'collaboration' }}
       >
         Сотрудничество
       </a>
     </li>
     <li>
-      <a 
-        href="#opportunities" 
+      <a
+        href="#opportunities"
         class:list={{ active: currentPage === 'opportunities' }}
       >
         Возможности
       </a>
     </li>
     <li>
-      <a 
-        href="#blog" 
+      <a
+        href="#blog"
         class:list={{ active: currentPage === 'blog' }}
       >
         Блог
@@ -58,3 +62,137 @@ const { currentPage = '' } = Astro.props;
   </ul>
 </nav>
 
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    background: #121212;
+    padding: 12px 20px;
+    box-sizing: border-box;
+  }
+
+  .nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .nav-list a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.05rem;
+    padding: 8px 4px;
+    transition: color 0.28s ease;
+  }
+
+  .nav-list a:hover,
+  .nav-list a.active {
+    color: #d4af37;   /* ваш золотой цвет из других компонентов */
+  }
+
+  /* ────────────────────────────────────────
+     Гамбургер + мобильное меню
+  ──────────────────────────────────────── */
+  .menu-toggle {
+    display: none;
+  }
+
+  .hamburger {
+    display: none;
+    position: relative;
+    width: 34px;
+    height: 16px;
+    cursor: pointer;
+    z-index: 1100;
+  }
+
+  .hamburger span,
+  .hamburger span::before,
+  .hamburger span::after {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 3.2px;
+    background: #ffffff;
+    border-radius: 2px;
+    transition: all 0.32s ease;
+  }
+
+  .hamburger span {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .hamburger span::before {
+    content: '';
+    top: -10px;
+  }
+
+  .hamburger span::after {
+    content: '';
+    top: -10px;
+  }
+
+  /* крестик */
+  .menu-toggle:checked + .hamburger span {
+    background: transparent;
+  }
+
+  .menu-toggle:checked + .hamburger span::before {
+    top: 0;
+    transform: rotate(45deg);
+  }
+
+  .menu-toggle:checked + .hamburger span::after {
+    top: 0;
+    transform: rotate(-45deg);
+  }
+
+  /* мобильное поведение */
+  @media (max-width: 768px) {
+    .hamburger {
+      display: block;
+    }
+
+    .nav-list {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #121212;
+      padding: 24px 20px;
+      border-bottom: 1px solid #333;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    }
+
+    .menu-toggle:checked ~ .nav-list {
+      display: flex;
+    }
+
+    .nav-list a {
+      font-size: 1.18rem;
+      padding: 0px 0;
+      display: block;
+      text-align: center;
+    }
+
+    .nav {
+      padding: 14px 20px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .nav-list a {
+      font-size: 1.1rem;
+    }
+  }
+</style>

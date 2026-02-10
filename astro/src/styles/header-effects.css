@@ -106,3 +106,10 @@
     margin: 0 auto;
     color: #ccc;
 }
+
+@media (max-width: 768px) {
+    .producer-photo {
+        width: 250px;
+        height: 250px;
+    }
+}
