@@ -6,6 +6,7 @@ import '../styles/header-effects.css';
 import '../styles/components.css';
 import '../styles/layout.css';
 import '../styles/map.css';
+import 'leaflet/dist/leaflet.css';
 
 import 'keen-slider/keen-slider.min.css';
 
@@ -14,7 +15,7 @@ import 'keen-slider/keen-slider.min.css';
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=10.0, user-scalable=yes">
   <title>{title}</title>
 
   <!-- шрифты -->
@@ -23,7 +24,9 @@ import 'keen-slider/keen-slider.min.css';
 
 <body>
   <slot />                  <!-- здесь будет весь контент страницы -->
-
+  <script>
+    import L from 'leaflet';
+  </script>
   <!-- глобальный скрипт карты -->
   <script src="/js/tours-interactive.js" is:inline></script>
   <script src="/js/modal.js" is:inline></script>

@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const mapContainer = document.querySelector('.map-container');
 
   console.log("Точек найдено:", dots.length);
-  console.log("popover по getElementById:", popover);
+  console.log("popover:", popover ? "найден" : "НЕ НАЙДЕН");
 
   if (!popover || !mapContainer) {
     console.warn('Popover или map-container не найдены');
@@ -18,14 +18,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeBtn = popover.querySelector('.popover-close');
 
   // ────────────────────────────────────────────────
-  // Данные спектаклей и городов (без изменений)
+  // Данные спектаклей и городов
   // ────────────────────────────────────────────────
   const showsData = {
     "Скрипичное Шоу": {
       title: "Скрипичное Шоу",
       desc: "Виртуозное сочетание музыки и драмы. Билеты от 1500 руб.",
       img: "/images/projects/skripka-show.jpg",
-      link: "#" 
+      link: "#"
     },
     "Родной Мой Кукушонок": {
       title: "Родной Мой Кукушонок",
@@ -61,14 +61,16 @@ document.addEventListener('DOMContentLoaded', () => {
       img: "/dist/images/cities/vladivostok.jpg",
       type: "visited"
     }
+    // добавляй другие города сюда
   };
 
   // ────────────────────────────────────────────────
-  // Функции popover (без изменений)
+  // Функции popover
   // ────────────────────────────────────────────────
   function hidePopover() {
     popover.classList.remove('visible', 'arrow-top', 'arrow-bottom', 'visited-mode');
-    popover.querySelector('.popover-btn').style.display = 'block';
+    const btn = popover.querySelector('.popover-btn');
+    if (btn) btn.style.display = 'block';
   }
 
   function positionPopover(triggerElement) {
@@ -127,20 +129,22 @@ document.addEventListener('DOMContentLoaded', () => {
       popover.querySelector('.popover-title').textContent = show.title;
       popover.querySelector('.popover-desc').textContent = show.desc;
       popover.querySelector('.popover-img').src = show.img;
-      popover.querySelector('.popover-btn').href = show.link;
-      popover.querySelector('.popover-btn').style.display = 'block';
+      const btn = popover.querySelector('.popover-btn');
+      if (btn) {
+        btn.href = show.link;
+        btn.style.display = 'block';
+      }
     }
 
     popover.classList.add('visible');
 
-    // Даём браузеру время на расчёт размеров после visible
     requestAnimationFrame(() => {
       positionPopover(cityDot);
     });
   }
 
   // ────────────────────────────────────────────────
-  // Клик по точкам (делегирование через svg)
+  // События кликов/тапов по точкам
   // ────────────────────────────────────────────────
   const svg = document.querySelector('.map-container svg');
 
@@ -176,58 +180,52 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ────────────────────────────────────────────────
-  // svg-pan-zoom ТОЛЬКО НА МОБИЛЬНЫХ
+  // Panzoom от timmywil — pinch + pan на мобильных
   // ────────────────────────────────────────────────
-  if (typeof svgPanZoom !== 'undefined' && svg) {
-    const isMobile = window.innerWidth <= 1024;  // можно изменить порог: 768, 900, 1024...
+  if (svg) {
+    const isMobile = 
+      /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+      window.innerWidth <= 1024;
 
     if (isMobile) {
       try {
-        const panZoom = svgPanZoom(svg, {
-          zoomEnabled:            true,
-          panEnabled:             true,
-          controlIconsEnabled:    false,       // ← никаких кнопок + / -
-          fit:                    1,
-          center:                 true,
-          dblClickZoomEnabled:    false,       // двойной тап → не зумить
-          mouseWheelZoomEnabled:  false,       // колёсико мыши не влияет (на моб. не актуально)
-          minZoom:                0.6,
-          maxZoom:                8,
-          zoomScaleSensitivity:   0.65,
+        import('@panzoom/panzoom').then(({ default: Panzoom }) => {
+          const panzoomInstance = Panzoom(svg, {
+            maxZoom: 12,
+            minZoom: 0.3,
+            zoomSpeed: 0.065,           // плавность зума
+            animate: true,
+            duration: 200,
+            easing: 'ease-out',
+            touchAction: 'auto',        // пусть CSS управляет
+            contain: 'inside',          // не улетать за границы
+            noPanOnDblClick: true,      // отключаем dblclick pan
+            focal: true                 // зум от центра жеста
+          });
 
-          // Прячем поповер при любом изменении вида (чтобы не висел в странном месте)
-          beforeZoom: function() {
-            if (popover.classList.contains('visible')) {
+          // Скрываем поповер при любом жесте
+          mapContainer.addEventListener('pointerdown', (e) => {
+            if (popover.classList.contains('visible') && !popover.contains(e.target)) {
               hidePopover();
             }
-            return true;
-          },
-          beforePan: function() {
-            if (popover.classList.contains('visible')) {
-              hidePopover();
-            }
-            return true;
-          }
-        });
+          }, { passive: true });
 
-        console.log("svg-pan-zoom активирован только для мобильных устройств");
+          // Опционально: отключить зум колёсиком на десктопе, если нужно
+          // panzoomInstance.zoomIn = () => {}; // пример отключения
 
-        // Опционально: ресайз окна → проверяем заново
-        window.addEventListener('resize', () => {
-          const nowMobile = window.innerWidth <= 1024;
-          if (nowMobile !== isMobile) {
-            // Если перешли с моб. на десктоп или обратно — можно destroy / re-init
-            // но для простоты оставляем как есть (библиотека не сильно мешает на десктопе)
-          }
+          console.log("Panzoom (timmywil) успешно запущен — pinch должен работать");
+
+        }).catch(err => {
+          console.error("Ошибка динамического импорта Panzoom:", err);
         });
 
       } catch (err) {
-        console.error("Ошибка при запуске svg-pan-zoom:", err);
+        console.error("Ошибка инициализации Panzoom:", err);
       }
     } else {
-      console.log("Десктоп: svg-pan-zoom отключён");
+      console.log("Десктоп — Panzoom не включается");
     }
   } else {
-    console.warn("svgPanZoom не загружен или SVG не найден");
+    console.warn("SVG-элемент не найден");
   }
 });
