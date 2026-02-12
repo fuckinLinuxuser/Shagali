@@ -1,0 +1,280 @@
+---
+// src/pages/waitlist.astro  или src/pages/лист-ожидания.astro
+
+import Layout from '../layouts/MainLayout.astro'; // если у вас есть общий layout
+
+const title = "Лист ожидания — Гастроли и выступления";
+const description = "Запишитесь в лист ожидания, чтобы первыми узнать о точных датах, городах и купить билеты на выступления.";
+---
+
+<Layout title={title} description={description}>
+  <section class="section waitlist">
+    <div class="container">
+      <div class="hero">
+        <h1>Станьте частью первых</h1>
+        <p class="lead">
+          Запишитесь в лист ожидания — сообщим вам о датах гастролей 2026–2027 раньше всех и дадим приоритет на покупку билетов.
+        </p>
+      </div>
+
+      <div class="waitlist-card">
+        <div class="counter">
+        </div>
+
+        <form class="waitlist-form" id="waitlist-form">
+          <div class="form-group">
+            <label for="name">Имя</label>
+            <input type="text" id="name" name="name" placeholder="Как к вам обращаться?" required />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Ваш основной email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="city">Желаемый город</label>
+            <input type="text" id="city" name="city" placeholder="Например: Екатеринбург, Новосибирск…" />
+          </div>
+
+          <div class="form-group">
+            <label for="project">Интересующий проект / спектакль</label>
+            <textarea id="project" name="project" rows="2" placeholder="Можно указать несколько или оставить пустым"></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary">Записаться в лист ожидания</button>
+        </form>
+
+        <p class="privacy">
+          Мы ценим вашу приватность. Данные используются только для уведомлений о гастролях.
+        </p>
+      </div>
+
+      <div class="benefits">
+        <h2>Что вы получите, записавшись</h2>
+        <div class="benefits-grid">
+          <div class="benefit-item">
+            <span class="icon">🔔</span>
+            <p>Первыми узнаете точные даты и города</p>
+          </div>
+          <div class="benefit-item">
+            <span class="icon">🎟️</span>
+            <p>Приоритетный доступ к билетам (без очереди)</p>
+          </div>
+          <div class="benefit-item">
+            <span class="icon">✉️</span>
+            <p>Эксклюзивные анонсы и бонусы для участников</p>
+          </div>
+          <div class="benefit-item">
+            <span class="icon">❤️</span>
+            <p>Возможность повлиять на выбор городов</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Можно добавить блок с картой или отзывами позже -->
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .section.waitlist {
+    padding: 8rem 1rem 10rem;
+    background: linear-gradient(180deg, #0f0f0a 0%, #14120d 100%);
+    min-height: 100vh;
+  }
+
+  .hero {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 4rem;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.2rem, 7vw, 5.5rem);
+    color: #f5f0e6;
+    margin-bottom: 1.2rem;
+    line-height: 1.1;
+  }
+
+  .lead {
+    font-size: 1.38rem;
+    color: #e0d9cc;
+    line-height: 1.6;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .waitlist-card {
+    background: rgba(28, 26, 22, 0.75);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    border: 1px solid rgba(212, 175, 87, 0.15);
+    box-shadow: 0 16px 60px rgba(0,0,0,0.5);
+    padding: 5rem 2.5rem;
+    max-width: 680px;
+    margin: 0 auto 6rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .counter {
+    position: absolute;
+    top: -2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #d4af57;
+    color: #0f0f0a;
+    padding: 1rem 1.8rem;
+    border-radius: 50px;
+    font-weight: 700;
+    box-shadow: 0 8px 30px rgba(212, 175, 87, 0.4);
+    white-space: nowrap;
+  }
+
+  .number {
+    font-size: 1.8rem;
+  }
+
+  .label {
+    font-size: 1rem;
+    margin-left: 0.6rem;
+    opacity: 0.9;
+  }
+
+  .waitlist-form {
+    display: grid;
+    gap: 1.4rem;
+    margin: 2.5rem 0 1.5rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  label {
+    color: #d4af57;
+    font-weight: 500;
+    font-size: 1.05rem;
+  }
+
+  input, textarea {
+    background: rgba(40, 38, 34, 0.7);
+    border: 1px solid rgba(212, 175, 87, 0.25);
+    border-radius: 10px;
+    padding: 1rem 1.3rem;
+    color: #f5f0e6;
+    font-size: 1.05rem;
+    transition: all 0.3s;
+  }
+
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: #d4af57;
+    box-shadow: 0 0 0 3px rgba(212, 175, 87, 0.15);
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #d4af57, #e8c97c);
+    color: #0f0f0a;
+    border: none;
+    padding: 1.2rem 2.5rem;
+    border-radius: 50px;
+    font-size: 1.22rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 50px rgba(212, 175, 87, 0.45);
+  }
+
+  .privacy {
+    text-align: center;
+    color: #a89f8f;
+    font-size: 0.95rem;
+    margin-top: 1.5rem;
+  }
+
+  .benefits {
+    max-width: 960px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .benefits h2 {
+    font-size: 2.4rem;
+    color: #f5f0e6;
+    margin-bottom: 3rem;
+  }
+
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+  }
+
+  .benefit-item {
+    background: rgba(30, 28, 24, 0.6);
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    border: 1px solid rgba(212, 175, 87, 0.12);
+  }
+
+  .icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 1.2rem;
+  }
+
+  .benefit-item p {
+    font-size: 1.15rem;
+    color: #e0d9cc;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 768px) {
+    .section.waitlist {
+      padding: 6rem 1rem 8rem;
+    }
+
+    h1 {
+      font-size: clamp(2.8rem, 8vw, 4.5rem);
+    }
+
+    .waitlist-card {
+      padding: 3.5rem 1.8rem 2.5rem;
+    }
+
+    .counter {
+      top: -2rem;
+      padding: 0.9rem 1.6rem;
+      font-size: 1.4rem;
+    }
+  }
+</style>
+
+<script>
+  // Простой пример отправки формы (замените на реальный backend / API)
+  document.getElementById('waitlist-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+
+    // Здесь можно отправить на сервер (например fetch('/api/waitlist', {method: 'POST', body: data}))
+    alert('Спасибо! Вы успешно записаны в лист ожидания. Скоро свяжемся ❤️');
+
+    form.reset();
+  });
+</script>

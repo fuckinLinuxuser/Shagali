@@ -1,211 +1,366 @@
 ---
 // src/pages/collaboration.astro
-// или src/pages/usloviya-sotrudnichestva.astro — как вам удобнее назвать
 ---
 
 <!DOCTYPE html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Условия сотрудничества | Мир За Сценой</title>
-    <!-- здесь ваши мета-теги, favicon, шрифты и т.д. -->
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Условия сотрудничества | Мир За Сценой</title>
+  <!-- Подключите ваши шрифты (Playfair Display + sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
 
-  <body>
-    <!-- здесь ваш header / навигация, если нужно -->
+<body>
+  <main class="main-content">
+    <section class="collaboration-hero">
+      <div class="container">
+        <h1 class="page-title">Условия сотрудничества</h1>
+        <p class="lead">
+          Мы собираем <span class="gold">соавторов</span>,<br>
+          которые готовы гореть на сцене жизни вместе с нами.
+        </p>
+      </div>
+    </section>
 
-    <main>
-      <section class="section collaboration">
-        <div class="container">
-          <h2>Условия сотрудничества</h2>
-          <p class="lead">
-            Мы ищем не просто исполнителей.<br />
-            Мы ищем <strong>соавторов</strong> — тех, кто готов гореть вместе с нами.
-          </p>
-
-          <div class="principles-grid">
-            <div class="principle-card">
-              <div class="number">01</div>
-              <h3>Только из любви и кайфа</h3>
-              <p>Работаем исключительно в зоне удовольствия. Если начнём задыхаться — уйдём делать это в другом месте. Здесь — только огонь.</p>
-            </div>
-
-            <div class="principle-card">
-              <div class="number">02</div>
-              <h3>Масштабно или никак</h3>
-              <p>Обычными мы успеем побыть всегда. Здесь мы делаем ярко, крупно, навсегда. Полутонов не держим.</p>
-            </div>
-
-            <div class="principle-card">
-              <div class="number">03</div>
-              <h3>Создаём из себя</h3>
-              <p>Настоящее рождается только внутри. Всё остальное — декорации. Поэтому честность с собой — главный инструмент.</p>
-            </div>
-
-            <div class="principle-card">
-              <div class="number">04</div>
-              <h3>Бог не меняет талант на деньги</h3>
-              <p>Он всегда требует большего. Мы помним об этом каждый день. И платим вперёд — качеством, дисциплиной, отдачей.</p>
-            </div>
-
-            <div class="principle-card">
-              <div class="number">05</div>
-              <h3>Случайности — это язык</h3>
-              <p>Мы видим знаки, ловим совпадения и строим из них маленькие чудеса. Волшебство — это работа с вниманием.</p>
-            </div>
-
-            <div class="principle-card">
-              <div class="number">06</div>
-              <h3>Все вокруг становятся Великими</h3>
-              <p>Потому что изначально ими и являются. Наша задача — просто помочь это вспомнить.</p>
-            </div>
-
-            <div class="principle-card highlight">
-              <div class="number">07</div>
-              <h3>Успеем ровно столько, сколько захотим</h3>
-              <p>Поделимся всем, что есть. Возьмём ровно столько, сколько полагается по законам справедливости и таланта.</p>
-            </div>
+    <section class="principles-section">
+      <div class="container">
+        <div class="principles-grid">
+          <div class="principle-card">
+            <div class="card-glow"></div>
+            <h3>Только из любви и кайфа</h3>
+            <p>Если нет внутреннего огня — мы уходим. Здесь место только для тех, кто дышит этим.</p>
           </div>
 
-          <div class="contract-block">
-            <h3>Что фиксируем в контракте</h3>
-            <ul class="contract-list">
-              <li>Полный <strong>отказ от алкоголя и любых веществ</strong> на время действия контракта</li>
-              <li>Уважительное общение. Коллегиальное обсуждение. Решающее слово — у продюсера</li>
-              <li>Все непонимания решаем <strong>лично, прямо и уважительно</strong></li>
-              <li>График строится с учётом ваших приоритетов, но в интересах проекта</li>
-            </ul>
+          <div class="principle-card">
+            <div class="card-glow"></div>
+            <h3>Масштабно или никак</h3>
+            <p>Полутонов не держим. Либо делаем историю, о которой будут говорить десятилетиями, либо не делаем вообще.</p>
+          </div>
 
-            <div class="for-actors">
-              <h4>Для актёров — дополнительно:</h4>
-              <ul>
-                <li>Ответственное отношение к внешности (рабочий вес, причёска, образ)</li>
-                <li>Готовность к глубокой самостоятельной работе над ролью</li>
-                <li>Дисциплина как проявление уважения (без опозданий, выполненные домашние задания)</li>
+          <div class="principle-card">
+            <div class="card-glow"></div>
+            <h3>Создаём из себя</h3>
+            <p>Честность с собой — единственный инструмент, который не ломается со временем.</p>
+          </div>
+
+          <div class="principle-card">
+            <div class="card-glow"></div>
+            <h3>Талант дороже денег</h3>
+            <p>Мы платим вперёд — качеством, дисциплиной, полной отдачей. Вселенная всегда возвращает с процентами.</p>
+          </div>
+
+          <div class="principle-card">
+            <div class="card-glow"></div>
+            <h3>Случайности — это язык</h3>
+            <p>Мы слушаем знаки, ловим синхронии и превращаем их в маленькие чудеса на сцене.</p>
+          </div>
+
+          <div class="principle-card">
+            <div class="card-glow"></div>
+            <h3>Все уже Великие</h3>
+            <p>Наша работа — не сделать из человека звезду, а помочь ему вспомнить, что он ею уже является.</p>
+          </div>
+
+          <div class="principle-card highlight">
+            <div class="card-glow"></div>
+            <h3>Успеем ровно столько, сколько захотим</h3>
+            <p>Поделимся всем. Возьмём ровно столько, сколько положено по законам таланта и справедливости.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contract-section">
+      <div class="container">
+        <div class="contract-frame">
+          <h2 class="contract-title">Что фиксируем в контракте</h2>
+
+          <div class="contract-grid">
+            <div class="contract-column">
+              <ul class="contract-list">
+                <li>Полный отказ от алкоголя и любых веществ на весь период проекта</li>
+                <li>Уважительное, коллегиальное общение. Решающее слово — у продюсера</li>
+                <li>Все конфликты и недопонимания решаем лично, прямо и с уважением</li>
+                <li>График формируется с учётом ваших приоритетов, но в интересах общей картины</li>
+              </ul>
+            </div>
+
+            <div class="contract-column actors">
+              <h3>Для актёров — дополнительно</h3>
+              <ul class="contract-list">
+                <li>Ответственное отношение к внешности (вес, причёска, образ)</li>
+                <li>Глубокая самостоятельная работа над ролью</li>
+                <li>Дисциплина как высшая форма уважения к партнёрам и зрителю</li>
               </ul>
             </div>
           </div>
-
-          <div class="cta-wrapper">
-            <p class="cta-text">Готовы создавать вместе нечто большее, чем просто спектакль?</p>
-            <a href="#feedback" class="btn-primary">Оставить заявку</a>
-          </div>
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
 
-    <!-- здесь ваш footer -->
+    <section class="cta-section">
+      <div class="container">
+        <p class="cta-text">Готовы выйти на сцену?</p>
+        <a href="#feedback" class="btn-cta">Оставить заявку</a>
+      </div>
+    </section>
+  </main>
 
-    <style>
-  .collaboration-teaser {
-    background: linear-gradient(135deg, #0f0f0a 0%, #1a1a12 100%);
-    color: #f5f0e6;
-    padding: 120px 0 140px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .collaboration-teaser::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 80% 20%, rgba(212,175,87,0.06) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .container {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 24px;
-    text-align: center;
-  }
-
-  h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 3.8rem;
-    font-weight: 700;
-    color: #d4af57;
-    margin-bottom: 1.8rem;
-    letter-spacing: 1px;
-    text-shadow: 0 4px 20px rgba(0,0,0,0.5);
-  }
-
-  .teaser-content {
-    max-width: 780px;
-    margin: 0 auto;
-  }
-
-  .lead {
-    font-size: 1.55rem;
-    line-height: 1.6;
-    color: #d9d2c6;
-    font-weight: 300;
-    margin-bottom: 1.8rem;
-  }
-
-  .lead strong {
-    color: #d4af57;
-  }
-
-  .teaser-subtitle {
-    font-size: 1.28rem;
-    line-height: 1.65;
-    color: #c9c0b3;
-    margin-bottom: 3rem;
-    font-style: italic;
-  }
-
-  .btn-primary {
-    display: inline-block;
-    background: #d4af57;
-    color: #0f0f0a;
-    padding: 16px 52px;
-    border-radius: 50px;
-    font-size: 1.22rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.35s ease;
-    box-shadow: 0 8px 30px rgba(212,175,87,0.28);
-  }
-
-  .btn-primary:hover {
-    background: #e6c678;
-    transform: translateY(-4px);
-    box-shadow: 0 16px 50px rgba(212,175,87,0.45);
-  }
-
-  @media (max-width: 768px) {
-    .collaboration-teaser {
-      padding: 80px 0 100px;
+  <style is:global>
+    :root {
+      --bg: #0a0a07;
+      --dark: #11110c;
+      --gold: #d4af57;
+      --gold-light: #e6c678;
+      --gold-dark: #b8972e;
+      --text: #f5f0e6;
+      --text-light: #d9d2c6;
+      --text-muted: #a89f8f;
     }
 
-    h2 {
-      font-size: 2.8rem;
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    /* Hero */
+    .collaboration-hero {
+      padding: 160px 0 120px;
+      text-align: center;
+      background: linear-gradient(to bottom, #0f0f0a, #0a0a07);
+    }
+
+    .page-title {
+      font-size: 5.2rem;
+      margin: 0 0 1.4rem;
+      letter-spacing: 1.5px;
+      text-shadow: 0 6px 40px rgba(212,175,87,0.18);
     }
 
     .lead {
-      font-size: 1.32rem;
+      font-size: 1.68rem;
+      max-width: 820px;
+      margin: 0 auto;
+      color: var(--text-light);
+      font-weight: 300;
     }
 
-    .teaser-subtitle {
-      font-size: 1.15rem;
+    .gold {
+      color: var(--gold);
+      font-weight: 600;
     }
 
-    .btn-primary {
-      padding: 14px 40px;
+    /* Principles */
+    .principles-section {
+      padding: 80px 0 140px;
+    }
+
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 40px;
+    }
+
+    .principle-card {
+      position: relative;
+      background: rgba(20,18,14,0.78);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(212,175,87,0.12);
+      border-radius: 20px;
+      padding: 48px 40px 40px;
+      transition: all 0.45s ease;
+      overflow: hidden;
+    }
+
+    .principle-card:hover {
+      transform: translateY(-14px);
+      border-color: rgba(212,175,87,0.45);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.55),
+                  0 0 0 1px rgba(212,175,87,0.18) inset;
+    }
+
+    .card-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 20%, rgba(212,175,87,0.07) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      pointer-events: none;
+    }
+
+    .principle-card:hover .card-glow { opacity: 1; }
+
+    .card-glow.strong {
+      background: radial-gradient(circle at 50% 50%, rgba(212,175,87,0.14) 0%, transparent 70%);
+    }
+
+    .principle-card h3 {
+      font-size: 1.95rem;
+      margin: 0 0 1.1em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .principle-card p {
       font-size: 1.08rem;
+      color: var(--text-muted);
+      margin: 0;
+      position: relative;
+      z-index: 1;
     }
-  }
 
-  @media (max-width: 480px) {
-    h2 {
-      font-size: 2.4rem;
+    .highlight {
+      border-color: var(--gold);
+      background: linear-gradient(145deg, rgba(30,26,20,0.92), rgba(18,16,12,0.92));
+      transform: scale(1.04);
     }
-    .lead {
-      font-size: 1.18rem;
+
+    .highlight h3 { color: var(--gold-light); }
+
+    /* Contract */
+    .contract-section {
+      padding: 80px 0 140px;
+      background: linear-gradient(to bottom, #0a0a07, #11110c);
     }
-  }
-</style>
-  </body>
+
+    .contract-frame {
+      background: rgba(15,13,9,0.7);
+      border: 1px solid rgba(212,175,87,0.22);
+      border-radius: 24px;
+      padding: 60px 48px;
+      max-width: 1100px;
+      margin: 0 auto;
+      box-shadow: 0 20px 80px rgba(0,0,0,0.6);
+    }
+
+    .contract-title {
+      font-size: 3.2rem;
+      text-align: center;
+      margin: 0 0 2.5rem;
+      letter-spacing: 1.2px;
+    }
+
+    .contract-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+    }
+
+    .contract-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 1.12rem;
+      line-height: 1.8;
+      color: var(--text-light);
+    }
+
+    .contract-list li {
+      position: relative;
+      padding-left: 2.2em;
+      margin-bottom: 1.1em;
+    }
+
+    .contract-list li::before {
+      content: '✦';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-size: 1.3em;
+      line-height: 1;
+    }
+
+    .actors h3 {
+      font-size: 1.65rem;
+      color: var(--gold-light);
+      margin: 0 0 1.4em;
+    }
+
+    /* CTA */
+    .cta-section {
+      padding: 140px 0 180px;
+      text-align: center;
+      background: linear-gradient(180deg, #11110c 0%, #0a0a07 100%);
+    }
+
+    .cta-text {
+      font-size: 2.1rem;
+      font-family: 'Playfair Display', serif;
+      color: var(--text-light);
+      margin-bottom: 2.5rem;
+    }
+
+    .btn-cta {
+      display: inline-block;
+      background: var(--gold);
+      color: #0a0a07;
+      padding: 18px 64px;
+      border-radius: 60px;
+      font-size: 1.32rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.4s ease;
+      box-shadow: 0 12px 40px rgba(212,175,87,0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.7s ease;
+    }
+
+    .btn-cta:hover::before {
+      transform: translateX(100%);
+    }
+
+    .btn-cta:hover {
+      background: var(--gold-light);
+      transform: translateY(-5px);
+      box-shadow: 0 24px 70px rgba(212,175,87,0.5);
+    }
+
+    /* Адаптив */
+    @media (max-width: 1024px) {
+      .principles-grid { gap: 32px; }
+      .contract-grid { grid-template-columns: 1fr; gap: 48px; }
+    }
+
+    @media (max-width: 768px) {
+      .page-title        { font-size: 3.8rem; }
+      .lead              { font-size: 1.38rem; }
+      .principle-card    { padding: 40px 28px; }
+      .contract-frame    { padding: 48px 32px; }
+      .btn-cta           { padding: 16px 48px; font-size: 1.18rem; }
+    }
+
+    @media (max-width: 480px) {
+      .page-title        { font-size: 2.9rem; }
+      .lead              { font-size: 1.22rem; }
+    }
+  </style>
+</body>
 </html>
