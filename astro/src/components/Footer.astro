@@ -2,35 +2,118 @@
 // src/components/Footer.astro
 
 const currentYear = new Date().getFullYear();
-const producerName = "Мир За Сценой";
-const email = "info@mirzasce.ru";
+const producer = "Мир За Сценой";
+const owner = "Елена Шагали";
+const ownerEmail = "info@mirzasce.ru";
+const dev = "Роман Самотуга";
+const devEmail = "samotuga621@gmail.com";      // ← замени на реальный email
 ---
 
 <footer class="footer">
   <div class="container">
-    <div class="footer-content">
+    <div class="footer-inner">
+
       <p class="copyright">
-        © {currentYear} {producerName}. Все права защищены.
+        © {currentYear} {producer} • Все права защищены
+      </p>
+
+      <p class="credits">
+        Продюсер: 
+        <a href={`mailto:${ownerEmail}`} class="person-link">{owner}</a>
+         • 
+        Сайт: 
+        <a href={`mailto:${devEmail}`} class="person-link">{dev}</a>
       </p>
 
       <div class="footer-links">
-        <a href="mailto:{email}" class="footer-link">
-          Связаться с продюсером
-        </a>
-        <span class="separator">•</span>
-        <a href="#projects" class="footer-link">
-          Проекты
-        </a>
-        <span class="separator">•</span>
-        <a href="#tours" class="footer-link">
-          Гастроли
-        </a>
+        <a href={`mailto:${ownerEmail}`} class="footer-link">Связаться</a>
+        <span class="sep">•</span>
+        <a href="#projects" class="footer-link">Проекты</a>
+        <span class="sep">•</span>
+        <a href="#tours" class="footer-link">Гастроли</a>
       </div>
 
-      <p class="made-with">
-        С любовью к театру • Сделано в {currentYear}
-      </p>
     </div>
   </div>
 </footer>
 
+<style>
+  .footer {
+    background: #1a1a1a;
+    color: #aaa;
+    font-size: 0.9rem;
+    padding: 32px 0 24px;
+    text-align: center;
+    border-top: 1px solid #333;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .copyright {
+    margin: 0;
+    color: #ccc;
+    font-weight: 500;
+  }
+
+  .credits {
+    margin: 4px 0 0;
+    color: #888;
+  }
+
+  .person-link {
+    color: #d4af37;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .person-link:hover,
+  .person-link:focus {
+    color: #ecc96b;
+    text-decoration: underline;
+  }
+
+  .footer-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 4px;
+  }
+
+  .footer-link {
+    color: #bbb;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-link:hover {
+    color: #d4af37;
+  }
+
+  .sep {
+    color: #555;
+    user-select: none;
+  }
+
+  @media (max-width: 480px) {
+    .footer {
+      padding: 28px 0 20px;
+      font-size: 0.85rem;
+    }
+    .footer-links {
+      flex-wrap: wrap;
+      gap: 8px 14px;
+    }
+  }
+</style>
