@@ -102,14 +102,38 @@
       </div>
     </section>
 
-    <section class="cta-section">
+<section class="cta-section">
       <div class="container">
         <p class="cta-text">Готовы выйти на сцену?</p>
-        <a href="#feedback" class="btn-cta">Оставить заявку</a>
+        <button type="button" class="btn-cta js-open-modal">Оставить заявку</button>
       </div>
     </section>
+
   </main>
 
+  <!-- ─── Модальное окно ─────────────────────────────────────────────── -->
+  <div class="modal-overlay js-modal-overlay" aria-hidden="true">
+    <div class="modal js-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      
+      <button class="modal-close js-close-modal" aria-label="Закрыть">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+
+      <h2 id="modal-title" class="modal-title">Оставить заявку</h2>
+      <p class="modal-subtitle">Мы свяжемся с вами в ближайшее время</p>
+
+      <iframe 
+        src="https://forms.yandex.ru/u/698ed4466d2d7366e0a9f973?iframe=1&theme=light" 
+        frameborder="0" 
+        name="ya-form-frame"
+        class="ya-form-iframe"
+        title="Форма заявки"
+      ></iframe>
+
+    </div>
+  </div>
   <style is:global>
     :root {
       --bg: #0a0a07;
@@ -361,6 +385,141 @@
       .page-title        { font-size: 2.9rem; }
       .lead              { font-size: 1.22rem; }
     }
+    /* Модалка */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--modal-bg);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+      z-index: 9999;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      position: relative;
+      width: 92%;
+      max-width: 860px;
+      max-height: 94vh;
+      background: var(--modal-glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(212,175,87,0.18);
+      border-radius: 24px;
+      box-shadow: 0 30px 100px rgba(0,0,0,0.7),
+                  0 0 0 1px rgba(212,175,87,0.12) inset;
+      padding: 48px 32px 40px;
+      overflow-y: auto;
+      transform: scale(0.92);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .modal-overlay.active .modal {
+      transform: scale(1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      transition: all 0.25s ease;
+      line-height: 1;
+    }
+
+    .modal-close:hover,
+    .modal-close:focus {
+      color: var(--gold-light);
+      background: rgba(212,175,87,0.12);
+      transform: rotate(90deg);
+    }
+
+    .modal-title {
+      font-size: 2.6rem;
+      text-align: center;
+      margin: 0 0 0.8rem;
+      color: var(--gold);
+      font-family: 'Playfair Display', serif;
+    }
+
+    .modal-subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      margin: 0 0 2.2rem;
+      font-size: 1.12rem;
+    }
+
+    .ya-form-iframe {
+      width: 100%;
+      height: 68vh;
+      min-height: 520px;
+      border-radius: 16px;
+      background: rgb(225, 216, 204);
+    }
+
+    /* Адаптив для модалки */
+    @media (max-width: 640px) {
+      .modal {
+        padding: 40px 20px 32px;
+        border-radius: 20px;
+      }
+      .modal-title { font-size: 2.1rem; }
+      .modal-close { top: 16px; right: 16px; }
+      .ya-form-iframe { min-height: 480px; }
+    }
+
+    @media (max-height: 680px) {
+      .ya-form-iframe { height: 52vh; min-height: 420px; }
+    }
   </style>
+
+  <!-- ─── JavaScript ─────────────────────────────────────────────────── -->
+  <script>
+    const openBtn  = document.querySelector('.js-open-modal');
+    const overlay  = document.querySelector('.js-modal-overlay');
+    const modal    = document.querySelector('.js-modal');
+    const closeBtn = document.querySelector('.js-close-modal');
+
+    function openModal() {
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      closeBtn.focus();
+    }
+
+    function closeModal() {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+      openBtn.focus();
+    }
+
+    openBtn?.addEventListener('click', openModal);
+    closeBtn?.addEventListener('click', closeModal);
+
+    // Закрытие по клику на фон
+    overlay?.addEventListener('click', e => {
+      if (e.target === overlay) closeModal();
+    });
+
+    // Закрытие по Escape
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && overlay.classList.contains('active')) {
+        closeModal();
+      }
+    });
+  </script>
 </body>
 </html>

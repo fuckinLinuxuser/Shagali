@@ -44,7 +44,7 @@
 
 .city-label {
   font-family: 'Roboto', system-ui, sans-serif;
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 600;
   fill: #ffeb3b;
   stroke: #000000;
@@ -58,7 +58,7 @@
 
 @media (max-width: 768px) {
   .city-label {
-    font-size: 12px;
+    font-size: 24px;
   }
 }
 
