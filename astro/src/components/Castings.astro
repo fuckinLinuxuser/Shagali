@@ -6,14 +6,12 @@
         margin: 0;
         padding: 0;
     }
-
     .castings-section {
         max-width: 1400px;
         margin: 60px auto;
         padding: 0 20px;
         text-align: center;
     }
-
     .castings-section h1 {
         font-size: 2.8em;
         margin-bottom: 50px;
@@ -22,7 +20,6 @@
         letter-spacing: 3px;
         position: relative;
     }
-
     .castings-section h1::after {
         content: '';
         width: 140px;
@@ -33,29 +30,23 @@
         left: 50%;
         transform: translateX(-50%);
     }
-
     .timeline-container {
         position: relative;
         overflow: hidden;
-        padding: 140px 60px 100px;   /* ← увеличены боковые паддинги под стрелки */
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
+        padding: 140px 0 100px;
+        -webkit-overflow-scrolling: touch;   
+        scrollbar-width: none;                
+        -ms-overflow-style: none;    
+        touch-action: auto;         
     }
-
-    .timeline-container::-webkit-scrollbar {
-        display: none;
-    }
-
     .timeline-wrapper {
         display: flex;
         transition: transform 0.6s ease-out;
         width: max-content;
         position: relative;
         will-change: transform;
-        touch-action: pan-x;
+        touch-action: auto;
     }
-
     .timeline-line {
         position: absolute;
         top: 50%;
@@ -67,74 +58,6 @@
         transform: translateY(-50%);
         z-index: 0;
     }
-
-    /* ================== СТРЕЛКИ ================== */
-    .nav-arrow {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 64px;
-        height: 64px;
-        background: rgba(0, 0, 0, 0.55);
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.2rem;
-        font-weight: bold;
-        cursor: pointer;
-        z-index: 15;
-        transition: all 0.25s ease;
-        user-select: none;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-
-    .nav-arrow:hover {
-        background: rgba(212, 175, 55, 0.85);
-        transform: translateY(-50%) scale(1.12);
-        box-shadow: 0 6px 20px rgba(212,175,55,0.5);
-    }
-
-    .nav-arrow:active {
-        transform: translateY(-50%) scale(0.94);
-    }
-
-    .nav-arrow.left  { left: 15px; }
-    .nav-arrow.right { right: 15px; }
-
-    /* Мобильная адаптация стрелок */
-    @media (max-width: 700px) {
-        .nav-arrow {
-            width: 54px;
-            height: 54px;
-            font-size: 1.9rem;
-            background: rgba(0, 0, 0, 0.45);
-        }
-
-        .nav-arrow:hover {
-            background: rgba(212, 175, 55, 0.75);
-        }
-
-        .timeline-container {
-            padding: 120px 50px 90px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .nav-arrow {
-            width: 48px;
-            height: 48px;
-            font-size: 1.7rem;
-        }
-
-        .timeline-container {
-            padding: 100px 40px 80px;
-        }
-    }
-
-    /* ================== остальные стили (без изменений) ================== */
-
     .timeline-item {
         position: relative;
         width: 360px;
@@ -146,15 +69,12 @@
         transition: opacity 0.8s ease, transform 0.8s ease, box-shadow 0.4s ease;
         z-index: 2;
     }
-
     .timeline-item.visible {
         opacity: 1;
         transform: translateY(0);
     }
-
-    .timeline-item:nth-child(odd)  { margin-top: -140px; }
+    .timeline-item:nth-child(odd) { margin-top: -140px; }
     .timeline-item:nth-child(even) { margin-top: 100px; }
-
     .timeline-date {
         font-size: 1.1em;
         font-weight: bold;
@@ -166,7 +86,6 @@
         border-radius: 20px;
         display: inline-block;
     }
-
     .timeline-content {
         background: white;
         border-radius: 12px;
@@ -175,13 +94,11 @@
         transition: all 0.4s ease;
         cursor: pointer;
     }
-
     .timeline-content:hover {
         transform: translateY(-8px);
         box-shadow: 0 12px 28px rgba(0,0,0,0.18);
         border: 1px solid #d4af37;
     }
-
     .timeline-thumbnail {
         width: 100%;
         height: 180px;
@@ -189,20 +106,17 @@
         border-radius: 8px;
         margin-bottom: 14px;
     }
-
     .timeline-title {
         font-size: 1.45em;
         margin: 0 0 10px;
         color: #222;
     }
-
     .timeline-teaser {
         font-size: 0.97em;
         color: #555;
         line-height: 1.45;
         margin: 0 0 16px;
     }
-
     .btn-detail {
         background: #d4af37;
         color: #1a1a1a;
@@ -213,13 +127,72 @@
         cursor: pointer;
         transition: all 0.3s;
     }
-
     .btn-detail:hover {
         background: #b8972e;
         transform: scale(1.05);
     }
+    .timeline-year {
+        font-family: 'Playfair Display', serif;
+        position: absolute;
+        right: -160px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 3.2em;
+        font-weight: bold;
+        color: #2a2500;
+        opacity: 0.75;
+        letter-spacing: 4px;
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: 3;
+        text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    }
+    .nav-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0,0,0,0.5);
+        color: white;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8em;
+        cursor: pointer;
+        z-index: 10;
+        transition: all 0.3s;
+    }
+    .nav-arrow:hover {
+        background: rgba(0,0,0,0.8);
+        transform: translateY(-50%) scale(1.1);
+    }
+    .nav-arrow.left { left: 10px; }
+    .nav-arrow.right { right: 10px; }
+    .timeline-progress {
+        position: absolute;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 70%;
+        height: 3px;
+        background: rgba(212,175,55,0.2);
+        border-radius: 2px;
+        overflow: hidden;
+    }
+    .progress-fill {
+        height: 100%;
+        width: 0%;
+        background: #d4af37;
+        transition: width 0.4s ease;
+    }
+    .timeline-item.nearest .timeline-content {
+        border: 1px solid #d4af37;
+    }
+    /* ... все предыдущие стили остаются до медиа-запросов ... */
 
-    /* Медиа-запросы (можно оставить как было) */
+    /* Десктоп / планшет */
     @media (max-width: 900px) {
         .timeline-item {
             width: 300px;
@@ -228,21 +201,93 @@
         }
         .timeline-item:nth-child(odd)  { margin-top: -110px; }
         .timeline-item:nth-child(even) { margin-top:  90px; }
+        .timeline-thumbnail {
+            height: 160px;
+        }
+        .timeline-title {
+            font-size: 1.35em;
+        }
+        .timeline-teaser {
+            font-size: 0.94em;
+        }
     }
 
+    /* Мобильные — карточки меньше + удобнее для пальца */
     @media (max-width: 600px) {
         .timeline-container {
-            padding: 100px 50px 70px;
+            padding: 100px 0 70px;
+            overflow-x: auto;                    /* разрешаем горизонтальный скролл */
+            -webkit-overflow-scrolling: touch;   /* плавный скролл на iOS */
+            scroll-snap-type: x mandatory;       /* опционально — магнит к карточке */
         }
+
+        .timeline-wrapper {
+            padding: 0 20px;                     /* отступы по бокам, чтобы первая/последняя карточка не прижималась к краю */
+        }
+
         .timeline-item {
             width: 280px;
             min-width: 280px;
-            margin: 0 14px;
+            margin: 0 12px;                      /* уменьшаем расстояние между карточками */
         }
+
         .timeline-item:nth-child(odd)  { margin-top: -80px; }
         .timeline-item:nth-child(even) { margin-top:  70px; }
+
+        .timeline-thumbnail {
+            height: 140px;                       /* фото поменьше */
+        }
+
+        .timeline-title {
+            font-size: 1.28em;
+            margin-bottom: 8px;
+        }
+
+        .timeline-teaser {
+            font-size: 0.92em;
+            line-height: 1.4;
+        }
+
+        .timeline-date {
+            font-size: 1em;
+            padding: 5px 12px;
+        }
+
+        .btn-detail {
+            padding: 9px 18px;
+            font-size: 0.95em;
+        }
+
+        /* убираем боковые стрелки — они не нужны при свайпе */
+        .nav-arrow {
+            display: none !important;
+        }
+
+        /* центрируем прогресс-бар и делаем его шире */
+        .timeline-progress {
+            width: 85%;
+        }
+
+        /* год — компактнее */
+        .timeline-year {
+            font-size: 1.9em;
+            left: 16px;
+            top: -50px;
+        }
     }
-</style>
+
+    /* Очень маленькие экраны */
+    @media (max-width: 400px) {
+        .timeline-item {
+            width: 260px;
+            min-width: 260px;
+            margin: 0 10px;
+        }
+        .timeline-thumbnail {
+            height: 130px;
+        }
+    }
+  </style>
 
 <section class="castings-section">
     <h1>Пробы и кастинги</h1>
