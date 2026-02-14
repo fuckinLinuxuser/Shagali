@@ -1,3 +1,6 @@
+---
+---
+
 <style>
     body {
         font-family: 'Arial', sans-serif;
@@ -6,12 +9,14 @@
         margin: 0;
         padding: 0;
     }
+
     .castings-section {
         max-width: 1400px;
         margin: 60px auto;
         padding: 0 20px;
         text-align: center;
     }
+
     .castings-section h1 {
         font-size: 2.8em;
         margin-bottom: 50px;
@@ -20,6 +25,7 @@
         letter-spacing: 3px;
         position: relative;
     }
+
     .castings-section h1::after {
         content: '';
         width: 140px;
@@ -30,34 +36,70 @@
         left: 50%;
         transform: translateX(-50%);
     }
+
     .timeline-container {
         position: relative;
         overflow: hidden;
-        padding: 140px 0 100px;
-        -webkit-overflow-scrolling: touch;   
-        scrollbar-width: none;                
-        -ms-overflow-style: none;    
-        touch-action: auto;         
+        padding: 140px 80px 120px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
     }
+
+    .timeline-container::-webkit-scrollbar {
+        display: none;
+    }
+
     .timeline-wrapper {
         display: flex;
-        transition: transform 0.6s ease-out;
+        transition: transform 0.65s ease-out;
         width: max-content;
-        position: relative;
         will-change: transform;
-        touch-action: auto;
+        touch-action: pan-x;
     }
+
     .timeline-line {
         position: absolute;
         top: 50%;
-        left: 0;
-        right: 0;
+        left: 60px;
+        right: 60px;
         height: 5px;
         background: linear-gradient(to right, #d4af37, #b8972e, #d4af37);
-        box-shadow: 0 1px 6px rgba(212,175,55,0.3);
         transform: translateY(-50%);
         z-index: 0;
     }
+
+    .nav-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 64px;
+        height: 64px;
+        background: rgba(0,0,0,0.6);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.4rem;
+        cursor: pointer;
+        z-index: 20;
+        transition: all 0.25s ease;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    }
+
+    .nav-arrow:hover {
+        background: #d4af37;
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    .nav-arrow:active {
+        transform: translateY(-50%) scale(0.96);
+    }
+
+    .nav-arrow.left  { left: 20px; }
+    .nav-arrow.right { right: 20px; }
+
     .timeline-item {
         position: relative;
         width: 360px;
@@ -65,40 +107,45 @@
         margin: 0 30px;
         text-align: center;
         opacity: 0;
-        transform: translateY(30px);
-        transition: opacity 0.8s ease, transform 0.8s ease, box-shadow 0.4s ease;
+        transform: translateY(40px);
+        transition: all 0.8s ease;
         z-index: 2;
     }
+
     .timeline-item.visible {
         opacity: 1;
         transform: translateY(0);
     }
-    .timeline-item:nth-child(odd) { margin-top: -140px; }
+
+    .timeline-item:nth-child(odd)  { margin-top: -140px; }
     .timeline-item:nth-child(even) { margin-top: 100px; }
+
     .timeline-date {
         font-size: 1.1em;
         font-weight: bold;
-        color: #d4af37;
-        margin-bottom: 12px;
-        background: rgba(0,0,0,0.7);
         color: white;
-        padding: 6px 14px;
+        background: rgba(0,0,0,0.75);
+        padding: 6px 16px;
         border-radius: 20px;
         display: inline-block;
+        margin-bottom: 12px;
     }
+
     .timeline-content {
         background: white;
         border-radius: 12px;
         padding: 20px;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         transition: all 0.4s ease;
         cursor: pointer;
     }
+
     .timeline-content:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+        transform: translateY(-10px);
+        box-shadow: 0 14px 32px rgba(0,0,0,0.2);
         border: 1px solid #d4af37;
     }
+
     .timeline-thumbnail {
         width: 100%;
         height: 180px;
@@ -106,206 +153,169 @@
         border-radius: 8px;
         margin-bottom: 14px;
     }
-    .timeline-title {
-        font-size: 1.45em;
-        margin: 0 0 10px;
-        color: #222;
-    }
-    .timeline-teaser {
-        font-size: 0.97em;
-        color: #555;
-        line-height: 1.45;
-        margin: 0 0 16px;
-    }
+
     .btn-detail {
         background: #d4af37;
         color: #1a1a1a;
         border: none;
-        padding: 10px 20px;
-        border-radius: 25px;
+        padding: 10px 24px;
+        border-radius: 30px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s;
     }
+
     .btn-detail:hover {
         background: #b8972e;
-        transform: scale(1.05);
+        transform: scale(1.06);
     }
-    .timeline-year {
-        font-family: 'Playfair Display', serif;
-        position: absolute;
-        right: -160px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 3.2em;
-        font-weight: bold;
-        color: #2a2500;
-        opacity: 0.75;
-        letter-spacing: 4px;
-        white-space: nowrap;
-        pointer-events: none;
-        z-index: 3;
-        text-shadow: 0 2px 6px rgba(0,0,0,0.5);
-    }
-    .nav-arrow {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(0,0,0,0.5);
-        color: white;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.8em;
-        cursor: pointer;
-        z-index: 10;
-        transition: all 0.3s;
-    }
-    .nav-arrow:hover {
-        background: rgba(0,0,0,0.8);
-        transform: translateY(-50%) scale(1.1);
-    }
-    .nav-arrow.left { left: 10px; }
-    .nav-arrow.right { right: 10px; }
+
     .timeline-progress {
         position: absolute;
-        bottom: 15px;
+        bottom: 30px;
         left: 50%;
         transform: translateX(-50%);
-        width: 70%;
-        height: 3px;
-        background: rgba(212,175,55,0.2);
-        border-radius: 2px;
+        width: 240px;
+        height: 5px;
+        background: rgba(0,0,0,0.25);
+        border-radius: 3px;
         overflow: hidden;
     }
+
     .progress-fill {
         height: 100%;
-        width: 0%;
         background: #d4af37;
-        transition: width 0.4s ease;
+        width: 0;
+        transition: width 0.65s ease-out;
     }
-    .timeline-item.nearest .timeline-content {
-        border: 1px solid #d4af37;
-    }
-    /* ... все предыдущие стили остаются до медиа-запросов ... */
 
-    /* Десктоп / планшет */
+    .timeline-item.nearest {
+        box-shadow: 0 0 0 4px #d4af37 !important;
+        transform: scale(1.04) !important;
+        z-index: 5;
+    }
+
+    /* ─────────────── МОДАЛЬНОЕ ОКНО ─────────────── */
+    #castings-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.88);
+        z-index: 2000;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        overflow: auto;
+    }
+
+    #castings-modal .modal-content {
+        background: white;
+        border-radius: 16px;
+        max-width: 820px;
+        width: 100%;
+        max-height: 92vh;
+        overflow-y: auto;
+        position: relative;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        margin: auto;
+    }
+
+    #castings-modal .close {
+        position: absolute;
+        right: 24px;
+        top: 16px;
+        font-size: 48px;
+        color: #d4af37;
+        cursor: pointer;
+        z-index: 10;
+    }
+
+    #modal-body {
+        padding: 40px 50px 50px;
+        text-align: center;
+    }
+
+    #modalTitle {
+        margin: 0 0 8px;
+        font-size: 2.1em;
+        color: #222;
+    }
+
+    #modalDate {
+        color: #d4af37;
+        font-size: 1.3em;
+        margin-bottom: 24px;
+    }
+
+    #modalVideoContainer {
+        position: relative;
+        padding-bottom: 56.25%;
+        height: 0;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #000;
+        margin: 20px 0 32px;
+    }
+
+    #modalVideo {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    #modalDesc {
+        text-align: left;
+        line-height: 1.7;
+        color: #444;
+        font-size: 1.08em;
+        white-space: pre-wrap;
+    }
+
+    /* Адаптив */
     @media (max-width: 900px) {
         .timeline-item {
             width: 300px;
             min-width: 300px;
-            margin: 0 18px;
+            margin: 0 20px;
         }
         .timeline-item:nth-child(odd)  { margin-top: -110px; }
-        .timeline-item:nth-child(even) { margin-top:  90px; }
-        .timeline-thumbnail {
-            height: 160px;
-        }
-        .timeline-title {
-            font-size: 1.35em;
-        }
-        .timeline-teaser {
-            font-size: 0.94em;
+        .timeline-item:nth-child(even) { margin-top:  80px; }
+        #modal-body {
+            padding: 30px 30px 40px;
         }
     }
 
-    /* Мобильные — карточки меньше + удобнее для пальца */
     @media (max-width: 600px) {
         .timeline-container {
-            padding: 100px 0 70px;
-            overflow-x: auto;                    /* разрешаем горизонтальный скролл */
-            -webkit-overflow-scrolling: touch;   /* плавный скролл на iOS */
-            scroll-snap-type: x mandatory;       /* опционально — магнит к карточке */
+            padding: 100px 50px 80px;
         }
-
-        .timeline-wrapper {
-            padding: 0 20px;                     /* отступы по бокам, чтобы первая/последняя карточка не прижималась к краю */
-        }
-
         .timeline-item {
             width: 280px;
             min-width: 280px;
-            margin: 0 12px;                      /* уменьшаем расстояние между карточками */
+            margin: 0 15px;
         }
-
-        .timeline-item:nth-child(odd)  { margin-top: -80px; }
-        .timeline-item:nth-child(even) { margin-top:  70px; }
-
-        .timeline-thumbnail {
-            height: 140px;                       /* фото поменьше */
-        }
-
-        .timeline-title {
-            font-size: 1.28em;
-            margin-bottom: 8px;
-        }
-
-        .timeline-teaser {
-            font-size: 0.92em;
-            line-height: 1.4;
-        }
-
-        .timeline-date {
-            font-size: 1em;
-            padding: 5px 12px;
-        }
-
-        .btn-detail {
-            padding: 9px 18px;
-            font-size: 0.95em;
-        }
-
-        /* убираем боковые стрелки — они не нужны при свайпе */
         .nav-arrow {
-            display: none !important;
-        }
-
-        /* центрируем прогресс-бар и делаем его шире */
-        .timeline-progress {
-            width: 85%;
-        }
-
-        /* год — компактнее */
-        .timeline-year {
-            font-size: 1.9em;
-            left: 16px;
-            top: -50px;
+            width: 52px;
+            height: 52px;
+            font-size: 2rem;
         }
     }
-
-    /* Очень маленькие экраны */
-    @media (max-width: 400px) {
-        .timeline-item {
-            width: 260px;
-            min-width: 260px;
-            margin: 0 10px;
-        }
-        .timeline-thumbnail {
-            height: 130px;
-        }
-    }
-  </style>
+</style>
 
 <section class="castings-section">
     <h1>Пробы и кастинги</h1>
+
     <div class="timeline-container">
         <div class="timeline-line"></div>
         <div class="timeline-wrapper" id="timelineWrapper">
 
-            <!-- Карточка 1 -->
             <div class="timeline-item"
-                data-name="Лисье Танго"
-                data-date="Весна 2025"
-                data-teaser="Удивительная история про танец из детского спектакля «Зверский детектив», в который я влюбилась с первого взгляда."
-                data-description="Удивительная история про танец из детского спектакля «Зверский детектив», в который я влюбилась с первого взгляда. В оригинале Лисичка танцевала с Барсукотом – и это был совершенно очаровательный и забавный дуэт. Подумалось – а вдруг из этого может появиться нечто более… взрослое?
-Спрашиваю стажеров: «Сможете?» Без раздумий кивают. Оглядываюсь: «Где попробуем?» Скидывают сумки и куртки прямо на пол – и пробуют прямо в метро. Не сходя с места… 
-Танго снималось несколько раз – в концертном зале, в лесу под проливным дождем. 
-В этой творческой отваге было чудо. 
-На память остались эти кадры. "
-                data-video="https://vkvideo.ru/video_ext.php?oid=-235880171&id=456239018&hash=65d113cfffc7785c&hd=3"
+                 data-name="Лисье Танго"
+                 data-date="Весна 2025"
+                 data-description="Удивительная история про танец из детского спектакля «Зверский детектив», в который я влюбилась с первого взгляда. В оригинале Лисичка танцевала с Барсукотом – и это был совершенно очаровательный и забавный дуэт. Подумалось – а вдруг из этого может появиться нечто более… взрослое?\nСпрашиваю стажеров: «Сможете?» Без раздумий кивают. Оглядываюсь: «Где попробуем?» Скидывают сумки и куртки прямо на пол – и пробуют прямо в метро. Не сходя с места… \nТанго снималось несколько раз – в концертном зале, в лесу под проливным дождем. \nВ этой творческой отваге было чудо. \nНа память остались эти кадры."
+                 data-video="/videos/tango.mp4"
             >
                 <div class="timeline-date">Весна 2025</div>
                 <div class="timeline-content">
@@ -316,53 +326,27 @@
                 </div>
             </div>
 
-
-            <!-- Карточка 2 -->
             <div class="timeline-item"
                  data-name="Комарово"
                  data-date="Лето 2025"
-                 data-teaser="Летний отдых на природе – дело хорошее… для лентяев."
-                 data-video="https://vkvideo.ru/video_ext.php?oid=-235880171&id=456239017&hash=87544ce0b75d5047&hd=3" 
-                 data-description="
-Летний отдых на природе – дело хорошее… для лентяев. 
-А для молодых актёров лето – это маленькая жизнь, наполненная творчеством, впечатлениями и приключениями. 
-Мы сняли домик в Комарово, где сам воздух пропитан вдохновением, где творили в своё время Ахматова и Бродский, братья Стругацкие и Шостакович…
-Солнечным утром мы успели позавтракать и порадоваться хорошей погоде. 
-Как только выдвинулись на съемки – начался (и потом только усиливался) дождь. 
-«Не сахарные, не растаем», - отважно решили актеры. 
-Планов были полные карманы:
-- научиться работать в границах кадра (а это очень непросто без опыта съемок);
-- попрактиковаться в записи актерских видеовизиток;
-- сделать подсъемку для портфолио.
-Успели – всё. 
-Устали – до дрожи в коленях. 
-Довольны – по самую макушку)
-                 ">
-                <!-- <div class="timeline-year">2025</div> -->
+                 data-description="Летний отдых на природе – дело хорошее… для лентяев. \nА для молодых актёров лето – это маленькая жизнь, наполненная творчеством, впечатлениями и приключениями. \nМы сняли домик в Комарово, где сам воздух пропитан вдохновением, где творили в своё время Ахматова и Бродский, братья Стругацкие и Шостакович…\nСолнечным утром мы успели позавтракать и порадоваться хорошей погоде. \nКак только выдвинулись на съемки – начался (и потом только усиливался) дождь. \n«Не сахарные, не растаем», - отважно решили актеры. \nПланов были полные карманы:\n- научиться работать в границах кадра;\n- попрактиковаться в записи актерских видеовизиток;\n- сделать подсъемку для портфолио.\nУспели – всё. Устали – до дрожи в коленях. Довольны – по самую макушку)"
+                 data-video="/videos/komarovo.mp4"
+            >
                 <div class="timeline-date">Лето 2025</div>
                 <div class="timeline-content">
                     <img src="/images/castings/komarovo.JPG" alt="Комарово" class="timeline-thumbnail">
                     <h3 class="timeline-title">Комарово</h3>
-                    <p class="timeline-teaser">Летний отдых на природе – дело хорошее… для лентяев.</p>
+                    <p class="timeline-teaser">Летний отдых на природе – дело хорошее…</p>
                     <button class="btn-detail">Подробнее</button>
                 </div>
             </div>
 
-
-            <!--  Карточка 3 -->
             <div class="timeline-item"
                  data-name="Шоу Скрипки"
                  data-date="Зима 2026"
-                 data-teaser="Несколько симпатичных и заряженных молодых творцов – актеры, танцоры, музыканты – решили подать заявку на конкурс синтетического искусства во Франции."
-                 data-video="https://vk.com/video_ext.php?oid=-235880171&id=456239020&hash=bdc3fec7167b7a38"
-                 data-description="
-Идея просто витала в воздухе. 
-Несколько симпатичных и заряженных молодых творцов – актеры, танцоры, музыканты – решили подать заявку на конкурс синтетического искусства во Франции. 
-Результат пока неизвестен, но сама идея осталась и вдохновила на продолжение. 
-Поедем ли в Париж – это вопрос. 
-Но нам хочется увидеть эту красоту на сцене. И мы знаем, как сказку сделать проектом.
-                 ">
-               <!--  <div class="timeline-year">2026</div> -->
+                 data-description="Идея просто витала в воздухе. \nНесколько симпатичных и заряженных молодых творцов – актеры, танцоры, музыканты – решили подать заявку на конкурс синтетического искусства во Франции.\nРезультат пока неизвестен, но сама идея осталась и вдохновила на продолжение. \nПоедем ли в Париж – это вопрос. \nНо нам хочется увидеть эту красоту на сцене. И мы знаем, как сказку сделать проектом."
+                 data-video="/videos/skripka.mp4"
+            >
                 <div class="timeline-date">Зима 2026</div>
                 <div class="timeline-content">
                     <img src="/images/castings/skripka.jpg" alt="Шоу Скрипки" class="timeline-thumbnail">
@@ -371,6 +355,7 @@
                     <button class="btn-detail">Подробнее</button>
                 </div>
             </div>
+
         </div>
 
         <div class="nav-arrow left" id="prev">←</div>
@@ -381,29 +366,147 @@
     </div>
 </section>
 
-
 <!-- Модальное окно -->
-<div id="castings-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; overflow:auto;">
-    <div style="background:white; margin:6% auto; padding:0; border-radius:12px; width:90%; max-width:760px; max-height:88vh; overflow-y:auto; position:relative; box-shadow:0 10px 40px rgba(0,0,0,0.5);">
-        <span class="close" style="position:absolute; right:20px; top:10px; font-size:42px; color:#d4af37; cursor:pointer;">×</span>
-        <div style="padding:30px 40px; text-align:center;">
-            <h2 id="modalTitle" style="margin:0 0 10px; color:#222;"></h2>
-            <div id="modalDate" style="color:#d4af37; font-size:1.2em; margin-bottom:20px;"></div>
-            
-            <!-- Важно: src пустой изначально + id для управления -->
-            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius:8px;">
-                <iframe 
-                    id="modalVideo" 
-                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
-                    frameborder="0" 
-                    allowfullscreen 
-                    allow="clipboard-write; autoplay; encrypted-media; picture-in-picture">
-                </iframe>
+<div id="castings-modal">
+    <div class="modal-content">
+        <span class="close">×</span>
+        <div id="modal-body">
+            <h2 id="modalTitle"></h2>
+            <div id="modalDate"></div>
+            <div id="modalVideoContainer">
+                <video id="modalVideo" controls playsinline>
+                    <source id="modalVideoSource" src="" type="video/mp4">
+                    Ваш браузер не поддерживает видео.
+                </video>
             </div>
-
-            <div id="modalDesc" style="margin-top:25px; line-height:1.7; color:#444; font-size:1.05em; text-align:left;"></div>
+            <div id="modalDesc"></div>
         </div>
     </div>
 </div>
 
-<script is:inline src="/js/castings.js"></script>
+<script is:inline>
+document.addEventListener('DOMContentLoaded', () => {
+    // Timeline
+    const items = document.querySelectorAll('.timeline-item');
+    const wrapper = document.getElementById('timelineWrapper');
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+    const progressFill = document.getElementById('progressFill');
+
+    let scrollPos = 0;
+    const itemWidth = 360 + 60;
+    const maxScroll = (items.length - 1) * itemWidth;
+
+    function updateProgress() {
+        const percent = Math.min(100, (scrollPos / maxScroll) * 100);
+        progressFill.style.width = `${percent}%`;
+    }
+
+    next?.addEventListener('click', () => {
+        scrollPos = Math.min(maxScroll, scrollPos + itemWidth);
+        wrapper.style.transform = `translateX(-${scrollPos}px)`;
+        updateProgress();
+        setTimeout(highlightNearest, 700);
+    });
+
+    prev?.addEventListener('click', () => {
+        scrollPos = Math.max(0, scrollPos - itemWidth);
+        wrapper.style.transform = `translateX(-${scrollPos}px)`;
+        updateProgress();
+        setTimeout(highlightNearest, 700);
+    });
+
+    items.forEach((item, i) => {
+        item.addEventListener('click', e => {
+            if (e.target.closest('.btn-detail')) return;
+            if (window.innerWidth <= 900) return;
+
+            const container = document.querySelector('.timeline-container');
+            const cw = container.offsetWidth;
+            const target = i * itemWidth - (cw / 2 - itemWidth / 2) + 30;
+            scrollPos = Math.max(0, Math.min(maxScroll, target));
+            wrapper.style.transform = `translateX(-${scrollPos}px)`;
+            updateProgress();
+            setTimeout(highlightNearest, 700);
+        });
+    });
+
+    function highlightNearest() {
+        const container = document.querySelector('.timeline-container');
+        if (!container) return;
+        const center = container.getBoundingClientRect().left + container.offsetWidth / 2;
+        let minDist = Infinity;
+        let closest = null;
+
+        items.forEach(item => {
+            const rect = item.getBoundingClientRect();
+            const dist = Math.abs((rect.left + rect.width / 2) - center);
+            if (dist < minDist) {
+                minDist = dist;
+                closest = item;
+            }
+        });
+
+        items.forEach(it => it.classList.remove('nearest'));
+        closest?.classList.add('nearest');
+    }
+
+    window.addEventListener('resize', highlightNearest);
+    highlightNearest();
+    updateProgress();
+
+    // Modal
+    const modal       = document.getElementById('castings-modal');
+    const modalTitle  = document.getElementById('modalTitle');
+    const modalDate   = document.getElementById('modalDate');
+    const modalDesc   = document.getElementById('modalDesc');
+    const video       = document.getElementById('modalVideo');
+    const videoSource = document.getElementById('modalVideoSource');
+    const closeBtn    = document.querySelector('#castings-modal .close');
+
+    document.querySelectorAll('.btn-detail').forEach(btn => {
+        btn.addEventListener('click', e => {
+            const card = e.target.closest('.timeline-item');
+            if (!card) return;
+
+            modalTitle.textContent  = card.dataset.name;
+            modalDate.textContent   = card.dataset.date;
+            modalDesc.textContent   = card.dataset.description;
+
+            videoSource.src = card.dataset.video;
+            video.load();
+            video.play().catch(() => {});
+
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    function closeModal() {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+        video.pause();
+        video.currentTime = 0;
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => {
+        if (e.target === modal) closeModal();
+    });
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && modal.style.display === 'flex') {
+            closeModal();
+        }
+    });
+
+    // Появление карточек
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.15 });
+
+    items.forEach(item => observer.observe(item));
+});
+</script>

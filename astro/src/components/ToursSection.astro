@@ -220,34 +220,12 @@ const tours = [
      <!-- В ToursSection.astro, после .cta-wrapper -->
 <!-- HTML (вставь вместо текущего .form-container) -->
 <div class="form-modal-trigger">
-  <button type="button" class="form-open-btn" id="openForm">
+  <button type="button" class="form-open-btn" id="openForm" onclick="openWaitlistModal()">
     Записаться в лист ожидания
   </button>
 </div>
 
-<div class="form-modal" id="formWrapper" hidden>
-  <div class="form-modal__overlay"></div>
-  <div class="form-modal__content">
-    <button type="button" class="form-modal__close" id="closeForm" aria-label="Закрыть">
-      <span>×</span>
-    </button>
 
-    <h3 class="form-modal__title">Лист ожидания</h3>
-    <p class="form-modal__subtitle">
-      Укажите желаемый город и проект — свяжемся, как только появятся точные даты
-    </p>
-
-    <div class="form-modal__iframe-wrapper">
-      <iframe
-        src="https://forms.yandex.ru/u/67dd8eb250569051913a5454?iframe=1&theme=classic"
-        class="form-iframe"
-        title="Форма записи в лист ожидания"
-        loading="lazy"
-        allow="fullscreen"
-      ></iframe>
-    </div>
-  </div>
-</div>
 
 <script>
   // JavaScript (дополни или замени существующий)

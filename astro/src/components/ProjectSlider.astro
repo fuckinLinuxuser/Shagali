@@ -40,6 +40,15 @@ const slides = [
                 <p><i>{slide.quote}</i></p>
               </>
             )}
+
+            <!-- Кнопка «Билеты» справа снизу -->
+            <button 
+              type="button"
+              class="tickets-btn"
+              onclick="openWaitlistModal()"
+            >
+              Билеты
+            </button>
           </div>
         </div>
       ))
@@ -91,7 +100,7 @@ const slides = [
 
   .hero-slider {
     width: 100%;
-    aspect-ratio: 16 / 9;                    /* десктоп — широкий */
+    aspect-ratio: 16 / 9;
     max-height: 90vh;
     margin: 0 auto;
     overflow: hidden;
@@ -119,7 +128,7 @@ const slides = [
     justify-content: flex-end;
     align-items: flex-start;
     text-align: left;
-    padding: 5rem 2rem 3.5rem 2rem;
+    padding: 5rem 2rem 5.5rem 2rem;           /* ↑ увеличен нижний отступ под кнопку */
     color: white;
     background: linear-gradient(
       to top right,
@@ -131,20 +140,52 @@ const slides = [
 
   .slide-content h2 {
     font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 3vw, 3rem);
+    margin-bottom: 0.8rem;
+    text-shadow: 0 3px 12px rgba(0,0,0,0.9);
   }
 
   .slide-content p {
     font-family: 'Times New Roman', serif;
+    font-size: clamp(0.6rem, 2.5vw, 1.6rem);
+    opacity: 0.65;
+    max-width: 1340px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    margin-bottom: 1.2rem;
   }
 
-  .slide-content blockquote {
-    font-family: 'Times New Roman', serif;
-    font-style: italic;
+  /* ─── Кнопка БИЛЕТЫ ──────────────────────────────────────── */
+  .tickets-btn {
+    position: absolute;
+    right: 2rem;
+    bottom: 2.5rem;
+    background: #d4af37;
+    color: #1a1a1a;
+    font-family: 'Arial', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1rem, 2.2vw, 1.35rem);
+    padding: 0.9rem 2.2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5),
+                0 2px 8px rgba(212,175,55,0.4);
+    transition: all 0.28s ease;
+    z-index: 5;
+    letter-spacing: 0.5px;
   }
 
-  /* ────────────────────────────────────────────── */
-  /*        НАДПИСЬ "скоро..."                     */
-  /* ────────────────────────────────────────────── */
+  .tickets-btn:hover {
+    background: #e6c24a;
+    transform: translateY(-4px) scale(1.04);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.55),
+                0 4px 16px rgba(212,175,55,0.6);
+  }
+
+  .tickets-btn:active {
+    transform: translateY(-1px) scale(0.98);
+  }
+
+  /* ─── Скоро-бейдж ────────────────────────────────────────── */
   .soon-badge {
     position: absolute;
     top: 1.2rem;
@@ -162,22 +203,6 @@ const slides = [
     line-height: 1.3;
     white-space: nowrap;
     z-index: 5;
-  }
-
-  /* ────────────────────────────────────────────── */
-  /* Десктопные размеры текста                     */
-  /* ────────────────────────────────────────────── */
-  .slide-content h2 {
-    font-size: clamp(1.5rem, 3vw, 3rem);
-    margin-bottom: 0.8rem;
-    text-shadow: 0 3px 12px rgba(0,0,0,0.9);
-  }
-
-  .slide-content p {
-    opacity: 0.65;
-    font-size: clamp(0.6rem, 2.5vw, 1.6rem);
-    max-width: 1340px;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
   }
 
   .custom-nav {
@@ -210,51 +235,45 @@ const slides = [
     transform: scale(1.12);
   }
 
-  .custom-btn.prev::before { content: ""; }
-  .custom-btn.next::before { content: ""; }
-
-  
   @media (max-width: 768px) {
     .hero-slider {
-      aspect-ratio: 4 / 5;                   /* основной вариант — вертикальнее */
-      /* Альтернатива: aspect-ratio: 4 / 5; — ещё толще */
-      /* Альтернатива: aspect-ratio: 9 / 16; — почти полноэкранный Stories/Reels стиль */
-      max-height: 85vh;                      /* не даём растягиваться слишком сильно */
-      min-height: 500px;                     /* минимальная высота, чтобы не было слишком коротко */
+      aspect-ratio: 4 / 5;
+      max-height: 85vh;
+      min-height: 500px;
     }
 
     .slide-content {
-      padding: 4rem 1.6rem 4rem 1.6rem;      /* больше воздуха снизу и сверху */
-      justify-content: center;               /* можно поэкспериментировать с center вместо flex-end */
+      padding: 4rem 1.6rem 6rem 1.6rem;     /* больше места снизу под кнопку */
+      justify-content: flex-end;
       background: linear-gradient(
         to bottom,
         rgba(0,0,0,0.65) 0%,
         rgba(0,0,0,0.45) 30%,
         rgba(0,0,0,0.25) 60%,
         transparent 85%
-      );                                     /* градиент сверху вниз — текст лучше читается */
+      );
+    }
+
+    .tickets-btn {
+      right: 1.4rem;
+      bottom: 2rem;
+      font-size: clamp(1.1rem, 4.5vw, 1.4rem);
+      padding: 0.8rem 1.9rem;
     }
 
     .soon-badge {
       top: 1rem;
       right: 1rem;
       font-size: clamp(1.1rem, 4.2vw, 1.6rem);
-      padding: 0.35rem 0.9rem;
     }
 
     .slide-content h2 {
-      font-size: clamp(2rem, 6.5vw, 3.2rem); /* крупнее заголовок */
-      margin-bottom: 1.2rem;
+      font-size: clamp(2rem, 6.5vw, 3.2rem);
     }
 
     .slide-content p {
       font-size: clamp(1.05rem, 4.2vw, 1.5rem);
       opacity: 0.9;
-      line-height: 1.45;
-    }
-
-    .custom-nav {
-      padding: 0 12px;
     }
 
     .custom-btn {
@@ -264,14 +283,12 @@ const slides = [
     }
   }
 
-  /* Очень узкие экраны (старые телефоны) */
   @media (max-width: 480px) {
-    .hero-slider {
-      aspect-ratio: 4 / 5;                   /* или 4 / 5, если 3/4 кажется недостаточно толстым */
-    }
-
-    .slide-content {
-      padding: 3.5rem 1.4rem 5rem 1.4rem;
+    .tickets-btn {
+      right: 1.2rem;
+      bottom: 1.8rem;
+      padding: 0.7rem 1.6rem;
+      font-size: 1.1rem;
     }
   }
 </style>
