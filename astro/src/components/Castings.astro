@@ -63,6 +63,7 @@
     }
 
     .timeline-wrapper {
+        position: relative;
         display: flex;
         gap: 60px;
         min-width: max-content;
@@ -73,13 +74,15 @@
     .timeline-line {
         position: absolute;
         top: 50%;
-        left: 60px;
-        right: 60px;
+        left: 0;
+        right: 0;
         height: 5px;
         background: linear-gradient(to right, #d4af37, #b8972e, #d4af37);
         transform: translateY(-50%);
         z-index: 0;
         pointer-events: none;
+        width: 100%;
+        min-width: max-content;
     }
 
     .nav-arrow {
@@ -97,8 +100,8 @@
         font-size: 2.4rem;
         cursor: pointer;
         z-index: 20;
-        transition: all 0.22s ease;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+        transition: all 0.25s ease;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.4);
     }
 
     .nav-arrow:hover {
@@ -223,6 +226,7 @@
         overflow-y: auto;
         position: relative;
         box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        margin: auto;                    /* ← добавлено для надёжного центрирования */
     }
 
     #castings-modal .close {
@@ -276,6 +280,7 @@
         color: #444;
         font-size: 1.08em;
         white-space: pre-wrap;
+        word-break: break-word;          /* ← для длинных текстов без обрезки */
     }
 
     /* Адаптив */
@@ -285,6 +290,8 @@
         }
         .timeline-wrapper {
             gap: 40px;
+            padding: 0 20px;
+            touch-action: auto;
         }
         .timeline-item {
             flex: 0 0 300px;
@@ -294,17 +301,30 @@
         .timeline-progress {
             display: none;
         }
+        .timeline-line {
+            left: 20px;
+            right: 20px;
+        }
     }
 
     @media (max-width: 600px) {
         .timeline-container {
-            padding: 90px 20px 90px;
+            padding: 120px 20px 120px;
         }
         .timeline-item {
             flex: 0 0 280px;
         }
         .timeline-wrapper {
             gap: 32px;
+            padding: 0 16px;
+            touch-action: auto;
+        }
+        .timeline-line {
+            left: 16px;
+            right: 16px;
+        }
+        #modal-body {
+            padding: 30px 24px 40px;
         }
     }
 </style>
@@ -313,8 +333,8 @@
     <h1>Пробы и кастинги</h1>
 
     <div class="timeline-container" id="timelineContainer">
-        <div class="timeline-line"></div>
         <div class="timeline-wrapper">
+            <div class="timeline-line"></div>
 
             <div class="timeline-item"
                  data-name="Лисье Танго"
@@ -360,9 +380,6 @@
 
         </div>
 
-        <div class="nav-arrow left" id="prev">←</div>
-        <div class="nav-arrow right" id="next">→</div>
-
         <div class="timeline-progress">
             <div class="progress-fill" id="progressFill"></div>
         </div>
@@ -393,42 +410,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const prev = document.getElementById('prev');
     const next = document.getElementById('next');
     const progressFill = document.getElementById('progressFill');
-
     const items = document.querySelectorAll('.timeline-item');
 
-    // Прокрутка стрелками (только десктоп)
+    // Прокрутка стрелками
     if (prev && next) {
-        const scrollStep = 420; // ширина карточки + gap
-
-        next.addEventListener('click', () => {
-            container.scrollBy({ left: scrollStep, behavior: 'smooth' });
-        });
-
-        prev.addEventListener('click', () => {
-            container.scrollBy({ left: -scrollStep, behavior: 'smooth' });
-        });
+        const scrollStep = 420;
+        next.addEventListener('click', () => container.scrollBy({ left: scrollStep, behavior: 'smooth' }));
+        prev.addEventListener('click', () => container.scrollBy({ left: -scrollStep, behavior: 'smooth' }));
     }
 
-    // Обновление прогресс-бара
+    // Прогресс-бар
     function updateProgress() {
         if (!progressFill || !container) return;
-        const maxScroll = container.scrollWidth - container.clientWidth;
-        const percent = maxScroll > 0 ? (container.scrollLeft / maxScroll) * 100 : 0;
+        const max = container.scrollWidth - container.clientWidth;
+        const percent = max > 0 ? (container.scrollLeft / max) * 100 : 0;
         progressFill.style.width = `${percent}%`;
     }
 
-    // Выделение ближайшей карточки
+    // Ближайшая карточка
     function highlightNearest() {
         if (!container) return;
-        const containerRect = container.getBoundingClientRect();
-        const center = containerRect.left + containerRect.width / 2;
-
-        let closest = null;
+        const center = container.getBoundingClientRect().left + container.offsetWidth / 2;
         let minDist = Infinity;
+        let closest = null;
 
         items.forEach(item => {
             const rect = item.getBoundingClientRect();
-            const dist = Math.abs((rect.left + rect.width / 2) - center);
+            const dist = Math.abs(rect.left + rect.width / 2 - center);
             if (dist < minDist) {
                 minDist = dist;
                 closest = item;
@@ -444,24 +452,21 @@ document.addEventListener('DOMContentLoaded', () => {
         highlightNearest();
     });
 
-    // Клик по карточке → центрируем (только десктоп)
+    // Центрирование по клику (десктоп)
     items.forEach(item => {
         item.addEventListener('click', e => {
             if (e.target.closest('.btn-detail')) return;
             if (window.innerWidth <= 900) return;
 
-            const itemLeft = item.offsetLeft;
-            const target = itemLeft - (container.clientWidth / 2) + (item.offsetWidth / 2);
+            const target = item.offsetLeft - (container.clientWidth / 2) + (item.offsetWidth / 2);
             container.scrollTo({ left: target, behavior: 'smooth' });
         });
     });
 
-    // Появление карточек при скролле
+    // Появление карточек
     const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
+            if (entry.isIntersecting) entry.target.classList.add('visible');
         });
     }, { threshold: 0.2 });
 
@@ -489,7 +494,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             modalTitle.textContent = card.dataset.name;
             modalDate.textContent = card.dataset.date;
-            modalDesc.textContent = card.dataset.description;
+            modalDesc.textContent = card.dataset.description;  // ← теперь полный текст
 
             videoSource.src = card.dataset.video;
             video.load();
@@ -508,11 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', e => {
-        if (e.target === modal) closeModal();
-    });
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
-    });
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 });
 </script>
