@@ -39,23 +39,35 @@
 
     .timeline-container {
         position: relative;
-        overflow: hidden;
-        padding: 140px 80px 120px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 140px 60px 140px;
         -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
+        scroll-behavior: smooth;
+        scrollbar-width: thin;
+        scrollbar-color: #d4af37 #fafbd6;
     }
 
     .timeline-container::-webkit-scrollbar {
-        display: none;
+        height: 8px;
+    }
+
+    .timeline-container::-webkit-scrollbar-track {
+        background: #fafbd6;
+        border-radius: 4px;
+    }
+
+    .timeline-container::-webkit-scrollbar-thumb {
+        background: #d4af37;
+        border-radius: 4px;
     }
 
     .timeline-wrapper {
         display: flex;
-        transition: transform 0.65s ease-out;
-        width: max-content;
-        will-change: transform;
+        gap: 60px;
+        min-width: max-content;
         touch-action: pan-x;
+        padding: 0 40px;
     }
 
     .timeline-line {
@@ -67,6 +79,7 @@
         background: linear-gradient(to right, #d4af37, #b8972e, #d4af37);
         transform: translateY(-50%);
         z-index: 0;
+        pointer-events: none;
     }
 
     .nav-arrow {
@@ -84,32 +97,31 @@
         font-size: 2.4rem;
         cursor: pointer;
         z-index: 20;
-        transition: all 0.25s ease;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+        transition: all 0.22s ease;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.35);
     }
 
     .nav-arrow:hover {
         background: #d4af37;
-        transform: translateY(-50%) scale(1.1);
-    }
-
-    .nav-arrow:active {
-        transform: translateY(-50%) scale(0.96);
+        transform: translateY(-50%) scale(1.08);
     }
 
     .nav-arrow.left  { left: 20px; }
     .nav-arrow.right { right: 20px; }
 
+    @media (max-width: 900px) {
+        .nav-arrow {
+            display: none !important;
+        }
+    }
+
     .timeline-item {
-        position: relative;
-        width: 360px;
-        min-width: 360px;
-        margin: 0 30px;
+        flex: 0 0 360px;
         text-align: center;
         opacity: 0;
-        transform: translateY(40px);
-        transition: all 0.8s ease;
-        z-index: 2;
+        transform: translateY(30px);
+        transition: all 0.7s ease;
+        scroll-snap-align: center;
     }
 
     .timeline-item.visible {
@@ -136,13 +148,13 @@
         border-radius: 12px;
         padding: 20px;
         box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-        transition: all 0.4s ease;
+        transition: all 0.35s ease;
         cursor: pointer;
     }
 
     .timeline-content:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 14px 32px rgba(0,0,0,0.2);
+        transform: translateY(-8px);
+        box-shadow: 0 12px 28px rgba(0,0,0,0.18);
         border: 1px solid #d4af37;
     }
 
@@ -167,7 +179,7 @@
 
     .btn-detail:hover {
         background: #b8972e;
-        transform: scale(1.06);
+        transform: scale(1.05);
     }
 
     .timeline-progress {
@@ -180,19 +192,14 @@
         background: rgba(0,0,0,0.25);
         border-radius: 3px;
         overflow: hidden;
+        pointer-events: none;
     }
 
     .progress-fill {
         height: 100%;
         background: #d4af37;
         width: 0;
-        transition: width 0.65s ease-out;
-    }
-
-    .timeline-item.nearest {
-        box-shadow: 0 0 0 4px #d4af37 !important;
-        transform: scale(1.04) !important;
-        z-index: 5;
+        transition: width 0.4s ease-out;
     }
 
     /* ─────────────── МОДАЛЬНОЕ ОКНО ─────────────── */
@@ -205,7 +212,6 @@
         align-items: center;
         justify-content: center;
         padding: 20px;
-        overflow: auto;
     }
 
     #castings-modal .modal-content {
@@ -217,7 +223,6 @@
         overflow-y: auto;
         position: relative;
         box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-        margin: auto;
     }
 
     #castings-modal .close {
@@ -275,31 +280,31 @@
 
     /* Адаптив */
     @media (max-width: 900px) {
+        .timeline-container {
+            padding: 100px 30px 100px;
+        }
+        .timeline-wrapper {
+            gap: 40px;
+        }
         .timeline-item {
-            width: 300px;
-            min-width: 300px;
-            margin: 0 20px;
+            flex: 0 0 300px;
         }
         .timeline-item:nth-child(odd)  { margin-top: -110px; }
-        .timeline-item:nth-child(even) { margin-top:  80px; }
-        #modal-body {
-            padding: 30px 30px 40px;
+        .timeline-item:nth-child(even) { margin-top: 80px; }
+        .timeline-progress {
+            display: none;
         }
     }
 
     @media (max-width: 600px) {
         .timeline-container {
-            padding: 100px 50px 80px;
+            padding: 90px 20px 90px;
         }
         .timeline-item {
-            width: 280px;
-            min-width: 280px;
-            margin: 0 15px;
+            flex: 0 0 280px;
         }
-        .nav-arrow {
-            width: 52px;
-            height: 52px;
-            font-size: 2rem;
+        .timeline-wrapper {
+            gap: 32px;
         }
     }
 </style>
@@ -307,16 +312,15 @@
 <section class="castings-section">
     <h1>Пробы и кастинги</h1>
 
-    <div class="timeline-container">
+    <div class="timeline-container" id="timelineContainer">
         <div class="timeline-line"></div>
-        <div class="timeline-wrapper" id="timelineWrapper">
+        <div class="timeline-wrapper">
 
             <div class="timeline-item"
                  data-name="Лисье Танго"
                  data-date="Весна 2025"
                  data-description="Удивительная история про танец из детского спектакля «Зверский детектив», в который я влюбилась с первого взгляда. В оригинале Лисичка танцевала с Барсукотом – и это был совершенно очаровательный и забавный дуэт. Подумалось – а вдруг из этого может появиться нечто более… взрослое?\nСпрашиваю стажеров: «Сможете?» Без раздумий кивают. Оглядываюсь: «Где попробуем?» Скидывают сумки и куртки прямо на пол – и пробуют прямо в метро. Не сходя с места… \nТанго снималось несколько раз – в концертном зале, в лесу под проливным дождем. \nВ этой творческой отваге было чудо. \nНа память остались эти кадры."
-                 data-video="/videos/tango.mp4"
-            >
+                 data-video="/videos/tango.mp4">
                 <div class="timeline-date">Весна 2025</div>
                 <div class="timeline-content">
                     <img src="/images/castings/foxes_tango.JPG" alt="Лисье Танго" class="timeline-thumbnail">
@@ -330,8 +334,7 @@
                  data-name="Комарово"
                  data-date="Лето 2025"
                  data-description="Летний отдых на природе – дело хорошее… для лентяев. \nА для молодых актёров лето – это маленькая жизнь, наполненная творчеством, впечатлениями и приключениями. \nМы сняли домик в Комарово, где сам воздух пропитан вдохновением, где творили в своё время Ахматова и Бродский, братья Стругацкие и Шостакович…\nСолнечным утром мы успели позавтракать и порадоваться хорошей погоде. \nКак только выдвинулись на съемки – начался (и потом только усиливался) дождь. \n«Не сахарные, не растаем», - отважно решили актеры. \nПланов были полные карманы:\n- научиться работать в границах кадра;\n- попрактиковаться в записи актерских видеовизиток;\n- сделать подсъемку для портфолио.\nУспели – всё. Устали – до дрожи в коленях. Довольны – по самую макушку)"
-                 data-video="/videos/komarovo.mp4"
-            >
+                 data-video="/videos/komarovo.mp4">
                 <div class="timeline-date">Лето 2025</div>
                 <div class="timeline-content">
                     <img src="/images/castings/komarovo.JPG" alt="Комарово" class="timeline-thumbnail">
@@ -345,8 +348,7 @@
                  data-name="Шоу Скрипки"
                  data-date="Зима 2026"
                  data-description="Идея просто витала в воздухе. \nНесколько симпатичных и заряженных молодых творцов – актеры, танцоры, музыканты – решили подать заявку на конкурс синтетического искусства во Франции.\nРезультат пока неизвестен, но сама идея осталась и вдохновила на продолжение. \nПоедем ли в Париж – это вопрос. \nНо нам хочется увидеть эту красоту на сцене. И мы знаем, как сказку сделать проектом."
-                 data-video="/videos/skripka.mp4"
-            >
+                 data-video="/videos/skripka.mp4">
                 <div class="timeline-date">Зима 2026</div>
                 <div class="timeline-content">
                     <img src="/images/castings/skripka.jpg" alt="Шоу Скрипки" class="timeline-thumbnail">
@@ -360,6 +362,7 @@
 
         <div class="nav-arrow left" id="prev">←</div>
         <div class="nav-arrow right" id="next">→</div>
+
         <div class="timeline-progress">
             <div class="progress-fill" id="progressFill"></div>
         </div>
@@ -386,57 +389,42 @@
 
 <script is:inline>
 document.addEventListener('DOMContentLoaded', () => {
-    // Timeline
-    const items = document.querySelectorAll('.timeline-item');
-    const wrapper = document.getElementById('timelineWrapper');
+    const container = document.getElementById('timelineContainer');
     const prev = document.getElementById('prev');
     const next = document.getElementById('next');
     const progressFill = document.getElementById('progressFill');
 
-    let scrollPos = 0;
-    const itemWidth = 360 + 60;
-    const maxScroll = (items.length - 1) * itemWidth;
+    const items = document.querySelectorAll('.timeline-item');
 
+    // Прокрутка стрелками (только десктоп)
+    if (prev && next) {
+        const scrollStep = 420; // ширина карточки + gap
+
+        next.addEventListener('click', () => {
+            container.scrollBy({ left: scrollStep, behavior: 'smooth' });
+        });
+
+        prev.addEventListener('click', () => {
+            container.scrollBy({ left: -scrollStep, behavior: 'smooth' });
+        });
+    }
+
+    // Обновление прогресс-бара
     function updateProgress() {
-        const percent = Math.min(100, (scrollPos / maxScroll) * 100);
+        if (!progressFill || !container) return;
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        const percent = maxScroll > 0 ? (container.scrollLeft / maxScroll) * 100 : 0;
         progressFill.style.width = `${percent}%`;
     }
 
-    next?.addEventListener('click', () => {
-        scrollPos = Math.min(maxScroll, scrollPos + itemWidth);
-        wrapper.style.transform = `translateX(-${scrollPos}px)`;
-        updateProgress();
-        setTimeout(highlightNearest, 700);
-    });
-
-    prev?.addEventListener('click', () => {
-        scrollPos = Math.max(0, scrollPos - itemWidth);
-        wrapper.style.transform = `translateX(-${scrollPos}px)`;
-        updateProgress();
-        setTimeout(highlightNearest, 700);
-    });
-
-    items.forEach((item, i) => {
-        item.addEventListener('click', e => {
-            if (e.target.closest('.btn-detail')) return;
-            if (window.innerWidth <= 900) return;
-
-            const container = document.querySelector('.timeline-container');
-            const cw = container.offsetWidth;
-            const target = i * itemWidth - (cw / 2 - itemWidth / 2) + 30;
-            scrollPos = Math.max(0, Math.min(maxScroll, target));
-            wrapper.style.transform = `translateX(-${scrollPos}px)`;
-            updateProgress();
-            setTimeout(highlightNearest, 700);
-        });
-    });
-
+    // Выделение ближайшей карточки
     function highlightNearest() {
-        const container = document.querySelector('.timeline-container');
         if (!container) return;
-        const center = container.getBoundingClientRect().left + container.offsetWidth / 2;
-        let minDist = Infinity;
+        const containerRect = container.getBoundingClientRect();
+        const center = containerRect.left + containerRect.width / 2;
+
         let closest = null;
+        let minDist = Infinity;
 
         items.forEach(item => {
             const rect = item.getBoundingClientRect();
@@ -448,30 +436,60 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         items.forEach(it => it.classList.remove('nearest'));
-        closest?.classList.add('nearest');
+        if (closest) closest.classList.add('nearest');
     }
 
-    window.addEventListener('resize', highlightNearest);
-    highlightNearest();
-    updateProgress();
+    container.addEventListener('scroll', () => {
+        updateProgress();
+        highlightNearest();
+    });
 
-    // Modal
-    const modal       = document.getElementById('castings-modal');
-    const modalTitle  = document.getElementById('modalTitle');
-    const modalDate   = document.getElementById('modalDate');
-    const modalDesc   = document.getElementById('modalDesc');
-    const video       = document.getElementById('modalVideo');
+    // Клик по карточке → центрируем (только десктоп)
+    items.forEach(item => {
+        item.addEventListener('click', e => {
+            if (e.target.closest('.btn-detail')) return;
+            if (window.innerWidth <= 900) return;
+
+            const itemLeft = item.offsetLeft;
+            const target = itemLeft - (container.clientWidth / 2) + (item.offsetWidth / 2);
+            container.scrollTo({ left: target, behavior: 'smooth' });
+        });
+    });
+
+    // Появление карточек при скролле
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.2 });
+
+    items.forEach(item => observer.observe(item));
+
+    // Инициализация
+    setTimeout(() => {
+        updateProgress();
+        highlightNearest();
+    }, 300);
+
+    // ─────────────── Модальное окно ───────────────
+    const modal = document.getElementById('castings-modal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDate = document.getElementById('modalDate');
+    const modalDesc = document.getElementById('modalDesc');
+    const video = document.getElementById('modalVideo');
     const videoSource = document.getElementById('modalVideoSource');
-    const closeBtn    = document.querySelector('#castings-modal .close');
+    const closeBtn = document.querySelector('#castings-modal .close');
 
     document.querySelectorAll('.btn-detail').forEach(btn => {
         btn.addEventListener('click', e => {
-            const card = e.target.closest('.timeline-item');
-            if (!card) return;
+            e.stopPropagation();
+            const card = btn.closest('.timeline-item');
 
-            modalTitle.textContent  = card.dataset.name;
-            modalDate.textContent   = card.dataset.date;
-            modalDesc.textContent   = card.dataset.description;
+            modalTitle.textContent = card.dataset.name;
+            modalDate.textContent = card.dataset.date;
+            modalDesc.textContent = card.dataset.description;
 
             videoSource.src = card.dataset.video;
             video.load();
@@ -493,20 +511,8 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.addEventListener('click', e => {
         if (e.target === modal) closeModal();
     });
-
     document.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && modal.style.display === 'flex') {
-            closeModal();
-        }
+        if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
     });
-
-    // Появление карточек
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add('visible');
-        });
-    }, { threshold: 0.15 });
-
-    items.forEach(item => observer.observe(item));
 });
 </script>

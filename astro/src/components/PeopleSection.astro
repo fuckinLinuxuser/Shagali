@@ -153,7 +153,7 @@
         box-shadow: 0 4px 14px rgba(0,0,0,0.2);
     }
 
-    .modal-video-wrapper iframe {
+    .modal-video-wrapper video {
         position: absolute;
         top: 0;
         left: 0;
@@ -208,7 +208,7 @@
              data-name="Елена Владимировна ШАГАЛИ" 
              data-role="Театральный продюсер. Драматург. Режиссер." 
              data-bio="Одни птицы больше думают о красоте своих перьев. Другие хотят укрепить своё гнездо. А я отношусь к тем птицам, которые всю жизнь рвутся в небо, чтобы петь свою любовную песню прямо в светлые улыбающиеся глаза Солнца.<br><br>Да. Некоторые не долетают. Бывает.<br>Но кто-то обязательно споёт. <br>И Солнцу будет ради чего рождаться каждое утро."
-             data-video="https://vkvideo.ru/video_ext.php?oid=-235880171&id=456239019&hash=6c3148a82d5bced5&hd=3">
+             data-video="/videos/shagali.mp4">
             <img src="/images/Shagali.jpg" alt="Елена Шагали" class="person-image">
             <div class="person-info">
                 <h2 class="person-name">Елена Шагали</h2>
@@ -233,7 +233,7 @@
         <div class="modal-body">
             <!-- Видео будет здесь -->
             <div id="modal-video-wrapper" class="modal-video-wrapper" style="display:none;">
-                <iframe id="modal-video" src="" frameborder="0" allowfullscreen></iframe>
+                <video id="modal-video" src="" controls></video>
             </div>
             <div id="modal-bio"></div>
         </div>
