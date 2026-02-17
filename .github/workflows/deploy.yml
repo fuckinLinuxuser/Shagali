@@ -27,7 +27,7 @@ jobs:
         run: npm run build
 
       - name: Deploy via SSH (rsync)
-        uses: burnett01/rsync-deployments@7.0.2
+        uses: burnett01/rsync-deployments@v8   # или @8.0.4 для конкретной
         with:
           switches: -avzr --delete
           path: astro/dist/                              # ← astro/dist/ а не просто dist/
