@@ -26,6 +26,13 @@ jobs:
         working-directory: astro                         # ← здесь!
         run: npm run build
 
+      - name: Debug SSH key loading
+        run: |
+          echo "${{ secrets.remote_key }}" > /tmp/key
+          chmod 600 /tmp/key
+          ssh-add /tmp/key || echo "ssh-add failed"
+          ssh-add -l   # покажет загруженные ключи
+
       - name: Deploy via SSH (rsync)
         uses: burnett01/rsync-deployments@v8   # или @8.0.4 для конкретной
         with:
