@@ -26,19 +26,17 @@ jobs:
         working-directory: astro                         # ← здесь!
         run: npm run build
 
-      - name: Debug SSH key loading
-        run: |
-          echo "${{ secrets.remote_key }}" > /tmp/key
-          chmod 600 /tmp/key
-          ssh-add /tmp/key || echo "ssh-add failed"
-          ssh-add -l   # покажет загруженные ключи
-
       - name: Deploy via SSH (rsync)
-        uses: burnett01/rsync-deployments@v8   # или @8.0.4 для конкретной
+        uses: burnett01/rsync-deployments@v8
         with:
-          switches: -avzr --delete
-          path: astro/dist/                              # ← astro/dist/ а не просто dist/
-          remote_host: ${{ secrets.SSH_HOST }}
-          remote_user: ${{ secrets.SSH_USER }}
-          remote_key: ${{ secrets.SSH_KEY }}
-          remote_path: /www/shagali.ru/   # подставь свой реальный путь
+            switches: -avzr --delete
+            path: astro/dist/
+            remote_host: ${{ secrets.SSH_HOST }}
+            remote_user: ${{ secrets.SSH_USER }}
+            remote_key: ${{ secrets.SSH_KEY }}
+            remote_path: /www/shagali.ru/          # проверь, что это точно корень сайта!
+            remote_port: 22
+            # Добавь это, если сервер старый и жалуется на host key:
+            strict_hostkeys_checking: false
+            # Если ключ RSA старый — попробуй:
+            # legacy_allow_rsa_hostkeys: true
