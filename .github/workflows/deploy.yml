@@ -34,7 +34,7 @@ jobs:
             remote_host: ${{ secrets.SSH_HOST }}
             remote_user: ${{ secrets.SSH_USER }}
             remote_key: ${{ secrets.SSH_KEY }}
-            remote_path: /www/shagali.ru/          # проверь, что это точно корень сайта!
+            remote_path: /var/www/u3413841/data/www/shagali.ru/          # проверь, что это точно корень сайта!
             remote_port: 22
             # Добавь это, если сервер старый и жалуется на host key:
             strict_hostkeys_checking: false
