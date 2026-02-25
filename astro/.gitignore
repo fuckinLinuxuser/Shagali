@@ -33,3 +33,5 @@ pnpm-debug.log*
 *.avi
 *.flv
 *.wmv
+
+yandex_*.html
