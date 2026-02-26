@@ -1,7 +1,5 @@
 ---
 // src/components/Header.astro
-// Компонент содержит шапку сайта с эффектами занавеса, прожекторов и блоком о продюсере
-
 const { title = "Мир За Сценой" } = Astro.props;
 ---
 
@@ -11,7 +9,10 @@ const { title = "Мир За Сценой" } = Astro.props;
 
   <div class="spotlight">
     <h1>{title}</h1>
-    <p>Театральный режисер, чьи проекты захватят ваши сердца</p>
+    
+    <p class="touch-phrase" id="touchPhrase">
+      Прикоснись к театру
+    </p>
   </div>
 
   <div class="about-producer">
@@ -24,7 +25,7 @@ const { title = "Мир За Сценой" } = Astro.props;
     <h2>Елена Шагали</h2>
 
     <blockquote>
-      "Театр — это не просто сцена, это зеркало души, где каждый зритель видит себя по-новому."
+      "В театр приходят из любопытства, а остаются по любви"
     </blockquote>
   </div>
 
@@ -32,3 +33,71 @@ const { title = "Мир За Сценой" } = Astro.props;
   <div class="beam-right"></div>
 </header>
 
+<style>
+
+  .touch-phrase {
+    font-size: clamp(1.4rem, 5vw, 2.2rem);
+    color: #f0e8c0;
+    opacity: 0;
+    transform: translateY(30px);
+    text-shadow: 0 0 25px rgba(212, 175, 55, 0.9);
+    font-style: italic;
+    letter-spacing: 2px;
+    transition: all 1.2s ease-out;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  /* Начальная анимация появления */
+  .touch-phrase.appear {
+    opacity: 1;
+    transform: translateY(0);
+    animation: spotlight-glow 4s ease-in-out infinite alternate;
+  }
+
+  @keyframes spotlight-glow {
+    0%   { text-shadow: 0 0 20px rgba(212,175,55,0.5), 0 0 40px rgba(212,175,55,0.3); }
+    50%  { text-shadow: 0 0 45px rgba(212,175,55,1),   0 0 90px rgba(212,175,55,0.7); }
+    100% { text-shadow: 0 0 25px rgba(212,175,55,0.6), 0 0 50px rgba(212,175,55,0.4); }
+  }
+
+  /* Анимация исчезновения при касании */
+  .touch-phrase.hide {
+    opacity: 0;
+    transform: translateY(-60px) scale(0.85);
+    pointer-events: none;
+    transition: all 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+
+  @keyframes beam-sway {
+    0%, 100% { transform: translateX(-8%) rotate(-4deg); }
+    50%      { transform: translateX(8%)  rotate(4deg);  }
+  }
+</style>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const phrase = document.getElementById('touchPhrase');
+    if (!phrase) return;
+
+    // Запускаем появление через небольшую задержку после загрузки
+    setTimeout(() => {
+      phrase.classList.add('appear');
+    }, 800);
+
+    // Одноразовое касание / клик → исчезновение
+    const hideHandler = () => {
+      phrase.classList.remove('appear');
+      phrase.classList.add('hide');
+      
+      // Удаляем обработчик, чтобы больше не реагировал
+      phrase.removeEventListener('click', hideHandler);
+      phrase.removeEventListener('touchstart', hideHandler);
+    };
+
+    // Реагируем и на клик, и на тач (для мобильных)
+    phrase.addEventListener('click', hideHandler);
+    phrase.addEventListener('touchstart', hideHandler, { passive: true });
+  });
+</script>
