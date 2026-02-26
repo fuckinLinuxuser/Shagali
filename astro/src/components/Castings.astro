@@ -126,6 +126,7 @@
         transition: all 0.7s ease;
         scroll-snap-align: center;
     }
+    
 
     .timeline-item.visible {
         opacity: 1;
@@ -185,25 +186,6 @@
         transform: scale(1.05);
     }
 
-    .timeline-progress {
-        position: absolute;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 240px;
-        height: 5px;
-        background: rgba(0,0,0,0.25);
-        border-radius: 3px;
-        overflow: hidden;
-        pointer-events: none;
-    }
-
-    .progress-fill {
-        height: 100%;
-        background: #d4af37;
-        width: 0;
-        transition: width 0.4s ease-out;
-    }
 
     /* ─────────────── МОДАЛЬНОЕ ОКНО ─────────────── */
     #castings-modal {
@@ -396,10 +378,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="timeline-progress">
-            <div class="progress-fill" id="progressFill"></div>
-        </div>
     </div>
 </section>
 
@@ -436,13 +414,6 @@ document.addEventListener('DOMContentLoaded', () => {
         prev.addEventListener('click', () => container.scrollBy({ left: -scrollStep, behavior: 'smooth' }));
     }
 
-    // Прогресс-бар
-    function updateProgress() {
-        if (!progressFill || !container) return;
-        const max = container.scrollWidth - container.clientWidth;
-        const percent = max > 0 ? (container.scrollLeft / max) * 100 : 0;
-        progressFill.style.width = `${percent}%`;
-    }
 
     // Ближайшая карточка
     function highlightNearest() {
@@ -491,7 +462,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Инициализация
     setTimeout(() => {
-        updateProgress();
         highlightNearest();
     }, 300);
 

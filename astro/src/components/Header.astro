@@ -46,10 +46,9 @@ const { title = "Мир За Сценой" } = Astro.props;
     user-select: none;
     cursor: pointer;
     position: relative;
-    z-index: 2;
+    z-index: 10; /* повыше, чтобы был над overlay */
   }
 
-  /* Начальная анимация появления */
   .touch-phrase.appear {
     opacity: 1;
     transform: translateY(0);
@@ -62,7 +61,6 @@ const { title = "Мир За Сценой" } = Astro.props;
     100% { text-shadow: 0 0 25px rgba(212,175,55,0.6), 0 0 50px rgba(212,175,55,0.4); }
   }
 
-  /* Анимация исчезновения */
   .touch-phrase.hide {
     opacity: 0;
     transform: translateY(-60px) scale(0.85);
@@ -83,25 +81,15 @@ const { title = "Мир За Сценой" } = Astro.props;
   }
 </style>
 
-<!-- Мобильная логика — увеличенная зона касания -->
+<!-- Мобильный overlay для огромной зоны касания -->
 <style>
   @media (max-width: 768px) {
-    .touch-phrase {
-      /* Делаем область касания очень большой, но сам текст остаётся прежнего размера */
-      padding: 6rem 4rem;
-      margin: -6rem -4rem;
-      display: inline-block;
-      /* Для лучшей центровки на всякий случай */
-      text-align: center;
-    }
-
-    /* Опционально: можно ещё больше увеличить зону */
-    .spotlight {
-      min-height: 40vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+    .touch-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 5;               /* под текстом (z-index 10), но над фоном */
+      background: transparent;  /* невидимый */
+      touch-action: manipulation; /* убирает 300ms задержку */
     }
   }
 </style>
@@ -111,42 +99,62 @@ const { title = "Мир За Сценой" } = Astro.props;
     const phrase = document.getElementById('touchPhrase');
     if (!phrase) return;
 
-    // Появление с небольшой задержкой
+    let overlay = null;
+    let mobileHideHandler = null; // объявляем заранее
+
+    // Появление текста
     setTimeout(() => {
       phrase.classList.add('appear');
     }, 800);
 
     const hideHandler = () => {
+      if (phrase.classList.contains('hide')) return;
+      
       phrase.classList.remove('appear');
       phrase.classList.add('hide');
-      
-      // Удаляем все обработчики
+
+      // Удаляем слушатели
       phrase.removeEventListener('click', hideHandler);
       phrase.removeEventListener('touchstart', hideHandler);
-      // Если вешали на spotlight — тоже убираем
-      document.removeEventListener('touchstart', mobileHideHandler);
+
+      if (overlay) {
+        overlay.removeEventListener('touchstart', hideHandler);
+      }
+
+      // Удаляем глобальный mobileHideHandler, если он был добавлен
+      if (mobileHideHandler) {
+        document.removeEventListener('touchstart', mobileHideHandler);
+        // или если вешали на spotlight — убрать там же
+      }
     };
 
-    // Десктоп — только по элементу
+    // Десктоп + общий touch на фразе
     phrase.addEventListener('click', hideHandler);
+    phrase.addEventListener('touchstart', hideHandler, { passive: true });
 
-    // Мобильные — вешаем дополнительно на весь spotlight
+    // Мобильная логика
     if (window.matchMedia("(max-width: 768px)").matches) {
-      const spotlight = phrase.closest('.spotlight');
+      const spotlight = phrase.closest('.header');
       if (spotlight) {
-        const mobileHideHandler = (e) => {
-          // Предотвращаем множественные срабатывания
+        // 1. Создаём overlay для большой зоны касания
+        overlay = document.createElement('div');
+        overlay.className = 'touch-overlay';
+        spotlight.appendChild(overlay);
+
+        // Касание по overlay → прячем
+        overlay.addEventListener('touchstart', hideHandler, { passive: true });
+
+        // 2. Дополнительный обработчик на весь spotlight (страховка)
+        mobileHideHandler = (e) => {
           if (phrase.classList.contains('hide')) return;
           hideHandler();
         };
 
         spotlight.addEventListener('touchstart', mobileHideHandler, { passive: true });
-        // На всякий случай оставляем и на самой фразе
-        phrase.addEventListener('touchstart', mobileHideHandler, { passive: true });
+
+        // Опционально: если хотите ловить касание вообще по документу (очень агрессивно)
+        // document.addEventListener('touchstart', mobileHideHandler, { passive: true });
       }
-    } else {
-      // На десктопе только по фразе
-      phrase.addEventListener('touchstart', hideHandler, { passive: true });
     }
   });
 </script>
