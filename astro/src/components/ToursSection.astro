@@ -8,35 +8,37 @@ const tours = [
     note: "",
   },
   {
-    month: "Июль 2026",
-    cities: ["Псков", "Гдов", "Сланцы"],
+    month: "Август 2026",
+    cities: ["Псковская и Ленинградская области"],
   },
   {
     month: "Сентябрь 2026",
     cities: [
-      "Тюмень",
-      "Тобольск",
-      "Нижневартовск",
-      "Сургут",
-      "Лангепас",
-      "Мегион",
-    ],
+      " ХМАО (Сургут, Нижневартовск, Мегион, Нефтеюганск и др.)"],
   },
   {
-    month: "Декабрь 2026",
-    cities: ["Пенза", "Саранск", "Рязань"],
+    month: "Октябрь 2026",
+    cities: ["Урал (Тюменская, Курганская, Челябинская области и др.)"],
   },
   {
     month: "Февраль 2027",
-    cities: ["Хабаровск", "Владивосток", "Комсомольск-на-Амуре"],
+    cities: ["Золотое / Серебряное кольцо России"],
   },
+  {
+    month: "Апрель 2027",
+    cities: ["Центральное Черноземье (Воронежская, Тамбовская области и др.)"],
+  },
+  {
+    month: "Июль 2027",
+    cities: ["Поволжье (Волгоградская, Пензенская, Саратовская области и др.)"],
+  }
 ];
 ---
 
 <section id="tours" class="section tours">
   <div class="container">
     <h2>Гастроли и выступления</h2>
-    <p class="base-info">Основная база — Санкт-Петербург</p>
+    <p class="base-info">Живем и творим в Санкт-Петербурге</p>
     <h3>План гастролей 2026–2027</h3>
 
     <div class="map-container">
@@ -217,8 +219,7 @@ const tours = [
     </div>
 
     <div class="cta-wrapper">
-     <!-- В ToursSection.astro, после .cta-wrapper -->
-<!-- HTML (вставь вместо текущего .form-container) -->
+
 <div class="form-modal-trigger">
   <button type="button" class="form-open-btn" id="openForm" onclick="openWaitlistModal()">
     Записаться в лист ожидания
@@ -275,9 +276,12 @@ wrapper?.addEventListener('click', e => {
     letter-spacing: -0.5px;
   }
 
+  .city-label {
+    display: none;
+  }
   .base-info {
     text-align: center;
-    font-size: 1.28rem;
+    font-size: 2.28rem;
     color: #d4af57;
     margin-bottom: 2.5rem;
     font-weight: 500;

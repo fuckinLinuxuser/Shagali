@@ -9,9 +9,23 @@ const slides = [
   },
   {
     img: "/images/projects/doggy.jpeg",
-    title: "Мамочка, купи собачку!",
-    text: "Милая пушистая игрушка, в которой отражается всё счастье твоего детства. Смешной товарищ по играм и соучастник мелких шалостей. И крупных семейных разборок заодно! Когда у Ребёнка из друзей только цифровая колонка, то собака становится заветной мечтой…  А родители видят в собаке источник дополнительных проблем. Однажды собака может надоесть. Впрочем, не только родителям… ",
+    title: "Мамочка, купи собаку!",
+    text: "Милая пушистая игрушка, в которой отражается всё счастье твоего детства. Смешной товарищ по играм и соучастник мелких шалостей. И крупных семейных разборок заодно! Когда у Ребёнка из друзей только цифровая колонка, то собака становится заветной мечтой… А родители видят в собаке источник дополнительных проблем. Однажды собака может надоесть. Впрочем, не только родителям… ",
     quote: "Сказка про то, как собака учит быть взрослыми. Причем учит не только детей. ",
+    soon: true
+  },
+  {
+    img: "/images/projects/papa_karlo.jpg",
+    title: "Откуда взялся папа Карло?",
+    text: "Детям всё прекрасно известно про Буратино. Он весёлый, забавный, симпатичный. Но когда ты взрослеешь, то начинаешь догадываться, что за этой сказкой стоит реальность итальянского Средневековья... И сквозь знакомые с детского сада яркие картинки проступает настоящая жизнь - такая же, какую живешь ты. Понятная - просто в старинных декорациях. Правдивая - просто случившаяся 400 лет назад. Дети до 15 лет на этот спектакль не приглашаются.",
+    quote: "Готическая сказка, которую рассказывают только взрослым",
+    soon: true
+  },
+  {
+    img: "/images/projects/indigo.jpg",
+    title: "Растворимый Индиго",
+    text: "Они родились в начале нового тысячелетия. Тогда человечество только открывало для себя новый мир - тот самый мир, где появились слова 'экологичность', 'ментальное здоровье', 'интеграция', 'энергия вселенной'... Мы впервые читали книги про то, что такое безусловная любовь. У нас рождались удивительные дети, которые знали про этику больше нас самих... А потом случилась жизнь. Дети Индиго выросли. А мир для них мы не вырастили. И наши маленькие волшебники пошли работать менеджерами продаж и автослесарями. Что-то внутри меняется, когда не сбывается хорошее будущее твоего ребенка. Как будто именно ты пообещал - и обманул...Философский детектив про то, как мы позвали волшебных детей в обычную жизнь.",
+    quote: "Мы так ждали поколение волшебников...",
     soon: true
   }
 ];
@@ -25,28 +39,18 @@ const slides = [
       slides.map((slide) => (
         <div class="swiper-slide">
           <img src={slide.img} alt={slide.title} loading="lazy" />
-
           <div class="slide-content">
-            {/* Бейдж "Скоро..." в левом верхнем углу на мобильных */}
             {slide.soon && (
               <div class="soon-badge mobile-only">Скоро...</div>
             )}
-
-            {/* Название + цитата над кнопками */}
             <div class="info-block">
               <h2>{slide.title}</h2>
-              {slide.quote && (
-                <p class="quote">{slide.quote}</p>
-              )}
+              {slide.quote && <p class="quote">{slide.quote}</p>}
             </div>
-
-            {/* Описание только на десктопе */}
             <p class="description desktop-only">{slide.text}</p>
 
-            {/* Кнопки внизу на одной линии */}
             <div class="buttons-row">
-              {/* "Подробнее" только на мобильных */}
-              <button 
+              <button
                 type="button"
                 class="more-btn mobile-only"
                 data-title={slide.title}
@@ -55,9 +59,7 @@ const slides = [
               >
                 Подробнее
               </button>
-
-              {/* "Билеты" всегда */}
-              <button 
+              <button
                 type="button"
                 class="tickets-btn"
                 onclick="openWaitlistModal()"
@@ -77,7 +79,7 @@ const slides = [
   </div>
 </div>
 
-<!-- Модалка -->
+<!-- Модальное окно -->
 <div id="project-modal" class="modal">
   <div class="modal-content">
     <span class="close-modal">×</span>
@@ -88,14 +90,13 @@ const slides = [
 </div>
 
 <script defer src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
-
 <script is:inline>
   document.addEventListener('DOMContentLoaded', () => {
     if (typeof Swiper === 'undefined') return console.error('Swiper не загрузился');
-
+    
     const swiper = new Swiper('#projects', {
       loop: true,
-      speed: 2500,
+      speed: 2000,
       grabCursor: true,
       autoplay: { delay: 5000, disableOnInteraction: false },
       effect: 'fade',
@@ -106,7 +107,6 @@ const slides = [
     document.querySelector('#projects .custom-btn.prev')?.addEventListener('click', () => swiper.slidePrev());
     document.querySelector('#projects .custom-btn.next')?.addEventListener('click', () => swiper.slideNext());
 
-    // Модалка
     const modal = document.getElementById('project-modal');
     const titleEl = document.getElementById('modal-title');
     const textEl = document.getElementById('modal-text');
@@ -126,7 +126,9 @@ const slides = [
 
     closeBtn.addEventListener('click', closeModal);
     modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.style.display === 'flex') closeModal(); });
+    document.addEventListener('keydown', e => { 
+      if (e.key === 'Escape' && modal.style.display === 'flex') closeModal(); 
+    });
 
     function closeModal() {
       modal.style.display = 'none';
@@ -160,9 +162,7 @@ const slides = [
     background: linear-gradient(to top right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, transparent 70%);
   }
 
-  .info-block {
-    margin-bottom: 2rem;
-  }
+  .info-block { margin-bottom: 2rem; }
 
   h2 {
     font-family: 'Playfair Display', serif;
@@ -182,36 +182,10 @@ const slides = [
 
   .buttons-row {
     display: flex;
+    flex-wrap: wrap;
     gap: 1.2rem;
     align-items: center;
-  }
-
-  /* Бейдж "Скоро..." */
-  .soon-badge {
-    position: absolute;
-    top: 5%;
-    left: 1%;
-    transform: translateY(-50%);
-    background: #c22431;
-    color: white;
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    font-size: clamp(1.1rem, 2.2vw, 1.6rem);
-    padding: 0.35em 0.9em;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-    white-space: nowrap;
-    z-index: 10;
-  }
-
-  .description {
-    font-family: 'Times New Roman', serif;
-    font-size: clamp(1rem, 2.2vw, 1.6rem);
-    opacity: 0.75;
-    max-width: 1340px;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
-    margin-bottom: 2rem;
-    line-height: 1.55;
+    margin-top: 1.2rem;
   }
 
   .more-btn,
@@ -226,6 +200,7 @@ const slides = [
     box-shadow: 0 6px 20px rgba(0,0,0,0.5);
     transition: all 0.28s ease;
     cursor: pointer;
+    white-space: nowrap;
   }
 
   .more-btn {
@@ -240,8 +215,32 @@ const slides = [
     box-shadow: 0 12px 32px rgba(0,0,0,0.55);
   }
 
-  .tickets-btn:hover {
-    background: #e6c24a;
+  .tickets-btn:hover { background: #e6c24a; }
+
+  .soon-badge {
+    position: absolute;
+    top: 5%;
+    left: 1%;
+    transform: translateY(-50%);
+    background: #c22431;
+    color: white;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+    padding: 0.35em 0.9em;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    z-index: 10;
+  }
+
+  .description {
+    font-family: 'Times New Roman', serif;
+    font-size: clamp(1rem, 2.2vw, 1.6rem);
+    opacity: 0.75;
+    max-width: 1340px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    margin-bottom: 2rem;
+    line-height: 1.55;
   }
 
   .custom-nav {
@@ -270,7 +269,7 @@ const slides = [
 
   .custom-btn:hover { background: rgba(255,255,255,0.25); transform: scale(1.12); }
 
-  /* ─── Мобильная версия ────────────────────────────────────── */
+  /* ─── Мобильные стили ────────────────────────────────────── */
   @media (max-width: 768px) {
     .hero-slider {
       aspect-ratio: 4 / 5;
@@ -294,30 +293,37 @@ const slides = [
       opacity: 0.85;
     }
 
-    .info-block {
-      margin-bottom: 1.5rem;
-    }
+    .info-block { margin-bottom: 1.5rem; }
 
     h2 {
       font-size: clamp(1.9rem, 6.5vw, 2.8rem);
-      margin-top: 3rem; /* место под бейдж */
+      margin-top: 3rem;
       margin-bottom: 0.6rem;
     }
 
-    .quote {
-      font-size: clamp(1rem, 3.8vw, 1.25rem);
-      margin: 0;
-    }
+    .quote { font-size: clamp(1rem, 3.8vw, 1.25rem); }
 
     .buttons-row {
-      gap: 1rem;
-    }
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;       /* ← главное: НЕ переносить */
+    gap: 12px !important;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 1.2rem;
+  }
 
-    .more-btn,
-    .tickets-btn {
-      padding: 0.8rem 1.8rem;
-      font-size: clamp(1rem, 4.5vw, 1.3rem);
-    }
+  .more-btn,
+  .tickets-btn {
+    flex: 1 1 45% !important;           /* примерно поровну делят ширину */
+    min-width: 0 !important;
+    max-width: 48% !important;
+    padding: 0.75rem .4rem !important;
+    font-size: clamp(0.95rem, 4vw, 1.15rem) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
 
     .desktop-only { display: none; }
     .mobile-only  { display: block; }
@@ -329,15 +335,22 @@ const slides = [
     }
   }
 
-  @media (max-width: 480px) {
-    .slide-content { padding: 2.5rem 1.4rem 4.5rem 1.4rem; }
-    .soon-badge { top: 0.9rem; left: 0.9rem; font-size: clamp(0.95rem, 4.2vw, 1.25rem); }
-    h2 { margin-top: 2.8rem; font-size: clamp(1.7rem, 7vw, 2.4rem); }
-    .buttons-row { flex-direction: column; gap: 1rem; align-items: flex-start; }
-    .tickets-btn, .more-btn { width: auto; }
+  @media (max-width: 420px) {
+    .slide-content { padding: 2.5rem 1.4rem 4.8rem 1.4rem; }
+    
+    .buttons-row {
+      gap: 10px;
+    }
+
+    .more-btn,
+    .tickets-btn {
+      min-width: 100px;
+      padding: 0.7rem 1.4rem;
+      font-size: clamp(0.95rem, 4.3vw, 1.15rem);
+    }
   }
 
-  /* Модалка (без изменений) */
+  /* Модалка */
   .modal {
     display: none;
     position: fixed;

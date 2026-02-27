@@ -1,0 +1,266 @@
+  .hero-slider {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 90vh;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    background: #000;
+  }
+
+  .swiper-slide { position: relative; width: 100%; height: 100%; }
+  .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
+
+  .slide-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 5rem 2rem 5.5rem 2rem;
+    color: white;
+    background: linear-gradient(to top right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, transparent 70%);
+  }
+
+  .info-block { margin-bottom: 2rem; }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 3.5rem);
+    margin: 0 0 0.6rem 0;
+    text-shadow: 0 3px 12px rgba(0,0,0,0.9);
+  }
+
+  .quote {
+    font-family: 'Times New Roman', serif;
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    font-style: italic;
+    opacity: 0.85;
+    margin: 0;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+  }
+
+  .buttons-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    align-items: center;
+    margin-top: 1.2rem;
+  }
+
+  .more-btn,
+  .tickets-btn {
+    background: #d4af37;
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: clamp(1rem, 2.2vw, 1.35rem);
+    padding: 0.9rem 2.2rem;
+    border-radius: 50px;
+    border: none;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    transition: all 0.28s ease;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .more-btn {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.5);
+  }
+
+  .more-btn:hover,
+  .tickets-btn:hover {
+    transform: translateY(-4px) scale(1.04);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.55);
+  }
+
+  .tickets-btn:hover { background: #e6c24a; }
+
+  .soon-badge {
+    position: absolute;
+    top: 5%;
+    left: 1%;
+    transform: translateY(-50%);
+    background: #c22431;
+    color: white;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+    padding: 0.35em 0.9em;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    z-index: 10;
+  }
+
+  .description {
+    font-family: 'Times New Roman', serif;
+    font-size: clamp(1rem, 2.2vw, 1.6rem);
+    opacity: 0.75;
+    max-width: 1340px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    margin-bottom: 2rem;
+    line-height: 1.55;
+  }
+
+  .custom-nav {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1.5rem;
+  }
+
+  .custom-btn {
+    pointer-events: auto;
+    width: 60px;
+    height: 60px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .custom-btn:hover { background: rgba(255,255,255,0.25); transform: scale(1.12); }
+
+  /* ─── Мобильные стили ────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .hero-slider {
+      aspect-ratio: 4 / 5;
+      max-height: 85vh;
+      min-height: 500px;
+    }
+
+    .slide-content {
+      padding: 3rem 1.6rem 5rem 1.6rem;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.55) 25%, rgba(0,0,0,0.35) 65%, transparent 90%);
+    }
+
+    .soon-badge {
+      top: 5%;
+      left: 5%;
+      transform: none;
+      font-size: clamp(1rem, 4.5vw, 1.35rem);
+      padding: 0.45em 1.1em;
+      border-radius: 50px;
+      z-index: 15;
+      opacity: 0.85;
+    }
+
+    .info-block { margin-bottom: 1.5rem; }
+
+    h2 {
+      font-size: clamp(1.9rem, 6.5vw, 2.8rem);
+      margin-top: 3rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .quote { font-size: clamp(1rem, 3.8vw, 1.25rem); }
+
+    .buttons-row {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;       /* ← главное: НЕ переносить */
+    gap: 12px !important;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 1.2rem;
+  }
+
+  .more-btn,
+  .tickets-btn {
+    flex: 1 1 45% !important;           /* примерно поровну делят ширину */
+    min-width: 0 !important;
+    max-width: 48% !important;
+    padding: 0.75rem .4rem !important;
+    font-size: clamp(0.95rem, 4vw, 1.15rem) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+    .desktop-only { display: none; }
+    .mobile-only  { display: block; }
+
+    .custom-btn {
+      width: 52px;
+      height: 52px;
+      font-size: 1.5rem;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .slide-content { padding: 2.5rem 1.4rem 4.8rem 1.4rem; }
+    
+    .buttons-row {
+      gap: 10px;
+    }
+
+    .more-btn,
+    .tickets-btn {
+      min-width: 100px;
+      padding: 0.7rem 1.4rem;
+      font-size: clamp(0.95rem, 4.3vw, 1.15rem);
+    }
+  }
+
+  /* Модалка */
+  .modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.88);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .modal-content {
+    background: #111;
+    color: white;
+    border-radius: 16px;
+    max-width: 92%;
+    width: 100%;
+    max-height: 82vh;
+    overflow-y: auto;
+    padding: 2.5rem 2rem;
+    position: relative;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.8);
+  }
+
+  .close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 2.8rem;
+    color: #d4af37;
+    cursor: pointer;
+  }
+
+  .modal-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.7rem, 6.5vw, 2.4rem);
+    margin-bottom: 1.3rem;
+    text-align: center;
+  }
+
+  #modal-text {
+    font-family: 'Times New Roman', serif;
+    font-size: clamp(1.05rem, 4.2vw, 1.35rem);
+    line-height: 1.65;
+    margin-bottom: 1.8rem;
+  }
+
+  #modal-quote {
+    font-style: italic;
+    opacity: 0.88;
+    text-align: center;
+    font-size: clamp(1.05rem, 4vw, 1.3rem);
+  }

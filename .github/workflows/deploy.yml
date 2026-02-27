@@ -29,7 +29,7 @@ jobs:
       - name: Deploy via SSH (rsync)
         uses: burnett01/rsync-deployments@v8
         with:
-            switches: -avzr --delete
+            switches: -avzr --delete --exclude-from=.github/rsync-excludes.txt
             path: astro/dist/
             remote_host: ${{ secrets.SSH_HOST }}
             remote_user: ${{ secrets.SSH_USER }}

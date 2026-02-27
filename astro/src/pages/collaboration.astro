@@ -6,11 +6,12 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Условия сотрудничества | Мир За Сценой</title>
-  <!-- Подключите ваши шрифты (Playfair Display + sans-serif) -->
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="icon" href="/images/image.png" type="image/png">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 
@@ -19,10 +20,6 @@
     <section class="collaboration-hero">
       <div class="container">
         <h1 class="page-title">Условия сотрудничества</h1>
-        <p class="lead">
-          Мы собираем <span class="gold">соавторов</span>,<br>
-          которые готовы гореть на сцене жизни вместе с нами.
-        </p>
       </div>
     </section>
 
@@ -30,44 +27,37 @@
       <div class="container">
         <div class="principles-grid">
           <div class="principle-card">
-            <div class="card-glow"></div>
             <h3>Работаем только из любви</h3>
-            <p>Захотим задолбаться - сделаем это в другом месте.</p>
+            <p>Захотим задолбаться — сделаем это в другом месте.</p>
           </div>
 
           <div class="principle-card">
-            <div class="card-glow"></div>
-            <h3>Действуем масштабно и ярко.</h3>
-            <p>Всегда успеем побыть обычными.</p>
+            <h3>Действуем масштабно и ярко</h3>
+            <p>Всегда успеем побыть обычными. Как-нибудь потом.</p>
           </div>
 
           <div class="principle-card">
-            <div class="card-glow"></div>
             <h3>Создаём из себя</h3>
             <p>Только внутри есть настоящее.</p>
           </div>
 
           <div class="principle-card">
-            <div class="card-glow"></div>
-            <h3>Помним о главном.</h3>
+            <h3>Помним о главном</h3>
             <p>Бог не меняет талант на деньги, он требует бо́льшего.</p>
           </div>
 
           <div class="principle-card">
-            <div class="card-glow"></div>
             <h3>Видим случайные совпадения</h3>
             <p>И строим из себя волшебников.</p>
           </div>
 
           <div class="principle-card">
-            <div class="card-glow"></div>
             <h3>Вокруг нас все становятся Великими</h3>
             <p>Какими и были изначально.</p>
           </div>
 
-          <div class="principle-card highlight">
-            <div class="card-glow"></div>
-            <h3>Успеем сколько захотим.</h3>
+          <div class="principle-card">
+            <h3>Успеем сколько захотим</h3>
             <p>Поделимся всем, что есть. Возьмем столько, сколько полагается.</p>
           </div>
         </div>
@@ -83,8 +73,8 @@
             <div class="contract-column">
               <ul class="contract-list">
                 <li>Отказ от алкоголя и веществ в ходе выполнения контракта.</li>
-                <li>Общение друг с другом – уважительное. Обсуждение – коллегиальное (решающее слово у продюсера). Действия – в интересах успешности проекта. </li>
-                <li>Возможные непонимания обсуждаются лично, прямо, уважительно и решаются в интересах успешности проекта. </li>
+                <li>Общение друг с другом – уважительное. Обсуждение – коллегиальное (решающее слово у продюсера). Действия – в интересах успешности проекта.</li>
+                <li>Возможные непонимания обсуждаются лично, прямо, уважительно и решаются в интересах успешности проекта.</li>
                 <li>График работы строится с учетом личных приоритетов, при этом в интересах успешности проекта.</li>
               </ul>
             </div>
@@ -102,21 +92,19 @@
       </div>
     </section>
 
-<section class="cta-section">
+    <section class="cta-section">
       <div class="container">
         <p class="cta-text">Готовы выйти на сцену?</p>
         <button type="button" class="btn-cta js-open-modal">Оставить заявку</button>
       </div>
     </section>
-
   </main>
 
-  <!-- ─── Модальное окно ─────────────────────────────────────────────── -->
+  <!-- Модальное окно -->
   <div class="modal-overlay js-modal-overlay" aria-hidden="true">
     <div class="modal js-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      
       <button class="modal-close js-close-modal" aria-label="Закрыть">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M18 6L6 18M6 6l12 12"/>
         </svg>
       </button>
@@ -124,26 +112,31 @@
       <h2 id="modal-title" class="modal-title">Оставить заявку</h2>
       <p class="modal-subtitle">Мы свяжемся с вами в ближайшее время</p>
 
-      <iframe 
-        src="https://forms.yandex.ru/u/698ed4466d2d7366e0a9f973?iframe=1&theme=light" 
-        frameborder="0" 
-        name="ya-form-frame"
-        class="ya-form-iframe"
-        title="Форма заявки"
-      ></iframe>
-
+      <div class="form-wrapper">
+        <iframe 
+          src="https://forms.yandex.ru/u/698ed4466d2d7366e0a9f973?iframe=1&theme=light" 
+          frameborder="0" 
+          class="ya-form-iframe"
+          title="Форма заявки"
+          allowfullscreen
+          scrolling="yes"
+        ></iframe>
+      </div>
     </div>
   </div>
+
   <style is:global>
     :root {
-      --bg: #0a0a07;
-      --dark: #11110c;
-      --gold: #d4af57;
-      --gold-light: #e6c678;
+      --bg:        #fafbd6;
+      --card-bg:   #ffffff;
+      --text:      #222222;
+      --text-light:#444444;
+      --text-muted:#666666;
+      --gold:      #d4af37;
       --gold-dark: #b8972e;
-      --text: #f5f0e6;
-      --text-light: #d9d2c6;
-      --text-muted: #a89f8f;
+      --gold-light:#e6c678;
+      --shadow:    0 6px 20px rgba(0,0,0,0.12);
+      --shadow-lg: 0 12px 36px rgba(0,0,0,0.16);
     }
 
     body {
@@ -152,6 +145,14 @@
       color: var(--text);
       font-family: 'Inter', system-ui, sans-serif;
       line-height: 1.6;
+    }
+
+    body.modal-open {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100dvh;
+      overflow: hidden;
     }
 
     .container {
@@ -163,145 +164,100 @@
     h1, h2, h3 {
       font-family: 'Playfair Display', serif;
       font-weight: 700;
-      color: var(--gold);
+      color: #222;
     }
 
     /* Hero */
     .collaboration-hero {
-      padding: 160px 0 120px;
+      padding: 140px 0 100px;
       text-align: center;
-      background: linear-gradient(to bottom, #0f0f0a, #0a0a07);
     }
 
     .page-title {
-      font-size: 5.2rem;
-      margin: 0 0 1.4rem;
-      letter-spacing: 1.5px;
-      text-shadow: 0 6px 40px rgba(212,175,87,0.18);
-    }
-
-    .lead {
-      font-size: 1.68rem;
-      max-width: 820px;
-      margin: 0 auto;
-      color: var(--text-light);
-      font-weight: 300;
-    }
-
-    .gold {
-      color: var(--gold);
-      font-weight: 600;
+      font-size: 4.8rem;
+      margin: 0 0 1rem;
+      letter-spacing: 1.2px;
+      color: #222;
     }
 
     /* Principles */
     .principles-section {
-      padding: 80px 0 140px;
+      padding: 60px 0 120px;
     }
 
     .principles-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-      gap: 40px;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 32px;
     }
 
     .principle-card {
-      position: relative;
-      background: rgba(20,18,14,0.78);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(212,175,87,0.12);
-      border-radius: 20px;
-      padding: 48px 40px 40px;
-      transition: all 0.45s ease;
-      overflow: hidden;
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 44px 36px;
+      box-shadow: var(--shadow);
+      transition: all 0.35s ease;
+      border: 1px solid rgba(212,175,55,0.12);
     }
 
     .principle-card:hover {
-      transform: translateY(-14px);
-      border-color: rgba(212,175,87,0.45);
-      box-shadow: 0 24px 80px rgba(0,0,0,0.55),
-                  0 0 0 1px rgba(212,175,87,0.18) inset;
-    }
-
-    .card-glow {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 30% 20%, rgba(212,175,87,0.07) 0%, transparent 60%);
-      opacity: 0;
-      transition: opacity 0.6s ease;
-      pointer-events: none;
-    }
-
-    .principle-card:hover .card-glow { opacity: 1; }
-
-    .card-glow.strong {
-      background: radial-gradient(circle at 50% 50%, rgba(212,175,87,0.14) 0%, transparent 70%);
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--gold);
     }
 
     .principle-card h3 {
-      font-size: 1.95rem;
+      font-size: 1.85rem;
       margin: 0 0 1.1em;
-      position: relative;
-      z-index: 1;
+      color: #222;
     }
 
     .principle-card p {
       font-size: 1.08rem;
-      color: var(--text-muted);
+      color: var(--text-light);
       margin: 0;
-      position: relative;
-      z-index: 1;
     }
-
-    .highlight {
-      border-color: var(--gold);
-      background: linear-gradient(145deg, rgba(30,26,20,0.92), rgba(18,16,12,0.92));
-      transform: scale(1.04);
-    }
-
-    .highlight h3 { color: var(--gold-light); }
 
     /* Contract */
     .contract-section {
-      padding: 80px 0 140px;
-      background: linear-gradient(to bottom, #0a0a07, #11110c);
+      padding: 60px 0 120px;
     }
 
     .contract-frame {
-      background: rgba(15,13,9,0.7);
-      border: 1px solid rgba(212,175,87,0.22);
-      border-radius: 24px;
-      padding: 60px 48px;
+      background: white;
+      border-radius: 20px;
+      padding: 56px 48px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(212,175,55,0.14);
       max-width: 1100px;
       margin: 0 auto;
-      box-shadow: 0 20px 80px rgba(0,0,0,0.6);
     }
 
     .contract-title {
-      font-size: 3.2rem;
+      font-size: 3rem;
       text-align: center;
-      margin: 0 0 2.5rem;
-      letter-spacing: 1.2px;
+      margin: 0 0 2.4rem;
+      color: #222;
     }
 
     .contract-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 60px;
+      gap: 56px;
     }
 
     .contract-list {
       list-style: none;
       padding: 0;
       margin: 0;
-      font-size: 1.12rem;
-      line-height: 1.8;
+      font-size: 1.1rem;
       color: var(--text-light);
     }
 
     .contract-list li {
       position: relative;
-      padding-left: 2.2em;
-      margin-bottom: 1.1em;
+      padding-left: 2em;
+      margin-bottom: 1em;
     }
 
     .contract-list li::before {
@@ -310,94 +266,58 @@
       left: 0;
       color: var(--gold);
       font-size: 1.3em;
-      line-height: 1;
     }
 
     .actors h3 {
-      font-size: 1.65rem;
-      color: var(--gold-light);
-      margin: 0 0 1.4em;
+      font-size: 1.6rem;
+      color: var(--gold-dark);
+      margin: 0 0 1.3em;
     }
 
     /* CTA */
     .cta-section {
-      padding: 140px 0 180px;
+      padding: 0px 0 160px;
       text-align: center;
-      background: linear-gradient(180deg, #11110c 0%, #0a0a07 100%);
     }
 
     .cta-text {
-      font-size: 2.1rem;
+      font-size: 2rem;
       font-family: 'Playfair Display', serif;
-      color: var(--text-light);
-      margin-bottom: 2.5rem;
+      color: #333;
+      margin-bottom: 2.2rem;
     }
 
     .btn-cta {
-      display: inline-block;
       background: var(--gold);
-      color: #0a0a07;
-      padding: 18px 64px;
+      color: #1a1a1a;
+      padding: 18px 60px;
+      border: none;
       border-radius: 60px;
-      font-size: 1.32rem;
+      font-size: 1.28rem;
       font-weight: 600;
-      text-decoration: none;
-      transition: all 0.4s ease;
-      box-shadow: 0 12px 40px rgba(212,175,87,0.35);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn-cta::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
-      transform: translateX(-100%);
-      transition: transform 0.7s ease;
-    }
-
-    .btn-cta:hover::before {
-      transform: translateX(100%);
+      cursor: pointer;
+      transition: all 0.35s ease;
+      box-shadow: 0 8px 32px rgba(212,175,55,0.28);
     }
 
     .btn-cta:hover {
-      background: var(--gold-light);
-      transform: translateY(-5px);
-      box-shadow: 0 24px 70px rgba(212,175,87,0.5);
+      background: var(--gold-dark);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(212,175,55,0.4);
     }
 
-    /* Адаптив */
-    @media (max-width: 1024px) {
-      .principles-grid { gap: 32px; }
-      .contract-grid { grid-template-columns: 1fr; gap: 48px; }
-    }
-
-    @media (max-width: 768px) {
-      .page-title        { font-size: 3.8rem; }
-      .lead              { font-size: 1.38rem; }
-      .principle-card    { padding: 40px 28px; }
-      .contract-frame    { padding: 48px 32px; }
-      .btn-cta           { padding: 16px 48px; font-size: 1.18rem; }
-    }
-
-    @media (max-width: 480px) {
-      .page-title        { font-size: 2.9rem; }
-      .lead              { font-size: 1.22rem; }
-    }
-    /* Модалка */
+    /* ─────────────── МОДАЛКА ─────────────── */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: var(--modal-bg);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      display: grid;
-      place-items: center;
+      background: rgba(0,0,0,0.82);
       opacity: 0;
       visibility: hidden;
-      transition: all 0.4s ease;
+      transition: opacity 0.4s ease;
       z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .modal-overlay.active {
@@ -407,114 +327,126 @@
 
     .modal {
       position: relative;
-      width: 92%;
+      width: 100%;
       max-width: 860px;
-      max-height: 94vh;
-      background: var(--modal-glass);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(212,175,87,0.18);
-      border-radius: 24px;
-      box-shadow: 0 30px 100px rgba(0,0,0,0.7),
-                  0 0 0 1px rgba(212,175,87,0.12) inset;
-      padding: 48px 32px 40px;
-      overflow-y: auto;
-      transform: scale(0.92);
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .modal-overlay.active .modal {
-      transform: scale(1);
+      height: 100dvh;
+      max-height: 100dvh;
+      background: white;
+      border-radius: 0;
+      overflow: hidden;
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      padding: 64px 32px 40px;
     }
 
     .modal-close {
-      position: absolute;
-      top: 24px;
+      position: fixed;
+      top: max(16px, env(safe-area-inset-top, 16px));
       right: 24px;
       background: none;
       border: none;
-      color: var(--text-muted);
+      color: var(--gold-dark);
+      font-size: 2.6rem;
       cursor: pointer;
-      padding: 8px;
-      border-radius: 50%;
-      transition: all 0.25s ease;
-      line-height: 1;
+      z-index: 10;
+      transition: all 0.3s;
     }
 
-    .modal-close:hover,
-    .modal-close:focus {
-      color: var(--gold-light);
-      background: rgba(212,175,87,0.12);
-      transform: rotate(90deg);
+    .modal-close:hover {
+      color: #222;
+      transform: rotate(90deg) scale(1.12);
     }
 
     .modal-title {
-      font-size: 2.6rem;
+      font-size: 2.4rem;
       text-align: center;
-      margin: 0 0 0.8rem;
-      color: var(--gold);
-      font-family: 'Playfair Display', serif;
+      margin: 0 0 0.6rem;
+      color: #222;
+      padding-top: env(safe-area-inset-top, 0);
     }
 
     .modal-subtitle {
       text-align: center;
-      color: var(--text-muted);
+      color: #666;
       margin: 0 0 2.2rem;
-      font-size: 1.12rem;
+      font-size: 1.1rem;
+    }
+
+    .form-wrapper {
+      flex: 1;
+      overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
+      padding: 0 8px 32px;
+      padding-bottom: calc(32px + env(safe-area-inset-bottom, 0));
     }
 
     .ya-form-iframe {
       width: 100%;
-      height: 68vh;
-      min-height: 520px;
-      border-radius: 16px;
-      background: rgb(225, 216, 204);
+      height: 1000px !important;
+      min-height: 600px;
+      border: none;
+      border-radius: 14px;
+      background: #f8f6f0;
+      display: block;
+      transform: translateZ(0);
     }
 
-    /* Адаптив для модалки */
-    @media (max-width: 640px) {
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .contract-grid { grid-template-columns: 1fr; gap: 48px; }
+    }
+
+    @media (max-width: 768px) {
+      .page-title   { font-size: 3.6rem; }
+      .contract-frame { padding: 48px 32px; }
+      .btn-cta      { padding: 16px 52px; font-size: 1.18rem; }
+
       .modal {
-        padding: 40px 20px 32px;
-        border-radius: 20px;
+        padding: 56px 20px 32px;
       }
+
       .modal-title { font-size: 2.1rem; }
-      .modal-close { top: 16px; right: 16px; }
-      .ya-form-iframe { min-height: 480px; }
+      .modal-close  { right: 16px; font-size: 2.4rem; }
     }
 
-    @media (max-height: 680px) {
-      .ya-form-iframe { height: 52vh; min-height: 420px; }
+    @media (max-width: 540px) {
+      .page-title   { font-size: 2.9rem; }
+      .modal-title  { font-size: 1.9rem; }
+      .form-wrapper { padding: 0 4px 40px; }
+    }
+
+    @media (max-height: 700px) {
+      .ya-form-iframe {
+        height: 600px !important;
+        min-height: 1400px;
+      }
     }
   </style>
 
-  <!-- ─── JavaScript ─────────────────────────────────────────────────── -->
   <script>
     const openBtn  = document.querySelector('.js-open-modal');
     const overlay  = document.querySelector('.js-modal-overlay');
-    const modal    = document.querySelector('.js-modal');
     const closeBtn = document.querySelector('.js-close-modal');
 
     function openModal() {
       overlay.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      closeBtn.focus();
+      document.body.classList.add('modal-open');
     }
 
     function closeModal() {
       overlay.classList.remove('active');
-      document.body.style.overflow = '';
-      openBtn.focus();
+      document.body.classList.remove('modal-open');
     }
 
     openBtn?.addEventListener('click', openModal);
     closeBtn?.addEventListener('click', closeModal);
 
-    // Закрытие по клику на фон
     overlay?.addEventListener('click', e => {
       if (e.target === overlay) closeModal();
     });
 
-    // Закрытие по Escape
     window.addEventListener('keydown', e => {
       if (e.key === 'Escape' && overlay.classList.contains('active')) {
         closeModal();
