@@ -197,7 +197,7 @@
     @media (max-width: 900px) {
         .swipe-prompt {
             position: fixed;
-            bottom: 20%;                    /* ниже карточки */
+            bottom: 10%;                    /* ниже карточки */
             left: 50%;
             transform: translateX(-50%);
             background: rgba(212, 175, 55, 0.9);
@@ -473,10 +473,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     hidePrompt();
                 }
             }, { once: true, passive: true });
-        });
-
-        // На всякий случай — через 6 секунд тоже скрываем
-        setTimeout(hidePrompt, 6000);
+        });        
     }
 
     // ─────────────── остальной код без изменений ───────────────
