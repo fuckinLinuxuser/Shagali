@@ -116,16 +116,9 @@
         display: none;
     }
 
-    .swipe-prompt {
-        display: none;
-    }
-
     @media (max-width: 900px) {
         .nav-arrow {
             display: none !important;
-        }
-        .swipe-prompt {
-            display: block;
         }
         .swipe-prompt {
             display: block;
@@ -139,7 +132,6 @@
         transform: translateY(30px);
         transition: all 0.7s ease;
         scroll-snap-align: center;
-        position: relative;
         position: relative;
     }
 
@@ -205,7 +197,7 @@
     @media (max-width: 900px) {
         .swipe-prompt {
             position: fixed;
-            bottom: 10%;
+            bottom: 10%;                    /* ниже карточки */
             left: 50%;
             transform: translateX(-50%);
             background: rgba(212, 175, 55, 0.9);
@@ -231,13 +223,13 @@
             margin-bottom: 60px;
             margin-top: 20px;
         }
-
+        /* даём заглянуть за правый край */
         .timeline-wrapper {
             padding-right: 80px;
         }
 
         .timeline-container {
-            padding: 100px 30px 140px;
+            padding: 100px 30px 140px;   /* чуть больше снизу, чтобы подсказка не обрезалась */
             position: relative;
         }
 
@@ -282,7 +274,6 @@
     }
 
     /* Модальное окно */
-    /* Модальное окно */
     #castings-modal {
         display: none;
         position: fixed;
@@ -303,7 +294,6 @@
         overflow-y: auto;
         position: relative;
         box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-        margin: auto;
         margin: auto;
     }
 
@@ -350,7 +340,6 @@
         width: 100%;
         height: 100%;
         border: none;
-        object-fit: contain;
     }
 
     #modalDesc {
@@ -361,68 +350,12 @@
         white-space: pre-wrap;
         word-break: break-word;
     }
-
-    /* ─────────────── Увеличенное видео на мобильных ─────────────── */
-    @media (max-width: 900px) {
-        #castings-modal {
-            padding: 10px;
-        }
-
-        #castings-modal .modal-content {
-            max-width: 96vw;
-            width: 96vw;
-            max-height: 92vh;
-            margin: 2vh auto;
-            border-radius: 12px;
-        }
-
-        #modal-body {
-            padding: 16px 20px 24px;
-        }
-
-        #modalTitle {
-            font-size: 1.8em;
-        }
-
-        #modalDate {
-            font-size: 1.15em;
-            margin-bottom: 16px;
-        }
-
-        #modalVideoContainer {
-            margin: 12px 0 20px;
-            padding-bottom: 56.25%;           /* 16:9 */
-            /* Если видео часто вертикальные → попробуйте: padding-bottom: 140% или 177.78%; */
-        }
-
-        #modalDesc {
-            font-size: 1em;
-            line-height: 1.6;
-        }
-
-        /* Опционально: ещё больше видео на очень маленьких экранах */
-        @media (max-width: 480px) {
-            #castings-modal .modal-content {
-                max-width: 100vw;
-                width: 100vw;
-                border-radius: 0;
-            }
-            #modal-body {
-                padding: 10px 12px 20px;
-            }
-            #modalVideoContainer {
-                margin: 8px 0 16px;
-            }
-        }
-    }
 </style>
 
 <section class="castings-section">
     <h1>Пробы и кастинги</h1>
 
     <div class="timeline-container" id="timelineContainer">
-        <div class="timeline-line"></div>
-
         <div class="timeline-line"></div>
 
         <div class="timeline-wrapper">
@@ -446,26 +379,6 @@
                 <div class="swipe-prompt" id="swipePrompt">Свайпай влево →</div>
             </div>
             
-
-            <div class="timeline-item"
-                 data-name="У нас два новых юных артиста (и оба симпатичные)"
-                 data-date="Февраль 2026"
-                 data-description="Весёлые и упоительно смелые - они оба всю жизнь были душой компании. Где бы ни появились - везде вокруг них сразу собирались благодарные зрители. 
-Пришло время выйти на настоящую сцену. 
-Первая фотосессия для спектакля 'Мамочка, купи собаку!', который мы скоро повезем по всей стране, чтобы рассказать родителям и детям о том, что такое 'моя собака'.
-
-Добрая комедия с участием цифрового помощника и пушистого папильона."
-                 data-video="/videos/sobachka.mp4">
-                <div class="timeline-date">Февраль 2026</div>
-                <div class="timeline-content">
-                    <img src="/images/castings/sobaka.jpg" alt="Два артиста" class="timeline-thumbnail">
-                    <h3 class="timeline-title">Два новых юных артиста</h3>
-                    <p class="timeline-teaser">Весёлые и упоительно смелые - они оба всю жизнь были душой компании...</p>
-                    <button class="btn-detail">Подробнее</button>
-                </div>
-                <div class="swipe-prompt" id="swipePrompt">Свайпай влево →</div>
-            </div>
-            
             <div class="timeline-item"
                  data-name="Шоу Скрипки"
                  data-date="Январь 2026"
@@ -476,19 +389,7 @@
 Хочется увидеть эту красоту на сцене. И мы знаем, как сказку сделать проектом."
                  data-video="/videos/skripka.mp4">
                 <div class="timeline-date">Январь 2026</div>
-                 data-name="Шоу Скрипки"
-                 data-date="Январь 2026"
-                 data-description="Идея просто витала в воздухе. 
-Несколько симпатичных и заряженных молодых творцов – актеры, танцоры, музыканты – решили подать заявку на конкурс синтетического искусства во Франции.
-Мы внезапно выиграли... хотя в Париж в итоге поехать не удалось из-за документов)))   
-А сама идея осталась и вдохновила на продолжение. 
-Хочется увидеть эту красоту на сцене. И мы знаем, как сказку сделать проектом."
-                 data-video="/videos/skripka.mp4">
-                <div class="timeline-date">Январь 2026</div>
                 <div class="timeline-content">
-                    <img src="/images/castings/skripka.jpg" alt="Шоу Скрипки" class="timeline-thumbnail">
-                    <h3 class="timeline-title">Шоу Скрипки</h3>
-                    <p class="timeline-teaser">Этим проектом мы выиграли Париж...</p>
                     <img src="/images/castings/skripka.jpg" alt="Шоу Скрипки" class="timeline-thumbnail">
                     <h3 class="timeline-title">Шоу Скрипки</h3>
                     <p class="timeline-teaser">Этим проектом мы выиграли Париж...</p>
@@ -506,7 +407,6 @@
                     <img src="/images/castings/komarovo.JPG" alt="Комарово" class="timeline-thumbnail">
                     <h3 class="timeline-title">Комарово</h3>
                     <p class="timeline-teaser">Актеры отдыхают так, что потом нужен отпуск...   </p>
-                    <p class="timeline-teaser">Актеры отдыхают так, что потом нужен отпуск...   </p>
                     <button class="btn-detail">Подробнее</button>
                 </div>
             </div>
@@ -517,15 +417,7 @@
                  data-description="Удивительная история про танец из детского спектакля «Зверский детектив», в который я влюбилась с первого взгляда. В оригинале Лисичка танцевала с Барсукотом – и это был совершенно очаровательный и забавный дуэт. Подумалось – а вдруг из этого может появиться нечто более… взрослое?\nСпрашиваю стажеров: «Сможете?» Без раздумий кивают. Оглядываюсь: «Где попробуем?» Скидывают сумки и куртки прямо на пол – и пробуют прямо в метро. Не сходя с места… \nТанго снималось несколько раз – в концертном зале, в лесу под проливным дождем. \nВ этой творческой отваге было чудо. \nНа память остались эти кадры."
                  data-video="/videos/tango.mp4">
                 <div class="timeline-date">Весна 2025</div>
-                 data-name="Лисье Танго"
-                 data-date="Весна 2025"
-                 data-description="Удивительная история про танец из детского спектакля «Зверский детектив», в который я влюбилась с первого взгляда. В оригинале Лисичка танцевала с Барсукотом – и это был совершенно очаровательный и забавный дуэт. Подумалось – а вдруг из этого может появиться нечто более… взрослое?\nСпрашиваю стажеров: «Сможете?» Без раздумий кивают. Оглядываюсь: «Где попробуем?» Скидывают сумки и куртки прямо на пол – и пробуют прямо в метро. Не сходя с места… \nТанго снималось несколько раз – в концертном зале, в лесу под проливным дождем. \nВ этой творческой отваге было чудо. \nНа память остались эти кадры."
-                 data-video="/videos/tango.mp4">
-                <div class="timeline-date">Весна 2025</div>
                 <div class="timeline-content">
-                    <img src="/images/castings/foxes_tango.JPG" alt="Лисье Танго" class="timeline-thumbnail">
-                    <h3 class="timeline-title">Лисье Танго</h3>
-                    <p class="timeline-teaser">Танцуем жизнь...</p>
                     <img src="/images/castings/foxes_tango.JPG" alt="Лисье Танго" class="timeline-thumbnail">
                     <h3 class="timeline-title">Лисье Танго</h3>
                     <p class="timeline-teaser">Танцуем жизнь...</p>
@@ -563,6 +455,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Показываем подсказку только на мобильных
     if (window.innerWidth <= 900 && swipePrompt) {
+
+        // Скрываем после первого скролла или касания
         const hidePrompt = () => {
             if (swipePrompt) {
                 swipePrompt.classList.add('hidden');
@@ -571,6 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let hasScrolled = false;
 
+        // События, после которых скрываем
         ['scroll', 'touchstart'].forEach(eventName => {
             container.addEventListener(eventName, () => {
                 if (!hasScrolled) {
@@ -580,6 +475,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }, { once: true, passive: true });
         });        
     }
+
+    // ─────────────── остальной код без изменений ───────────────
 
     function highlightNearest() {
         if (!container) return;
@@ -600,7 +497,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (closest) closest.classList.add('nearest');
     }
 
-    container.addEventListener('scroll', highlightNearest);
     container.addEventListener('scroll', highlightNearest);
 
     items.forEach(item => {
@@ -625,7 +521,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 300);
 
     // Модальное окно
-    // Модальное окно
     const modal = document.getElementById('castings-modal');
     const modalTitle = document.getElementById('modalTitle');
     const modalDate = document.getElementById('modalDate');
@@ -641,7 +536,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             modalTitle.textContent = card.dataset.name;
             modalDate.textContent = card.dataset.date;
-            modalDesc.textContent = card.dataset.description;
             modalDesc.textContent = card.dataset.description;
 
             videoSource.src = card.dataset.video;
