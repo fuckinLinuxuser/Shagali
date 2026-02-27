@@ -6,7 +6,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Условия сотрудничества | Мир За Сценой</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -104,7 +104,7 @@
   <div class="modal-overlay js-modal-overlay" aria-hidden="true">
     <div class="modal js-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
       <button class="modal-close js-close-modal" aria-label="Закрыть">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M18 6L6 18M6 6l12 12"/>
         </svg>
       </button>
@@ -112,13 +112,16 @@
       <h2 id="modal-title" class="modal-title">Оставить заявку</h2>
       <p class="modal-subtitle">Мы свяжемся с вами в ближайшее время</p>
 
-      <iframe 
-        src="https://forms.yandex.ru/u/698ed4466d2d7366e0a9f973?iframe=1&theme=light" 
-        frameborder="0" 
-        name="ya-form-frame"
-        class="ya-form-iframe"
-        title="Форма заявки"
-      ></iframe>
+      <div class="form-wrapper">
+        <iframe 
+          src="https://forms.yandex.ru/u/698ed4466d2d7366e0a9f973?iframe=1&theme=light" 
+          frameborder="0" 
+          class="ya-form-iframe"
+          title="Форма заявки"
+          allowfullscreen
+          scrolling="yes"
+        ></iframe>
+      </div>
     </div>
   </div>
 
@@ -142,6 +145,14 @@
       color: var(--text);
       font-family: 'Inter', system-ui, sans-serif;
       line-height: 1.6;
+    }
+
+    body.modal-open {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100dvh;
+      overflow: hidden;
     }
 
     .container {
@@ -265,7 +276,7 @@
 
     /* CTA */
     .cta-section {
-      padding: 120px 0 160px;
+      padding: 0px 0 160px;
       text-align: center;
     }
 
@@ -295,17 +306,18 @@
       box-shadow: 0 16px 48px rgba(212,175,55,0.4);
     }
 
-    /* Modal */
+    /* ─────────────── МОДАЛКА ─────────────── */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.75);
-      display: grid;
-      place-items: center;
+      background: rgba(0,0,0,0.82);
       opacity: 0;
       visibility: hidden;
-      transition: all 0.4s ease;
+      transition: opacity 0.4s ease;
       z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .modal-overlay.active {
@@ -314,38 +326,36 @@
     }
 
     .modal {
-      background: white;
-      border-radius: 20px;
-      max-width: 860px;
-      width: 92%;
-      max-height: 94vh;
-      padding: 48px 40px 40px;
       position: relative;
-      box-shadow: 0 20px 80px rgba(0,0,0,0.5);
-      overflow-y: auto;
-      transform: scale(0.94);
-      transition: transform 0.35s ease;
-    }
-
-    .modal-overlay.active .modal {
-      transform: scale(1);
+      width: 100%;
+      max-width: 860px;
+      height: 100dvh;
+      max-height: 100dvh;
+      background: white;
+      border-radius: 0;
+      overflow: hidden;
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      padding: 64px 32px 40px;
     }
 
     .modal-close {
-      position: absolute;
-      top: 20px;
+      position: fixed;
+      top: max(16px, env(safe-area-inset-top, 16px));
       right: 24px;
       background: none;
       border: none;
-      font-size: 2.2rem;
       color: var(--gold-dark);
+      font-size: 2.6rem;
       cursor: pointer;
-      line-height: 1;
+      z-index: 10;
+      transition: all 0.3s;
     }
 
     .modal-close:hover {
       color: #222;
-      transform: rotate(90deg);
+      transform: rotate(90deg) scale(1.12);
     }
 
     .modal-title {
@@ -353,22 +363,34 @@
       text-align: center;
       margin: 0 0 0.6rem;
       color: #222;
+      padding-top: env(safe-area-inset-top, 0);
     }
 
     .modal-subtitle {
       text-align: center;
       color: #666;
-      margin: 0 0 2rem;
+      margin: 0 0 2.2rem;
       font-size: 1.1rem;
+    }
+
+    .form-wrapper {
+      flex: 1;
+      overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
+      padding: 0 8px 32px;
+      padding-bottom: calc(32px + env(safe-area-inset-bottom, 0));
     }
 
     .ya-form-iframe {
       width: 100%;
-      height: 66vh;
-      min-height: 520px;
+      height: 1000px !important;
+      min-height: 600px;
+      border: none;
       border-radius: 14px;
       background: #f8f6f0;
-      border: 1px solid #e8e4d8;
+      display: block;
+      transform: translateZ(0);
     }
 
     /* Responsive */
@@ -380,29 +402,42 @@
       .page-title   { font-size: 3.6rem; }
       .contract-frame { padding: 48px 32px; }
       .btn-cta      { padding: 16px 52px; font-size: 1.18rem; }
+
+      .modal {
+        padding: 56px 20px 32px;
+      }
+
+      .modal-title { font-size: 2.1rem; }
+      .modal-close  { right: 16px; font-size: 2.4rem; }
     }
 
     @media (max-width: 540px) {
       .page-title   { font-size: 2.9rem; }
-      .modal        { padding: 40px 24px 32px; }
-      .modal-title  { font-size: 2rem; }
+      .modal-title  { font-size: 1.9rem; }
+      .form-wrapper { padding: 0 4px 40px; }
+    }
+
+    @media (max-height: 700px) {
+      .ya-form-iframe {
+        height: 600px !important;
+        min-height: 1400px;
+      }
     }
   </style>
 
   <script>
     const openBtn  = document.querySelector('.js-open-modal');
     const overlay  = document.querySelector('.js-modal-overlay');
-    const modal    = document.querySelector('.js-modal');
     const closeBtn = document.querySelector('.js-close-modal');
 
     function openModal() {
       overlay.classList.add('active');
-      document.body.style.overflow = 'hidden';
+      document.body.classList.add('modal-open');
     }
 
     function closeModal() {
       overlay.classList.remove('active');
-      document.body.style.overflow = '';
+      document.body.classList.remove('modal-open');
     }
 
     openBtn?.addEventListener('click', openModal);
