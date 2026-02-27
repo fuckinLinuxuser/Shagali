@@ -112,9 +112,16 @@
     .nav-arrow.left  { left: 20px; }
     .nav-arrow.right { right: 20px; }
 
+    .swipe-prompt {
+        display: none;
+    }
+
     @media (max-width: 900px) {
         .nav-arrow {
             display: none !important;
+        }
+        .swipe-prompt {
+            display: block;
         }
     }
 
@@ -125,8 +132,8 @@
         transform: translateY(30px);
         transition: all 0.7s ease;
         scroll-snap-align: center;
+        position: relative;
     }
-    
 
     .timeline-item.visible {
         opacity: 1;
@@ -186,8 +193,87 @@
         transform: scale(1.05);
     }
 
+    /* ─────────────── ПОДСКАЗКА СНИЗУ ─────────────── */
+    @media (max-width: 900px) {
+        .swipe-prompt {
+            position: fixed;
+            bottom: 20%;                    /* ниже карточки */
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(212, 175, 55, 0.9);
+            color: #1a1a1a;
+            font-weight: bold;
+            font-size: 1.05rem;
+            padding: 10px 24px;
+            border-radius: 50px;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            pointer-events: none;
+            z-index: 5;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
 
-    /* ─────────────── МОДАЛЬНОЕ ОКНО ─────────────── */
+        .swipe-prompt.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .timeline-content {
+            margin-bottom: 60px;
+            margin-top: 20px;
+        }
+        /* даём заглянуть за правый край */
+        .timeline-wrapper {
+            padding-right: 80px;
+        }
+
+        .timeline-container {
+            padding: 100px 30px 140px;   /* чуть больше снизу, чтобы подсказка не обрезалась */
+            position: relative;
+        }
+
+        .timeline-wrapper {
+            gap: 40px;
+            padding: 0 20px;
+            touch-action: auto;
+        }
+
+        .timeline-item {
+            margin-top: -60px;
+        }
+
+        .timeline-item:nth-child(odd)  { margin-top: -80px; }
+        .timeline-item:nth-child(even) { margin-top: 70px; }
+
+        .timeline-line {
+            display: none;
+        }
+    
+        .timeline-date {
+            bottom: 40px;
+        }
+
+        @media (max-width: 600px) {
+            .timeline-container {
+                padding: 100px 20px 160px;
+            }
+            .timeline-item {
+                flex: 0 0 280px;
+                margin-top: -60px;
+            }
+            .timeline-wrapper {
+                gap: 32px;
+                padding: 0 16px;
+            }
+
+            .timeline-line {
+                display: none;
+            }
+        }
+    }
+
+    /* Модальное окно */
     #castings-modal {
         display: none;
         position: fixed;
@@ -208,7 +294,7 @@
         overflow-y: auto;
         position: relative;
         box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-        margin: auto;                    /* ← добавлено для надёжного центрирования */
+        margin: auto;
     }
 
     #castings-modal .close {
@@ -262,52 +348,7 @@
         color: #444;
         font-size: 1.08em;
         white-space: pre-wrap;
-        word-break: break-word;          /* ← для длинных текстов без обрезки */
-    }
-
-    /* Адаптив */
-    @media (max-width: 900px) {
-        .timeline-container {
-            padding: 100px 30px 100px;
-        }
-        .timeline-wrapper {
-            gap: 40px;
-            padding: 0 20px;
-            touch-action: auto;
-        }
-        .timeline-item {
-            flex: 0 0 300px;
-        }
-        .timeline-item:nth-child(odd)  { margin-top: -110px; }
-        .timeline-item:nth-child(even) { margin-top: 80px; }
-        .timeline-progress {
-            display: none;
-        }
-        .timeline-line {
-            left: 20px;
-            right: 20px;
-        }
-    }
-
-    @media (max-width: 600px) {
-        .timeline-container {
-            padding: 120px 20px 120px;
-        }
-        .timeline-item {
-            flex: 0 0 280px;
-        }
-        .timeline-wrapper {
-            gap: 32px;
-            padding: 0 16px;
-            touch-action: auto;
-        }
-        .timeline-line {
-            left: 16px;
-            right: 16px;
-        }
-        #modal-body {
-            padding: 30px 24px 40px;
-        }
+        word-break: break-word;
     }
 </style>
 
@@ -315,8 +356,9 @@
     <h1>Пробы и кастинги</h1>
 
     <div class="timeline-container" id="timelineContainer">
+        <div class="timeline-line"></div>
+
         <div class="timeline-wrapper">
-            <div class="timeline-line"></div>
 
             <div class="timeline-item"
                  data-name="У нас два новых юных артиста (и оба симпатичные)"
@@ -334,8 +376,9 @@
                     <p class="timeline-teaser">Весёлые и упоительно смелые - они оба всю жизнь были душой компании...</p>
                     <button class="btn-detail">Подробнее</button>
                 </div>
+                <div class="swipe-prompt" id="swipePrompt">Свайпай влево →</div>
             </div>
-
+            
             <div class="timeline-item"
                  data-name="Шоу Скрипки"
                  data-date="Январь 2026"
@@ -380,8 +423,8 @@
                     <p class="timeline-teaser">Танцуем жизнь...</p>
                     <button class="btn-detail">Подробнее</button>
                 </div>
+                
             </div>
-
         </div>
     </div>
 </section>
@@ -407,20 +450,37 @@
 <script is:inline>
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('timelineContainer');
-    const prev = document.getElementById('prev');
-    const next = document.getElementById('next');
-    const progressFill = document.getElementById('progressFill');
     const items = document.querySelectorAll('.timeline-item');
+    const swipePrompt = document.getElementById('swipePrompt');
 
-    // Прокрутка стрелками
-    if (prev && next) {
-        const scrollStep = 420;
-        next.addEventListener('click', () => container.scrollBy({ left: scrollStep, behavior: 'smooth' }));
-        prev.addEventListener('click', () => container.scrollBy({ left: -scrollStep, behavior: 'smooth' }));
+    // Показываем подсказку только на мобильных
+    if (window.innerWidth <= 900 && swipePrompt) {
+
+        // Скрываем после первого скролла или касания
+        const hidePrompt = () => {
+            if (swipePrompt) {
+                swipePrompt.classList.add('hidden');
+            }
+        };
+
+        let hasScrolled = false;
+
+        // События, после которых скрываем
+        ['scroll', 'touchstart'].forEach(eventName => {
+            container.addEventListener(eventName, () => {
+                if (!hasScrolled) {
+                    hasScrolled = true;
+                    hidePrompt();
+                }
+            }, { once: true, passive: true });
+        });
+
+        // На всякий случай — через 6 секунд тоже скрываем
+        setTimeout(hidePrompt, 6000);
     }
 
+    // ─────────────── остальной код без изменений ───────────────
 
-    // Ближайшая карточка
     function highlightNearest() {
         if (!container) return;
         const center = container.getBoundingClientRect().left + container.offsetWidth / 2;
@@ -440,23 +500,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (closest) closest.classList.add('nearest');
     }
 
-    container.addEventListener('scroll', () => {
-        updateProgress();
-        highlightNearest();
-    });
+    container.addEventListener('scroll', highlightNearest);
 
-    // Центрирование по клику (десктоп)
     items.forEach(item => {
         item.addEventListener('click', e => {
             if (e.target.closest('.btn-detail')) return;
             if (window.innerWidth <= 900) return;
-
             const target = item.offsetLeft - (container.clientWidth / 2) + (item.offsetWidth / 2);
             container.scrollTo({ left: target, behavior: 'smooth' });
         });
     });
 
-    // Появление карточек
     const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.isIntersecting) entry.target.classList.add('visible');
@@ -465,12 +519,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     items.forEach(item => observer.observe(item));
 
-    // Инициализация
     setTimeout(() => {
         highlightNearest();
     }, 300);
 
-    // ─────────────── Модальное окно ───────────────
+    // Модальное окно
     const modal = document.getElementById('castings-modal');
     const modalTitle = document.getElementById('modalTitle');
     const modalDate = document.getElementById('modalDate');
@@ -486,7 +539,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             modalTitle.textContent = card.dataset.name;
             modalDate.textContent = card.dataset.date;
-            modalDesc.textContent = card.dataset.description;  // ← теперь полный текст
+            modalDesc.textContent = card.dataset.description;
 
             videoSource.src = card.dataset.video;
             video.load();
