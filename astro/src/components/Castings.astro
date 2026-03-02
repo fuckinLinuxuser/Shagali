@@ -134,7 +134,6 @@
         scroll-snap-align: center;
         position: relative;
     }
-    
 
     .timeline-item.visible {
         opacity: 1;
@@ -198,7 +197,11 @@
     @media (max-width: 900px) {
         .swipe-prompt {
             position: fixed;
+<<<<<<< HEAD
             bottom: 10%;
+=======
+            bottom: 10%;                    /* ниже карточки */
+>>>>>>> main
             left: 50%;
             transform: translateX(-50%);
             background: rgba(212, 175, 55, 0.9);
@@ -224,13 +227,21 @@
             margin-bottom: 60px;
             margin-top: 20px;
         }
+<<<<<<< HEAD
 
+=======
+        /* даём заглянуть за правый край */
+>>>>>>> main
         .timeline-wrapper {
             padding-right: 80px;
         }
 
         .timeline-container {
+<<<<<<< HEAD
             padding: 100px 30px 140px;
+=======
+            padding: 100px 30px 140px;   /* чуть больше снизу, чтобы подсказка не обрезалась */
+>>>>>>> main
             position: relative;
         }
 
@@ -351,6 +362,7 @@
         font-size: 1.08em;
         white-space: pre-wrap;
         word-break: break-word;
+<<<<<<< HEAD
     }
 
     /* ─────────────── Увеличенное видео на мобильных ─────────────── */
@@ -405,6 +417,8 @@
                 margin: 8px 0 16px;
             }
         }
+=======
+>>>>>>> main
     }
 </style>
 
@@ -479,6 +493,10 @@
                     <p class="timeline-teaser">Танцуем жизнь...</p>
                     <button class="btn-detail">Подробнее</button>
                 </div>
+<<<<<<< HEAD
+=======
+                
+>>>>>>> main
             </div>
         </div>
     </div>
@@ -510,6 +528,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Показываем подсказку только на мобильных
     if (window.innerWidth <= 900 && swipePrompt) {
+<<<<<<< HEAD
+=======
+
+        // Скрываем после первого скролла или касания
+>>>>>>> main
         const hidePrompt = () => {
             if (swipePrompt) {
                 swipePrompt.classList.add('hidden');
@@ -518,6 +541,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let hasScrolled = false;
 
+<<<<<<< HEAD
+=======
+        // События, после которых скрываем
+>>>>>>> main
         ['scroll', 'touchstart'].forEach(eventName => {
             container.addEventListener(eventName, () => {
                 if (!hasScrolled) {
@@ -528,6 +555,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });        
     }
 
+<<<<<<< HEAD
+=======
+    // ─────────────── остальной код без изменений ───────────────
+
+>>>>>>> main
     function highlightNearest() {
         if (!container) return;
         const center = container.getBoundingClientRect().left + container.offsetWidth / 2;
