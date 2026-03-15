@@ -10,7 +10,7 @@
         margin: 0;
         padding: 0;
     }
-
+    
     .our-people {
         max-width: 1400px;
         margin: 60px auto;
@@ -54,6 +54,9 @@
         box-shadow: 0 6px 18px rgba(0,0,0,0.12);
         transition: all 0.28s ease;
         cursor: pointer;
+        display: flex;
+        flex-direction: column;          /* вертикальное расположение */
+        height: 100%;   
     }
 
     .person-card:hover {
@@ -68,6 +71,7 @@
     }
 
     .person-info {
+        flex-grow: 1;                    /* информация занимает всё доступное пространство */
         padding: 22px 20px;
         text-align: center;
     }
@@ -92,6 +96,37 @@
         margin: 0;
     }
 
+.read-full-btn {
+    /* прижимаем кнопку к низу карточки */
+    margin: 0 20px 20px 20px;        /* отступы слева-справа-снизу */
+    padding: 0.7rem 1.4rem;
+    background: #d4af37;
+    color: #1a1a1a;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    align-self: center;              /* центрируем по горизонтали */
+    width: fit-content;              /* кнопка не растягивается на всю ширину */
+    min-width: 160px;                /* минимальная ширина, чтобы выглядело солидно */
+}
+
+.read-full-btn:hover {
+    background: #b8972e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.read-full-btn:hover {
+    background: #b8972e;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+}
+
+.read-full-btn:active {
+    transform: translateY(0);
+}
     /* Модальное окно */
     .modal {
         display: none;
@@ -216,10 +251,38 @@
                 <p class="person-short">Петербург стал моей любовью - и ответил тёплой  взаимностью. 
 Я дарю Петербургу всё, что есть - он дарит мне театр как городскую философию.</p>
             </div>
+            <button class="read-full-btn">Читать полностью</button>
         </div>
 
-        <!-- Следующие карточки добавляй аналогично -->
 
+        <div class="person-card"
+            data-name="Владимир Сергеевич М."
+            data-role="Методический руководитель. Творческий консультант."
+            data-image="/images/people/people_vladimir.jpg"             
+            data-full-image="/images/people/people_vladimir_insade.jpg" 
+            data-bio="«Пишу о Владимире Сергеевиче сама, хотя он владеет искусством слова тоньше и лучше. Ему было бы что сказать, и люди собрались бы его слушать. Да - если бы он сам хотел говорить. Но он молчит и загадочно улыбается. 
+Итак, мой Владимир Сергеевич. 
+Это человек из какой-то другой Вселенной. Он может быть любым. 
+Когда я прошу его для дела побыть незаметным – то его лица не могут потом вспомнить, хотя с энтузиазмом общались целый вечер. Когда мне требуется его реальный характер – то его харизму потом не могут забыть месяцами, хотя общались не дольше часа.
+Ему нет дела до этого слоя реальности. Он пишет мне такие письма, что каждое из них – это готовый сценарий для хорошего голливудского фильма. Он подсказывает такие жизненные ходы, что у меня начинает легонько кружиться голова. 
+Владимир Сергеевич - единственный человек на свете, которому я бы с радостью отдала руководящую роль в этом моем проекте. Но он не берёт. Ему нужно другое. 
+Он увлечен средневековой музыкой. Пишет симфонию. Между делом подкидывает мне идеи для пьес – и за каждую из этих идей я готова платить сотни тысяч, но он не берёт…
+Ему нужно что-то своё. Что-то, что ценится в его личной Вселенной. У него симфония. У него философские идеи. У него бесконечность, делённая на ноль. 
+А мы тут что-то копошимся с горящими глазами. Сайты всякие делаем, гастроли по стране катаем, к премьерам готовимся. Зачем? Суета сует…
+Из всех ныне живущих на этой планете он единственный, кто может говорить со мной строго. И кому я отвечу на это уважительно и благодарно».
+
+
+Елена Шагали."
+
+        >      
+            <img src="/images/people/people_vladimir.jpg" alt="Владимир М." class="person-image">
+            <div class="person-info">
+                <h2>Владимир М.</h2>
+                <div class="person-role">Методический руководитель. Творческий консультант.</div>
+                <p class="person-short">Елена Шагали: «Он хотел остаться в тени, но я попросила его встать рядом со мной под свет софитов. И пообещала, что сама напишу этот текст».</p>
+            </div>
+            <button class="read-full-btn">Читать полностью</button>
+        </div>
     </div>
 </section>
 
@@ -232,6 +295,7 @@
             <div class="role" id="modal-role"></div>
         </div>
         <div class="modal-body">
+            <img id="modal-full-image" style="display:none; max-width:40%; border-radius:12px; margin:1.5rem auto;" alt="Фото">
             <!-- Видео будет здесь -->
             <div id="modal-video-wrapper" class="modal-video-wrapper" style="display:none;">
                 <video id="modal-video" src="" controls></video>
@@ -242,48 +306,78 @@
 </div>
 
 <script is:inline>
-    const cards = document.querySelectorAll('.person-card');
-    const modal = document.getElementById('people-modal');
-    const modalName = document.getElementById('modal-name');
-    const modalRole = document.getElementById('modal-role');
-    const modalBio = document.getElementById('modal-bio');
-    const modalVideoWrapper = document.getElementById('modal-video-wrapper');
-    const modalVideo = document.getElementById('modal-video');
-    const closeBtn = document.querySelector('#people-modal .close');
+    document.addEventListener('DOMContentLoaded', () => {
+        const cards = document.querySelectorAll('.person-card');
+        const modal = document.getElementById('people-modal');
+        const modalName = document.getElementById('modal-name');
+        const modalRole = document.getElementById('modal-role');
+        const modalBio = document.getElementById('modal-bio');
+        const modalVideoWrapper = document.getElementById('modal-video-wrapper');
+        const modalVideo = document.getElementById('modal-video');
+        const closeBtn = document.querySelector('#people-modal .close');
 
-    cards.forEach(card => {
-        card.addEventListener('click', () => {
-            modalName.textContent = card.dataset.name || '—';
-            modalRole.textContent = card.dataset.role || '';
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                modalName.textContent = card.dataset.name || '—';
+                modalRole.textContent = card.dataset.role || '';
 
-            // Биография
-            let bio = card.dataset.bio || '';
-            modalBio.innerHTML = bio.replace(/\n/g, '<br>');
+                let bio = card.dataset.bio || '';
 
-            // Видео
-            const videoUrl = card.dataset.video;
-            if (videoUrl && videoUrl.trim() !== '') {
-                modalVideo.src = videoUrl;
-                modalVideoWrapper.style.display = 'block';
-            } else {
-                modalVideo.src = '';
-                modalVideoWrapper.style.display = 'none';
-            }
+                // Самый тупой и надёжный способ
+                let html = bio
+                    .replace(/\n/g, '<br>')                           // все переносы → <br>
+                    .replace(
+                        /Елена Шагали\.\s*$/, 
+                        '<span style="display:block; text-align:right; font-style:italic; margin-top:40px; color:#555; font-size:1.1em; padding-right:10px;">Елена Шагали.</span>'
+                    );
 
-            modal.style.display = 'block';
+                modalBio.innerHTML = html;
+                // Фото
+                const fullImage = card.dataset.fullImage;
+                let modalImg = document.getElementById('modal-full-image');
+
+                if (fullImage && fullImage.trim() !== '') {
+                    if (!modalImg) {
+                        modalImg = document.createElement('img');
+                        modalImg.id = 'modal-full-image';
+                        modalImg.alt = card.dataset.name || 'Фото';
+                        modalImg.style.maxWidth = '100%';
+                        modalImg.style.borderRadius = '12px';
+                        modalImg.style.margin = '1.5rem auto';
+                        modalImg.style.display = 'block';
+                        document.getElementById('modal-body').prepend(modalImg);
+                    }
+                    modalImg.src = fullImage;
+                    modalImg.style.display = 'block';
+                } else if (modalImg) {
+                    modalImg.style.display = 'none';
+                }
+
+                // Видео
+                const videoUrl = card.dataset.video;
+                if (videoUrl && videoUrl.trim() !== '') {
+                    modalVideo.src = videoUrl;
+                    modalVideoWrapper.style.display = 'block';
+                } else {
+                    modalVideo.src = '';
+                    modalVideoWrapper.style.display = 'none';
+                }
+
+                modal.style.display = 'block';
+            });
         });
-    });
 
-    // Закрытие
-    closeBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
-        modalVideo.src = ''; // останавливаем видео
-    });
-
-    window.addEventListener('click', (e) => {
-        if (e.target === modal) {
+        // Закрытие модального окна
+        closeBtn.addEventListener('click', () => {
             modal.style.display = 'none';
             modalVideo.src = '';
-        }
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                modalVideo.src = '';
+            }
+        });
     });
 </script>

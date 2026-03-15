@@ -493,10 +493,6 @@
                     <p class="timeline-teaser">Танцуем жизнь...</p>
                     <button class="btn-detail">Подробнее</button>
                 </div>
-<<<<<<< HEAD
-=======
-                
->>>>>>> main
             </div>
         </div>
     </div>
@@ -528,11 +524,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Показываем подсказку только на мобильных
     if (window.innerWidth <= 900 && swipePrompt) {
-<<<<<<< HEAD
-=======
-
         // Скрываем после первого скролла или касания
->>>>>>> main
         const hidePrompt = () => {
             if (swipePrompt) {
                 swipePrompt.classList.add('hidden');
@@ -540,11 +532,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         let hasScrolled = false;
-
-<<<<<<< HEAD
-=======
         // События, после которых скрываем
->>>>>>> main
         ['scroll', 'touchstart'].forEach(eventName => {
             container.addEventListener(eventName, () => {
                 if (!hasScrolled) {
@@ -555,11 +543,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });        
     }
 
-<<<<<<< HEAD
-=======
     // ─────────────── остальной код без изменений ───────────────
 
->>>>>>> main
     function highlightNearest() {
         if (!container) return;
         const center = container.getBoundingClientRect().left + container.offsetWidth / 2;
