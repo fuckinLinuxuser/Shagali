@@ -35,12 +35,8 @@ const { title = "Мир За Сценой" } = Astro.props;
 
 <style>
   .touch-phrase {
-<<<<<<< HEAD
-<<<<<<< HEAD
     font-size: clamp(1.4rem, 5vw, 2.2rem);
-=======
     font-size: clamp(1.4rem, 5.5vw, 2.4rem);
->>>>>>> main
     color: #f0e8c0;
     opacity: 0;
     transform: translateY(40px) scale(0.92);
@@ -87,14 +83,11 @@ const { title = "Мир За Сценой" } = Astro.props;
   will-change: transform, opacity, text-shadow, filter;
 }
 
-<<<<<<< HEAD
   .touch-phrase.hide {
     opacity: 0;
     transform: translateY(-60px) scale(0.85);
     pointer-events: none;
     transition: all 1.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-=======
     font-size: clamp(1.4rem, 5.5vw, 2.4rem);
     color: #f0e8c0;
     opacity: 0;
@@ -142,34 +135,20 @@ const { title = "Мир За Сценой" } = Astro.props;
   will-change: transform, opacity, text-shadow, filter;
 }
 
->>>>>>> main
-=======
->>>>>>> main
-
   .spotlight {
     position: relative;
     z-index: 1;
-<<<<<<< HEAD
-<<<<<<< HEAD
     animation: spotlight 2s infinite alternate;
-=======
     animation: spotlight 2.8s infinite alternate;
->>>>>>> main
-=======
     animation: spotlight 2.8s infinite alternate;
->>>>>>> main
     color: rgb(253, 245, 199);
   }
 
   @keyframes spotlight {
-<<<<<<< HEAD
-<<<<<<< HEAD
     0% { text-shadow: 0 0 10px gold; }
     100% { text-shadow: 0 0 20px gold; }
-=======
     0%   { text-shadow: 0 0 8px gold; }
     100% { text-shadow: 0 0 24px gold; }
->>>>>>> main
   }
 </style>
 
@@ -224,8 +203,6 @@ const { title = "Мир За Сценой" } = Astro.props;
       filter: brightness(1.12);
     }
   }
-<<<<<<< HEAD
-=======
     0%   { text-shadow: 0 0 8px gold; }
     100% { text-shadow: 0 0 24px gold; }
   }
@@ -283,10 +260,7 @@ const { title = "Мир За Сценой" } = Astro.props;
     }
   }
 }
->>>>>>> main
-=======
-}
->>>>>>> main
+
 </style>
 
 <script is:inline>
@@ -295,29 +269,20 @@ const { title = "Мир За Сценой" } = Astro.props;
     if (!phrase) return;
 
     let overlay = null;
-<<<<<<< HEAD
-<<<<<<< HEAD
     let mobileHideHandler = null; // объявляем заранее
-=======
     let mobileHideHandler = null;
->>>>>>> main
 
     // Появление
     setTimeout(() => {
       phrase.classList.add('appear');
-<<<<<<< HEAD
     }, 800);
-=======
     let mobileHideHandler = null;
 
     // Появление
     setTimeout(() => {
       phrase.classList.add('appear');
     }, 900);
->>>>>>> main
-=======
     }, 900);
->>>>>>> main
 
     const hideHandler = () => {
       if (phrase.classList.contains('hide')) return;
@@ -325,13 +290,6 @@ const { title = "Мир За Сценой" } = Astro.props;
       phrase.classList.remove('appear');
       phrase.classList.add('hide');
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-      // Удаляем слушатели
-=======
->>>>>>> main
-=======
->>>>>>> main
       phrase.removeEventListener('click', hideHandler);
       phrase.removeEventListener('touchstart', hideHandler);
 
@@ -339,11 +297,6 @@ const { title = "Мир За Сценой" } = Astro.props;
         overlay.removeEventListener('touchstart', hideHandler);
       }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-      // Удаляем глобальный mobileHideHandler, если он был добавлен
-=======
->>>>>>> main
       if (mobileHideHandler) {
         document.removeEventListener('touchstart', mobileHideHandler);
       }
@@ -363,9 +316,7 @@ const { title = "Мир За Сценой" } = Astro.props;
 
         overlay.addEventListener('touchstart', hideHandler, { passive: true });
 
-<<<<<<< HEAD
         // 2. Дополнительный обработчик на весь spotlight (страховка)
-=======
       if (mobileHideHandler) {
         document.removeEventListener('touchstart', mobileHideHandler);
       }
@@ -384,30 +335,19 @@ const { title = "Мир За Сценой" } = Astro.props;
         header.appendChild(overlay);
 
         overlay.addEventListener('touchstart', hideHandler, { passive: true });
-
->>>>>>> main
-=======
->>>>>>> main
         mobileHideHandler = (e) => {
           if (phrase.classList.contains('hide')) return;
           hideHandler();
         };
-
-<<<<<<< HEAD
-<<<<<<< HEAD
         spotlight.addEventListener('touchstart', mobileHideHandler, { passive: true });
 
         // Опционально: если хотите ловить касание вообще по документу (очень агрессивно)
         // document.addEventListener('touchstart', mobileHideHandler, { passive: true });
-=======
         header.addEventListener('touchstart', mobileHideHandler, { passive: true });
->>>>>>> main
-=======
         header.addEventListener('touchstart', mobileHideHandler, { passive: true });
->>>>>>> main
       }
     }
-  });
+  };
 </script>
 
 <style>
