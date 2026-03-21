@@ -55,6 +55,10 @@ const { currentPage = '' } = Astro.props;
 </nav>
 
 <style>
+  html {
+    scroll-padding-top: 80px;   /* ← подберите под высоту вашей шапки + небольшой запас */
+  }
+
   .nav {
     position: sticky;
     top: 0;
