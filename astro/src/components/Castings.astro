@@ -113,8 +113,29 @@
     .nav-arrow.right { right: 20px; }
 
     .swipe-prompt {
-        display: block;
-    }
+            position: fixed;
+            bottom: 10%;
+            bottom: 10%;                    /* ниже карточки */
+            left: 20%;
+            
+            background: rgba(212, 175, 55, 0.9);
+            color: #1a1a1a;
+            font-weight: bold;
+            font-size: 1.05rem;
+            padding: 10px 24px;
+            border-radius: 50px;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            pointer-events: none;
+            z-index: 5;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .swipe-prompt.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
 
     @media (max-width: 900px) {
         .nav-arrow {
@@ -442,7 +463,7 @@
                     <p class="timeline-teaser">Весёлые и упоительно смелые - они оба всю жизнь были душой компании...</p>
                     <button class="btn-detail">Подробнее</button>
                 </div>
-                <div class="swipe-prompt" id="swipePrompt">Свайпай влево →</div>
+                <div class="swipe-prompt" id="swipePrompt">Свайпай вправо →</div>
             </div>
             
             <div class="timeline-item"
