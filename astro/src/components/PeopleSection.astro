@@ -38,16 +38,42 @@
     transform: translateX(-50%);
   }
 
-  .people-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, 340px);
+.people-grid {
+    display: flex;
+    flex-wrap: nowrap;
     gap: 35px;
-    justify-content: center;
-    padding: 0 10px;
-  }
+    justify-content: center;        /* по центру */
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 30px 20px 40px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+/* Фиксируем ширину карточек */
+.person-card {
+    width: 250px;
+    flex: 0 0 250px;           /* очень важно для горизонтальной линии */
+    margin: 0;
+}
+
+/* Красивый скроллбар */
+.people-grid::-webkit-scrollbar {
+    height: 9px;
+}
+.people-grid::-webkit-scrollbar-thumb {
+    background: #d4af37;
+    border-radius: 10px;
+}
+.people-grid::-webkit-scrollbar-track {
+    background: #2a2a22;
+}
 
   .person-card {
-    width: 340px;
+    width: 250px;
     background: white;
     border-radius: 12px;
     overflow: hidden;
@@ -56,7 +82,6 @@
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    height: 100%;
     cursor: default !important;
   }
 
@@ -67,7 +92,7 @@
 
   .person-image {
     width: 100%;
-    height: 340px;
+    height: 250px;
     object-fit: cover;
   }
 
@@ -247,6 +272,8 @@
   }
 
   @media (max-width: 768px) {
+    
+    
     .modal-content {
       margin: 20px auto;
       width: 96%;
@@ -266,6 +293,7 @@
       max-width: 360px;
     }
   }
+
 </style>
 
 <section id="people" class="our-people">
@@ -273,24 +301,58 @@
 
   <div class="people-grid">
 
+    <div class="person-card" data-name="Валерия ВАРЧЕНКО" data-role="Актер." data-video="/videos/valeria.mp4">
+      <img src="/images/people/people_valeria.jpg" alt="Валерия Варченко" class="person-image">
+      <div class="person-info">
+        <h2 class="person-name">Валерия Варченко</h2>
+        <div class="person-role">Актер.</div>
+      </div>
+      <button class="read-full-btn">Читать полностью</button>
+
+      <div class="bio-content">
+        Одни птицы больше думают о красоте своих перьев. Другие хотят укрепить своё гнездо. А я отношусь к тем птицам, которые всю жизнь рвутся в небо, чтобы петь свою любовную песню прямо в светлые улыбающиеся глаза Солнца. <br><br>
+        Да. Некоторые не долетают. Бывает.<br>Но кто-то обязательно споёт. <br>И Солнцу будет ради чего рождаться каждое утро.</p> 
+        <div class="signature">Валерия Варченко</div>
+      </div>
+    </div>
+
+        
     <div class="person-card" data-name="Елена Владимировна ШАГАЛИ" data-role="Театральный продюсер. Драматург. Режиссер." data-video="/videos/shagali.mp4">
       <img src="/images/people/people_shagali.JPG" alt="Елена Шагали" class="person-image">
       <div class="person-info">
         <h2 class="person-name">Елена Шагали</h2>
         <div class="person-role">Театральный продюсер. Драматург. Режиссер.</div>
-        <p class="person-short">Петербург стал моей любовью - и ответил тёплой  взаимностью. 
-Я дарю Петербургу всё, что есть - он дарит мне театр как городскую философию.</p>
       </div>
       <button class="read-full-btn">Читать полностью</button>
 
       <div class="bio-content">
+        Петербург стал моей любовью - и ответил тёплой  взаимностью. 
+        Я дарю Петербургу всё, что есть - он дарит мне театр как городскую философию.
         Одни птицы больше думают о красоте своих перьев. Другие хотят укрепить своё гнездо. А я отношусь к тем птицам, которые всю жизнь рвутся в небо, чтобы петь свою любовную песню прямо в светлые улыбающиеся глаза Солнца. <br><br>
         Да. Некоторые не долетают. Бывает.<br>Но кто-то обязательно споёт. <br>И Солнцу будет ради чего рождаться каждое утро.</p>
         <div class="signature">Елена Шагали.</div>
       </div>
     </div>
 
+    <div class="person-card" data-name="Анна Насонова" data-role="Актер." data-video="/videos/anna.mp4">
+      <img src="/images/people/people_anna.jpg" alt="Анна Насонова" class="person-image">
+      <div class="person-info">
+        <h2 class="person-name">Анна Насонова</h2>
+        <div class="person-role">Актер.</div>
+      </div>
+      <button class="read-full-btn">Читать полностью</button>
+
+      <div class="bio-content">
+        Одни птицы больше думают о красоте своих перьев. Другие хотят укрепить своё гнездо. А я отношусь к тем птицам, которые всю жизнь рвутся в небо, чтобы петь свою любовную песню прямо в светлые улыбающиеся глаза Солнца. <br><br>
+        Да. Некоторые не долетают. Бывает.<br>Но кто-то обязательно споёт. <br>И Солнцу будет ради чего рождаться каждое утро.</p> 
+        <div class="signature">Анна Насонова</div>
+      </div>
+    </div>
   </div>
+
+
+
+
 </section>
 
 <!-- Модальное окно -->
@@ -399,7 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Защита от случайных/старых обработчиков клика по карточке
+
 document.querySelectorAll('.person-card').forEach(card => {
     card.addEventListener('click', e => {
         // Если цель клика — НЕ кнопка, НЕ ссылка и НЕ элемент с pointer-events: auto

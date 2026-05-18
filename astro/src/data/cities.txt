@@ -1,0 +1,73 @@
+<circle class="city-dot" cx="78" cy="580" r="5" data-city="spb" />
+        <text x="99" y="530" class="city-label" text-anchor="middle">Санкт-Петербург,
+          <tspan x="90" dy="1.2em">Гдов, Сланцы</tspan>
+        </text>
+
+        <circle class="city-dot" cx="60" cy="605" r="5" data-city="pskov" />
+        <text x="60" y="635" class="city-label" text-anchor="middle">Псков</text>
+
+        <circle class="city-dot" cx="336" cy="607" r="5" data-city="tyumen" />
+        <text x="336" y="637" class="city-label" text-anchor="middle">Тюмень</text>
+
+        <!-- Ялуторовск (юго-восточнее Тюмени) -->
+<circle class="city-dot" cx="355" cy="625" r="5" data-city="yalutorovsk" />
+<text x="355" y="655" class="city-label" text-anchor="middle">Ялуторовск</text>
+
+<!-- Заводоуковск (южнее, между Тюменью и Ялуторовском) -->
+<circle class="city-dot" cx="348" cy="640" r="5" data-city="zavodoukovsk" />
+<text x="348" y="670" class="city-label" text-anchor="middle">Заводоуковск</text>
+
+<!-- Ишим (юго-восточнее, ближе к Омску) -->
+<circle class="city-dot" cx="400" cy="625" r="5" data-city="ishim" />
+<text x="400" y="655" class="city-label" text-anchor="middle">Ишим</text>
+
+<!-- Омск (юго-восточнее Ишима) -->
+<circle class="city-dot" cx="470" cy="640" r="5" data-city="omsk" />
+<text x="470" y="670" class="city-label" text-anchor="middle">Омск</text>
+
+<!-- Курган (южнее Тюмени) -->
+<circle class="city-dot" cx="320" cy="660" r="5" data-city="kurgan" />
+<text x="320" y="690" class="city-label" text-anchor="middle">Курган</text>
+
+<!-- Челябинск (юго-западнее Кургана) -->
+<circle class="city-dot" cx="260" cy="650" r="5" data-city="chelyabinsk" />
+<text x="260" y="680" class="city-label" text-anchor="middle">Челябинск</text>
+
+<!-- Миасс (западнее Челябинска) -->
+<circle class="city-dot" cx="230" cy="660" r="5" data-city="miass" />
+<text x="230" y="690" class="city-label" text-anchor="middle">Миасс</text>
+
+<!-- Чебаркуль (северо-западнее Челябинска) -->
+<circle class="city-dot" cx="240" cy="635" r="5" data-city="chebarkul" />
+<text x="240" y="665" class="city-label" text-anchor="middle">Чебаркуль</text>
+
+<!-- Магнитогорск (южнее Челябинска) -->
+<circle class="city-dot" cx="250" cy="685" r="5" data-city="magnitogorsk" />
+<text x="250" y="715" class="city-label" text-anchor="middle">Магнитогорск</text>
+
+
+        <circle class="city-dot" cx="356" cy="594" r="5" data-city="tobolsk" />
+        <text x="356" y="574" class="city-label" text-anchor="middle">Тобольск</text>
+
+        <circle class="city-dot" cx="417" cy="574" r="5" data-city="langepas" />
+        <text x="417" y="524" class="city-label" text-anchor="middle">Сургут, Нижневартовск
+          <tspan x="407" dy="1.2em">Лангепас, Мегион</tspan>
+        </text>
+
+        <circle class="city-dot" cx="186" cy="653" r="5" data-city="penza" />
+        <text x="186" y="683" class="city-label" text-anchor="middle">Пенза</text>
+
+        <circle class="city-dot" cx="187" cy="642" r="5" data-city="saransk" />
+        <text x="187" y="622" class="city-label" text-anchor="middle">Саранск</text>
+
+        <circle class="city-dot" cx="147" cy="637" r="5" data-city="ryazan" />
+        <text x="147" y="667" class="city-label" text-anchor="middle">Рязань</text>
+
+        <circle class="city-dot" cx="830" cy="712" r="5" data-city="khabarovsk" />
+        <text x="830" y="697" class="city-label" text-anchor="middle">Хабаровск</text>
+
+        <circle class="city-dot" cx="822" cy="753" r="5" data-city="vladivostok" />
+        <text x="822" y="783" class="city-label" text-anchor="middle">Владивосток</text>
+
+        <circle class="city-dot" cx="849" cy="671" r="5" data-city="komsomolsk" />
+        <text x="849" y="651" class="city-label" text-anchor="middle">Комсомольск-на-Амуре</text>

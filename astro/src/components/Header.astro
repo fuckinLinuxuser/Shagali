@@ -1,5 +1,4 @@
 ---
-// src/components/Header.astro
 const { title = "Мир За Сценой" } = Astro.props;
 ---
 
@@ -15,19 +14,25 @@ const { title = "Мир За Сценой" } = Astro.props;
     </p>
   </div>
 
-  <div class="about-producer">
-    <img
-      src="/images/Shagali.jpg"
-      alt="Елена Шагали"
-      class="producer-photo"
-    />
+<div class="about-producer">
+  <video
+    class="producer-video"
+    autoplay
+    loop
+    muted
+    playsinline
+    preload="auto"
+    
+  >
+    <source src="/videos/ez.mp4" type="video/mp4">
+    <!-- Тестовое видео -->
+    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+    Ваш браузер не поддерживает видео.
+  </video>
 
-    <h2>Елена Шагали</h2>
-
-    <blockquote>
-      "В театр приходят из любопытства, а остаются по любви"
-    </blockquote>
-  </div>
+  <h2>Елена Шагали</h2>
+  <blockquote>"В театр приходят из любопытства, а остаются по любви"</blockquote>
+</div>
 
   <div class="beam-left"></div>
   <div class="beam-right"></div>
@@ -35,15 +40,15 @@ const { title = "Мир За Сценой" } = Astro.props;
 
 <style>
   .touch-phrase {
-    font-size: clamp(1.4rem, 5vw, 2.2rem);
-    font-size: clamp(1.4rem, 5.5vw, 2.4rem);
+    display: none;
+    font-size: clamp(1.5rem, 6vw, 2.6rem);
     color: #f0e8c0;
     opacity: 0;
-    transform: translateY(40px) scale(0.92);
-    text-shadow: 0 0 22px rgba(212, 175, 55, 0.8);
+    transform: translateY(50px) scale(0.9);
+    text-shadow: 0 0 18px rgba(212, 175, 55, 0.7);
     font-style: italic;
-    letter-spacing: 1.8px;
-    transition: all 0.9s ease-out;
+    letter-spacing: 1.6px;
+    transition: all 0.8s ease-out;
     user-select: none;
     cursor: pointer;
     position: relative;
@@ -51,141 +56,31 @@ const { title = "Мир За Сценой" } = Astro.props;
     will-change: transform, opacity, text-shadow;
   }
 
- .touch-phrase {
-  font-size: clamp(1.5rem, 6vw, 2.6rem);
-  color: #f0e8c0;
-  opacity: 0;
-  transform: translateY(50px) scale(0.88);
-  text-shadow: 0 0 18px rgba(212, 175, 55, 0.7);
-  font-style: italic;
-  letter-spacing: 1.6px;
-  transition: all 0.8s ease-out;
-  user-select: none;
-  cursor: pointer;
-  position: relative;
-  z-index: 10;
-  will-change: transform, opacity, text-shadow, filter;
-}
-
-.touch-phrase {
-  font-size: clamp(1.5rem, 6vw, 2.6rem);
-  color: #f0e8c0;
-  opacity: 0;
-  transform: translateY(50px) scale(0.9);
-  text-shadow: 0 0 18px rgba(212, 175, 55, 0.7);
-  font-style: italic;
-  letter-spacing: 1.6px;
-  transition: all 0.8s ease-out;
-  user-select: none;
-  cursor: pointer;
-  position: relative;
-  z-index: 10;
-  will-change: transform, opacity, text-shadow, filter;
-}
+  .touch-phrase.appear {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    animation: 
+      float-up-down 1.5s ease-in-out infinite alternate,
+      soft-glow-breath 4.8s ease-in-out infinite;
+  }
 
   .touch-phrase.hide {
     opacity: 0;
-    transform: translateY(-60px) scale(0.85);
+    transform: translateY(-50px) scale(0.92);
+    transition: opacity 0.9s ease-out, transform 0.9s cubic-bezier(0.4, 0, 0.25, 1);
     pointer-events: none;
-    transition: all 1.4s cubic-bezier(0.4, 0, 0.2, 1);
-    font-size: clamp(1.4rem, 5.5vw, 2.4rem);
-    color: #f0e8c0;
-    opacity: 0;
-    transform: translateY(40px) scale(0.92);
-    text-shadow: 0 0 22px rgba(212, 175, 55, 0.8);
-    font-style: italic;
-    letter-spacing: 1.8px;
-    transition: all 0.9s ease-out;
-    user-select: none;
-    cursor: pointer;
-    position: relative;
-    z-index: 10;
-    will-change: transform, opacity, text-shadow;
   }
-
- .touch-phrase {
-  font-size: clamp(1.5rem, 6vw, 2.6rem);
-  color: #f0e8c0;
-  opacity: 0;
-  transform: translateY(50px) scale(0.88);
-  text-shadow: 0 0 18px rgba(212, 175, 55, 0.7);
-  font-style: italic;
-  letter-spacing: 1.6px;
-  transition: all 0.8s ease-out;
-  user-select: none;
-  cursor: pointer;
-  position: relative;
-  z-index: 10;
-  will-change: transform, opacity, text-shadow, filter;
-}
-
-.touch-phrase {
-  font-size: clamp(1.5rem, 6vw, 2.6rem);
-  color: #f0e8c0;
-  opacity: 0;
-  transform: translateY(50px) scale(0.9);
-  text-shadow: 0 0 18px rgba(212, 175, 55, 0.7);
-  font-style: italic;
-  letter-spacing: 1.6px;
-  transition: all 0.8s ease-out;
-  user-select: none;
-  cursor: pointer;
-  position: relative;
-  z-index: 10;
-  will-change: transform, opacity, text-shadow, filter;
-}
 
   .spotlight {
     position: relative;
     z-index: 1;
-    animation: spotlight 2s infinite alternate;
-    animation: spotlight 2.8s infinite alternate;
     animation: spotlight 2.8s infinite alternate;
     color: rgb(253, 245, 199);
   }
 
   @keyframes spotlight {
-    0% { text-shadow: 0 0 10px gold; }
-    100% { text-shadow: 0 0 20px gold; }
     0%   { text-shadow: 0 0 8px gold; }
     100% { text-shadow: 0 0 24px gold; }
-  }
-</style>
-
-<!-- Мобильный overlay для большой зоны касания -->
-<style>
-@media (max-width: 768px) {
-  .touch-overlay {
-    position: absolute;
-    inset: 0;
-    z-index: 5;
-    background: transparent;
-    touch-action: manipulation;
-  }
-
-  .touch-phrase {
-    font-size: clamp(1.6rem, 6.5vw, 2.8rem);
-    padding: 20px 40px;
-    margin: 0 auto;
-    display: inline-block;
-  }
-
-  .touch-phrase.appear {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    animation: 
-      float-up-down 1.5s ease-in-out infinite alternate,
-      soft-glow-breath 4.8s ease-in-out infinite;
-  }
-
-  /* ← Вот это и есть исчезновение — мягкий подъём + затухание одновременно */
-  .touch-phrase.hide {
-    opacity: 0;
-    transform: translateY(-50px) scale(0.92);
-    transition: 
-      opacity 0.9s ease-out,
-      transform 0.9s cubic-bezier(0.4, 0, 0.25, 1);
-    pointer-events: none;
   }
 
   @keyframes float-up-down {
@@ -203,154 +98,55 @@ const { title = "Мир За Сценой" } = Astro.props;
       filter: brightness(1.12);
     }
   }
-    0%   { text-shadow: 0 0 8px gold; }
-    100% { text-shadow: 0 0 24px gold; }
-  }
-</style>
 
-<!-- Мобильный overlay для большой зоны касания -->
-<style>
-@media (max-width: 768px) {
-  .touch-overlay {
-    position: absolute;
-    inset: 0;
-    z-index: 5;
-    background: transparent;
-    touch-action: manipulation;
-  }
 
-  .touch-phrase {
-    font-size: clamp(1.6rem, 6.5vw, 2.8rem);
-    padding: 20px 40px;
-    margin: 0 auto;
-    display: inline-block;
-  }
-
-  .touch-phrase.appear {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    animation: 
-      float-up-down 1.5s ease-in-out infinite alternate,
-      soft-glow-breath 4.8s ease-in-out infinite;
-  }
-
-  /* ← Вот это и есть исчезновение — мягкий подъём + затухание одновременно */
-  .touch-phrase.hide {
-    opacity: 0;
-    transform: translateY(-50px) scale(0.92);
-    transition: 
-      opacity 0.9s ease-out,
-      transform 0.9s cubic-bezier(0.4, 0, 0.25, 1);
-    pointer-events: none;
-  }
-
-  @keyframes float-up-down {
-    0%   { transform: translateY(0) scale(1); }
-    100% { transform: translateY(-12px) scale(1.06); }
-  }
-
-  @keyframes soft-glow-breath {
-    0%   { 
-      text-shadow: 0 0 20px rgba(212,175,55,0.65), 0 0 40px rgba(212,175,55,0.3); 
-      filter: brightness(1);
-    }
-    100% { 
-      text-shadow: 0 0 50px rgba(212,175,55,0.95), 0 0 90px rgba(212,175,55,0.55); 
-      filter: brightness(1.12);
-    }
-  }
+ .about-producer h2 {
+  margin-top: 80px;
+  margin-bottom: auto;
+}
+  /* === Видео === */
+.producer-video {
+  border-radius: 100%;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  width: 350px;
+  height: 350px;
+  object-fit: cover;
+  border: 3px solid gold;
+  display: block;
+  background: #111;
+  transform: translateZ(0);           /* фиксит rendering в Chrome */
+  -webkit-transform: translateZ(0);
+  will-change: transform;
+  margin: auto;
 }
 
-</style>
+.producer-video:playing {
+  background: transparent;
+}
 
-<script is:inline>
-  document.addEventListener('DOMContentLoaded', () => {
-    const phrase = document.getElementById('touchPhrase');
-    if (!phrase) return;
+  .about-producer {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(30px);
+    filter: blur(5px);
+    transition: all 1.5s ease 0.5s;
+    margin-top: 20px;
+    z-index: 1;
+    display: flex;
+    flex-direction: column; /* Элементы встают друг под друга: видео сверху, h2 снизу */
+    align-items: center;    /* Центрирует и видео, и h2 по горизонтали */
+    min-height: 500px;      /* Задайте высоту блоку, чтобы h2 было куда падать вниз */
+    position: relative;
+    
+  }
 
-    let overlay = null;
-    let mobileHideHandler = null; // объявляем заранее
-    let mobileHideHandler = null;
+  .header:hover .about-producer {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
 
-    // Появление
-    setTimeout(() => {
-      phrase.classList.add('appear');
-    }, 800);
-    let mobileHideHandler = null;
-
-    // Появление
-    setTimeout(() => {
-      phrase.classList.add('appear');
-    }, 900);
-    }, 900);
-
-    const hideHandler = () => {
-      if (phrase.classList.contains('hide')) return;
-      
-      phrase.classList.remove('appear');
-      phrase.classList.add('hide');
-
-      phrase.removeEventListener('click', hideHandler);
-      phrase.removeEventListener('touchstart', hideHandler);
-
-      if (overlay) {
-        overlay.removeEventListener('touchstart', hideHandler);
-      }
-
-      if (mobileHideHandler) {
-        document.removeEventListener('touchstart', mobileHideHandler);
-      }
-    };
-
-    // Десктоп + touch на самой фразе
-    phrase.addEventListener('click', hideHandler);
-    phrase.addEventListener('touchstart', hideHandler, { passive: true });
-
-    // Мобильная логика — большая зона касания
-    if (window.matchMedia("(max-width: 768px)").matches) {
-      const header = phrase.closest('.header');
-      if (header) {
-        overlay = document.createElement('div');
-        overlay.className = 'touch-overlay';
-        header.appendChild(overlay);
-
-        overlay.addEventListener('touchstart', hideHandler, { passive: true });
-
-        // 2. Дополнительный обработчик на весь spotlight (страховка)
-      if (mobileHideHandler) {
-        document.removeEventListener('touchstart', mobileHideHandler);
-      }
-    };
-
-    // Десктоп + touch на самой фразе
-    phrase.addEventListener('click', hideHandler);
-    phrase.addEventListener('touchstart', hideHandler, { passive: true });
-
-    // Мобильная логика — большая зона касания
-    if (window.matchMedia("(max-width: 768px)").matches) {
-      const header = phrase.closest('.header');
-      if (header) {
-        overlay = document.createElement('div');
-        overlay.className = 'touch-overlay';
-        header.appendChild(overlay);
-
-        overlay.addEventListener('touchstart', hideHandler, { passive: true });
-        mobileHideHandler = (e) => {
-          if (phrase.classList.contains('hide')) return;
-          hideHandler();
-        };
-        spotlight.addEventListener('touchstart', mobileHideHandler, { passive: true });
-
-        // Опционально: если хотите ловить касание вообще по документу (очень агрессивно)
-        // document.addEventListener('touchstart', mobileHideHandler, { passive: true });
-        header.addEventListener('touchstart', mobileHideHandler, { passive: true });
-        header.addEventListener('touchstart', mobileHideHandler, { passive: true });
-      }
-    }
-  };
-</script>
-
-<style>
+  /* Остальные стили (шторы, лучи и т.д.) */
   .curtain-left, .curtain-right {
     position: absolute;
     top: 0;
@@ -360,14 +156,13 @@ const { title = "Мир За Сценой" } = Astro.props;
     transition: transform 2s ease;
   }
 
-  .curtain-left { left: 0; transform: translateX(0); }
-  .curtain-right { right: 0; transform: translateX(0); }
+  .curtain-left  { left: 0; }
+  .curtain-right { right: 0; }
 
   .header:hover .curtain-left  { transform: translateX(-100%); }
   .header:hover .curtain-right { transform: translateX(100%); }
 
-  .beam-left,
-  .beam-right {
+  .beam-left, .beam-right {
     position: absolute;
     bottom: 0;
     width: 50%;
@@ -383,56 +178,86 @@ const { title = "Мир За Сценой" } = Astro.props;
   .header:hover .beam-left,
   .header:hover .beam-right {
     opacity: 0.75;
-    transition-duration: 4s;
   }
 
   .beam-left  { left: 0; clip-path: polygon(0 100%, 100% 100%, 70% 0); }
   .beam-right { right: 0; clip-path: polygon(0 100%, 100% 100%, 30% 0); }
 
-  .about-producer {
-    text-align: center;
-    opacity: 0;
-    transform: translateY(30px);
-    filter: blur(5px);
-    transition: all 1.5s ease 0.5s;
-    margin-top: 20px;
-    z-index: 1;
-    position: relative;
-  }
-
-  .header:hover .about-producer {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
-
-  .producer-photo {
-    border-radius: 100%;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-    width: 350px;
-    height: 350px;
-    object-fit: cover;
-    border: 3px solid gold;
-  }
-
-  .about-producer h2 {
-    font-size: 2.5rem;
-    color: gold;
-    margin: 10px 0;
-  }
-
-  .about-producer blockquote {
-    font-style: italic;
-    font-size: 1.2rem;
-    max-width: 600px;
-    margin: 0 auto;
-    color: #ccc;
-  }
-
   @media (max-width: 768px) {
-    .producer-photo {
+    .producer-video {
       width: 250px;
       height: 250px;
     }
   }
+</style>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const phrase = document.getElementById('touchPhrase');
+    if (!phrase) return;
+
+    // Появление фразы
+    setTimeout(() => {
+      phrase.classList.add('appear');
+    }, 800);
+
+    const hideHandler = () => {
+      if (phrase.classList.contains('hide')) return;
+      
+      phrase.classList.remove('appear');
+      phrase.classList.add('hide');
+      phrase.removeEventListener('click', hideHandler);
+      phrase.removeEventListener('touchstart', hideHandler);
+    };
+
+    phrase.addEventListener('click', hideHandler);
+    phrase.addEventListener('touchstart', hideHandler, { passive: true });
+
+    // Мобильная большая зона касания
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      const header = phrase.closest('.header');
+      if (header) {
+        const overlay = document.createElement('div');
+        overlay.className = 'touch-overlay';
+        header.appendChild(overlay);
+
+        overlay.addEventListener('touchstart', hideHandler, { passive: true });
+      }
+    }
+  });
+
+
+  // === Принудительный запуск видео ===
+const video = document.querySelector('.producer-video');
+if (video) {
+  video.muted = true;           // обязательно
+  
+  const playPromise = video.play();
+  
+  if (playPromise !== undefined) {
+    playPromise.catch(error => {
+      console.warn("Autoplay prevented:", error);
+      // Пробуем ещё раз после взаимодействия
+      document.addEventListener('click', () => video.play(), { once: true });
+    });
+  }
+
+  // Отладка
+  video.addEventListener('loadedmetadata', () => console.log('Видео загружено, длительность:', video.duration));
+  video.addEventListener('error', (e) => console.error('Ошибка видео:', e));
+  video.addEventListener('playing', () => console.log('Видео начало играть'));
+}
+</script>
+
+<!-- Мобильный overlay -->
+<style>
+@media (max-width: 768px) {
+  .touch-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    background: transparent;
+    touch-action: manipulation;
+  }
+}
 </style>
