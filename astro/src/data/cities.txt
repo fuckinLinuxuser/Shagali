@@ -72,4 +72,4 @@
         <circle class="city-dot" cx="849" cy="671" r="5" data-city="komsomolsk" />
         <text x="849" y="651" class="city-label" text-anchor="middle">Комсомольск-на-Амуре</text>
 
-        ff
+        
