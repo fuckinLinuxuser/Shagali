@@ -1,0 +1,192 @@
+---
+const ADMIN_PASSWORD = '1111'; // ← ИЗМЕНИ!
+---
+
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель — Управление Блогом</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #1a1a1a; color: #eee; margin:0; padding:20px; }
+        .container { max-width: 1100px; margin: 40px auto; background: #222; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+        h1 { text-align: center; color: #d4af37; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #444; }
+        th { background: #333; }
+        .btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; margin: 0 4px; }
+        .btn-edit { background: #4ade80; color: #111; }
+        .btn-delete { background: #f87171; color: white; }
+        .btn-primary { background: #d4af37; color: #111; font-weight: bold; padding: 14px; width: 100%; margin-top: 15px; }
+        .hidden { display: none; }
+        label { display: block; margin: 10px 0 5px; color: #d4af37; }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 12px; background: #333; color: white; border: none; border-radius: 8px; }
+        input[type="file"] { background: #444; padding: 8px; }
+        #status { margin-top: 10px; text-align: center; font-weight: bold; }
+        .required { color: #f87171; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="loginScreen">
+            <h1>Админ-панель</h1>
+            <div style="max-width:400px; margin:80px auto;">
+                <input type="password" id="passwordInput" placeholder="Пароль" />
+                <button id="loginBtn" class="btn-primary">Войти</button>
+            </div>
+        </div>
+
+        <div id="adminPanel" class="hidden">
+            <h1>Управление постами блога</h1>
+
+            <h2 id="formTitle">Новый пост</h2>
+            <form id="postForm">
+                <input type="hidden" id="postId">
+                <input type="hidden" id="isEdit" value="false">
+
+                <input type="text" id="title" placeholder="Название поста" required>
+                <input type="text" id="date" placeholder="Дата (например: Март 2026)" required>
+                
+                <label>Фото обложки <span class="required">*</span></label>
+                <input type="file" id="coverImage" accept="image/*" required>
+
+                <label>Короткий текст <span class="required">*</span></label>
+                <textarea id="shortText" rows="3" required></textarea>
+                
+                <label>Полный текст <span class="required">*</span></label>
+                <textarea id="fullText" rows="8" required></textarea>
+                
+                <label>Основное медиа (видео или фото) <span class="required">*</span></label>
+                <input type="file" id="mainMedia" accept="image/*,video/*" required>
+
+                <button type="submit" class="btn-primary" id="submitBtn">Опубликовать пост</button>
+            </form>
+
+            <div id="status"></div>
+
+            <h2 style="margin-top:40px;">Существующие посты</h2>
+            <table id="postsTable">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Название</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script define:vars={{ ADMIN_PASSWORD }}>
+        let currentEditId = null;
+
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            if (document.getElementById('passwordInput').value.trim() === ADMIN_PASSWORD) {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('adminPanel').classList.remove('hidden');
+                loadPosts();
+            } else {
+                alert('Неверный пароль!');
+            }
+        });
+
+        async function loadPosts() {
+            const res = await fetch('/api/posts');
+            const posts = await res.json();
+            
+            const tbody = document.querySelector('#postsTable tbody');
+            tbody.innerHTML = '';
+
+            posts.forEach(post => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${post.date}</td>
+                    <td>${post.title}</td>
+                    <td>
+                        <button class="btn btn-edit" onclick="editPost(${post.id})">Редактировать</button>
+                        <button class="btn btn-delete" onclick="deletePost(${post.id})">Удалить</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        window.editPost = async (id) => {
+            const res = await fetch(`/api/posts/${id}`);
+            const post = await res.json();
+
+            currentEditId = post.id;
+            document.getElementById('formTitle').textContent = 'Редактирование поста';
+            document.getElementById('postId').value = post.id;
+            document.getElementById('title').value = post.title;
+            document.getElementById('date').value = post.date;
+            document.getElementById('shortText').value = post.shortText;
+            document.getElementById('fullText').value = post.fullText;
+
+            // При редактировании файлы НЕ обязательны
+            document.getElementById('coverImage').required = false;
+            document.getElementById('mainMedia').required = false;
+
+            document.getElementById('submitBtn').textContent = 'Сохранить изменения';
+        };
+
+        window.deletePost = async (id) => {
+            if (!confirm('Вы уверены, что хотите удалить этот пост?')) return;
+            
+            const res = await fetch(`/api/posts/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                loadPosts();
+            } else {
+                alert('Ошибка при удалении');
+            }
+        };
+
+        document.getElementById('postForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const status = document.getElementById('status');
+            status.textContent = 'Сохранение...';
+
+            const formData = new FormData();
+            formData.append('title', document.getElementById('title').value);
+            formData.append('date', document.getElementById('date').value);
+            formData.append('shortText', document.getElementById('shortText').value);
+            formData.append('fullText', document.getElementById('fullText').value);
+
+            const coverFile = document.getElementById('coverImage').files[0];
+            const mainFile = document.getElementById('mainMedia').files[0];
+
+            if (coverFile) formData.append('coverImage', coverFile);
+            if (mainFile) formData.append('mainMedia', mainFile);
+
+            const isEdit = !!currentEditId;
+            const url = isEdit ? `/api/posts/${currentEditId}` : '/api/posts';
+            const method = isEdit ? 'PUT' : 'POST';
+
+            try {
+                const res = await fetch(url, { method, body: formData });
+                if (res.ok) {
+                    status.style.color = '#4ade80';
+                    status.textContent = isEdit ? '✅ Изменения сохранены!' : '✅ Пост успешно опубликован!';
+                    
+                    document.getElementById('postForm').reset();
+                    currentEditId = null;
+                    document.getElementById('formTitle').textContent = 'Новый пост';
+                    document.getElementById('submitBtn').textContent = 'Опубликовать пост';
+                    
+                    // Возвращаем обязательность полей
+                    document.getElementById('coverImage').required = true;
+                    document.getElementById('mainMedia').required = true;
+
+                    loadPosts();
+                } else {
+                    throw new Error();
+                }
+            } catch (err) {
+                status.style.color = '#f87171';
+                status.textContent = '❌ Ошибка при сохранении';
+            }
+        });
+    </script>
+</body>
+</html>
