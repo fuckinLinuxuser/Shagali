@@ -1,8 +1,8 @@
-import { c as createComponent } from './astro-component_CNLK_uwO.mjs';
+import { c as createComponent } from './astro-component_BYPt4OLf.mjs';
 import 'piccolore';
-import { k as renderComponent, r as renderTemplate, m as maybeRenderHead } from './server_BBnQDNBb.mjs';
-import { r as renderScript } from './script_DKkfqjt2.mjs';
-import { $ as $$MainLayout } from './MainLayout_BV8-X1qr.mjs';
+import { k as renderComponent, r as renderTemplate, m as maybeRenderHead } from './server_u_7t0tlI.mjs';
+import { r as renderScript } from './script_CDT4iaJ6.mjs';
+import { $ as $$MainLayout } from './MainLayout_CZDt-iaP.mjs';
 
 const $$Waitlist = createComponent(($$result, $$props, $$slots) => {
   const title = "Лист ожидания — Гастроли и выступления";

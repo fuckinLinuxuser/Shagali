@@ -1,6 +1,6 @@
-import { c as createComponent } from './astro-component_CNLK_uwO.mjs';
+import { c as createComponent } from './astro-component_BYPt4OLf.mjs';
 import 'piccolore';
-import { i as renderHead, r as renderTemplate } from './server_BBnQDNBb.mjs';
+import { i as renderHead, r as renderTemplate } from './server_u_7t0tlI.mjs';
 import 'clsx';
 
 const $$YandexCe6Cf319C85B86A6 = createComponent(($$result, $$props, $$slots) => {
