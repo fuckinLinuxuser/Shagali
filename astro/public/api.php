@@ -5,8 +5,8 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
 $posts_file = __DIR__ . '/posts.json';
-$images_dir = __DIR__ . '/images/posts';
-$videos_dir = __DIR__ . '/videos/posts';
+$images_dir = __DIR__ . '/images';
+$videos_dir = __DIR__ . '/videos';
 
 // Создаем папки, если их нет
 if (!file_exists($images_dir)) mkdir($images_dir, 0755, true);
@@ -77,7 +77,7 @@ if ($method === 'POST' || $method === 'PUT') {
         $ext = pathinfo($_FILES['coverImage']['name'], PATHINFO_EXTENSION) ?: 'jpg';
         $filename = "{$slug}-cover-{$timestamp}.{$ext}";
         if (move_uploaded_file($_FILES['coverImage']['tmp_name'], "{$images_dir}/{$filename}")) {
-            $coverPath = "/images/posts/{filename}";
+            $coverPath = "/images/{filename}";
         }
     }
 
@@ -90,7 +90,7 @@ if ($method === 'POST' || $method === 'PUT') {
         $ext = pathinfo($_FILES['mainMedia']['name'], PATHINFO_EXTENSION) ?: ($isVideo ? 'mp4' : 'jpg');
         $filename = "{$slug}-main-{$timestamp}.{$ext}";
         if (move_uploaded_file($_FILES['mainMedia']['tmp_name'], "{$folder}/{$filename}")) {
-            $mainPath = "/{$web_folder}/posts/{$filename}";
+            $mainPath = "/{$web_folder}/{$filename}";
         }
     }
 
