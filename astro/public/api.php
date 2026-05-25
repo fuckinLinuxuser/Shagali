@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json");
+header("Content-Type: application/json; charset=utf-8");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
@@ -23,14 +23,12 @@ function savePosts($file, $posts) {
 }
 
 $method = $_SERVER['REQUEST_METHOD'];
-$uri = $_SERVER['REQUEST_URI'];
 
 // Хак для парсинга PUT с файлами в PHP
 if ($method === 'POST' && isset($_GET['_method']) && $_GET['_method'] === 'PUT') {
     $method = 'PUT';
 }
 
-// Получаем ID из query-строки (например, api.php?id=123)
 $id_param = isset($_GET['id']) ? (int)$_GET['id'] : null;
 
 // ====================== GET ======================
@@ -39,14 +37,14 @@ if ($method === 'GET') {
     if ($id_param) {
         foreach ($posts as $post) {
             if ($post['id'] === $id_param) {
-                echo json_encode($post);
+                echo json_encode($post, JSON_UNESCAPED_UNICODE);
                 exit;
             }
         }
         http_response_code(404);
         echo json_encode(["error" => "Not found"]);
     } else {
-        echo json_encode($posts);
+        echo json_encode($posts, JSON_UNESCAPED_UNICODE);
     }
     exit;
 }
@@ -65,7 +63,7 @@ if ($method === 'POST' || $method === 'PUT') {
     }
 
     $posts = readPosts($posts_file);
-    $timestamp = time() * 1000; // аналог Date.now()
+    $timestamp = time() * 1000; 
     $slug = preg_replace('/[^a-zа-я0-9]+/u', '-', mb_strtolower($title));
 
     $coverPath = '';
@@ -77,7 +75,8 @@ if ($method === 'POST' || $method === 'PUT') {
         $ext = pathinfo($_FILES['coverImage']['name'], PATHINFO_EXTENSION) ?: 'jpg';
         $filename = "{$slug}-cover-{$timestamp}.{$ext}";
         if (move_uploaded_file($_FILES['coverImage']['tmp_name'], "{$images_dir}/{$filename}")) {
-            $coverPath = "/images/castings/{filename}";
+            // ИСПРАВЛЕНО: Двойные кавычки и правильное имя переменной PHP
+            $coverPath = "/images/castings/{$filename}"; 
         }
     }
 
@@ -85,17 +84,19 @@ if ($method === 'POST' || $method === 'PUT') {
     if (isset($_FILES['mainMedia']) && $_FILES['mainMedia']['error'] === UPLOAD_ERR_OK) {
         $mime = $_FILES['mainMedia']['type'];
         $isVideo = strpos($mime, 'video/') === 0;
+        
         $folder = $isVideo ? $videos_dir : $images_dir;
-        $web_folder = $isVideo ? 'videos' : 'images';
+        $web_folder = $isVideo ? 'videos' : 'images/castings'; // ИСПРАВЛЕНО: приведен к вашей структуре папок
+        
         $ext = pathinfo($_FILES['mainMedia']['name'], PATHINFO_EXTENSION) ?: ($isVideo ? 'mp4' : 'jpg');
         $filename = "{$slug}-main-{$timestamp}.{$ext}";
         if (move_uploaded_file($_FILES['mainMedia']['tmp_name'], "{$folder}/{$filename}")) {
-            $mainPath = "/{$web_folder}/{$filename}";
+            // ИСПРАВЛЕНО: Двойные кавычки и правильный путь
+            $mainPath = "/{$web_folder}/{$filename}"; 
         }
     }
 
     if ($method === 'POST') {
-        // Создание
         array_unshift($posts, [
             "id" => $timestamp,
             "title" => $title,
@@ -108,7 +109,6 @@ if ($method === 'POST' || $method === 'PUT') {
         ]);
         http_response_code(201);
     } else {
-        // Редактирование (PUT)
         $found = false;
         foreach ($posts as &$post) {
             if ($post['id'] === $id_param) {
