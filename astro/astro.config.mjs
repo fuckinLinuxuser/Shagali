@@ -1,19 +1,16 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
-import node from '@astrojs/node';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://shagali.ru',
   integrations: [sitemap()],
 
-  output: 'server',                    // включаем серверный режим
-  adapter: node({
-    mode: 'standalone'
-  }),
+  // Переключаем Astro в полностью статический режим
+  output: 'static',
 
-  // Рекомендуемые настройки
+  // Рекомендуемые настройки для корректных URL без косой черты в конце
   trailingSlash: 'never',
   build: {
     format: 'directory'
