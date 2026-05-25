@@ -321,102 +321,77 @@ try {
 </style>
 
 <section class="castings-section" id="blog">
-    <h1>Блог</h1>
-
-    <div class="timeline-container" id="timelineContainer">
-        <div class="timeline-line"></div>
-
-        <div class="timeline-wrapper">
-
-            <!-- ДИНАМИЧЕСКИЕ КАРТОЧКИ -->
-            {posts.map(post => (
-                <div class="timeline-item"
-                     data-name={post.title}
-                     data-date={post.date}
-                     data-description={post.fullText}
-                     data-video={post.mainMedia}>
-                    <div class="timeline-date">{post.date}</div>
-                    <div class="timeline-content">
-                        <img src={post.coverImage} alt={post.title} class="timeline-thumbnail">
-                        <h3 class="timeline-title">{post.title}</h3>
-                        <p class="timeline-teaser">{post.shortText}</p>
-                        <button class="btn-detail">Подробнее</button>
-                    </div>
-                </div>
-            ))}
-
-        </div>
+  <h1>Блог</h1>
+  <div class="timeline-container" id="timelineContainer">
+    <div class="timeline-line"></div>
+    <div class="timeline-wrapper" id="posts-container">
+      <!-- ДИНАМИЧЕСКИЕ КАРТОЧКИ БУДУТ СЮДА ВКЛЕИВАТЬСЯ ЧЕРЕЗ JS -->
+       <div class="loading-text" style="color: #aaa; text-align:center;">Загрузка публикаций...</div>
     </div>
+  </div>
 </section>
 
-
 <div id="castings-modal">
-    <div class="modal-content">
-        <span class="close">×</span>
-        <div id="modal-body">
-            <h2 id="modalTitle"></h2>
-            <div id="modalDate"></div>
-            <div id="modalVideoContainer">
-                <video id="modalVideo" controls playsinline>
-                    <source id="modalVideoSource" src="" type="video/mp4">
-                    Ваш браузер не поддерживает видео.
-                </video>
-            </div>
-            <div id="modalDesc"></div>
-        </div>
+  <div class="modal-content">
+    <span class="close">×</span>
+    <div id="modal-body">
+      <h2 id="modalTitle"></h2>
+      <div id="modalDate"></div>
+      <div id="modalVideoContainer">
+        <video id="modalVideo" controls playsinline>
+          <source id="modalVideoSource" src="" type="video/mp4">
+          Ваш браузер не поддерживает видео.
+        </video>
+      </div>
+      <div id="modalDesc"></div>
     </div>
+  </div>
 </div>
 
-<script is:inline>
-document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('timelineContainer');
-    const items = document.querySelectorAll('.timeline-item');
+<script>
+  async function displayPosts() {
+    try {
+      const res = await fetch('/api.php');
+      const posts = await res.json();
+      const container = document.getElementById('posts-container');
+      if (!container) return;
+      
+      if (posts.length === 0) {
+        container.innerHTML = '<div style="color: #aaa; text-align:center;">Пока нет ни одного поста.</div>';
+        return;
+      }
 
-    // Появление карточек
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add('visible');
-        });
-    }, { threshold: 0.2 });
+      container.innerHTML = ''; // очищаем загрузку
 
-    items.forEach(item => observer.observe(item));
+      posts.forEach((post: any) => {
+        const item = document.createElement('div');
+        item.className = 'timeline-item';
+        item.setAttribute('data-name', post.title);
+        item.setAttribute('data-date', post.date);
+        item.setAttribute('data-description', post.fullText);
+        item.setAttribute('data-video', post.mainMedia);
 
-    // Модальное окно
-    const modal = document.getElementById('castings-modal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalDate = document.getElementById('modalDate');
-    const modalDesc = document.getElementById('modalDesc');
-    const video = document.getElementById('modalVideo');
-    const videoSource = document.getElementById('modalVideoSource');
-    const closeBtn = document.querySelector('#castings-modal .close');
-
-    document.querySelectorAll('.btn-detail').forEach(btn => {
-        btn.addEventListener('click', e => {
-            e.stopPropagation();
-            const card = btn.closest('.timeline-item');
-
-            modalTitle.textContent = card.dataset.name;
-            modalDate.textContent = card.dataset.date;
-            modalDesc.textContent = card.dataset.description;
-
-            videoSource.src = card.dataset.video || '';
-            video.load();
-            video.play().catch(() => {});
-
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        });
-    });
-
-    function closeModal() {
-        modal.style.display = 'none';
-        document.body.style.overflow = '';
-        video.pause();
-        video.currentTime = 0;
+        item.innerHTML = `
+          <div class="timeline-date">${post.date}</div>
+          <div class="timeline-content">
+            <img src="${post.coverImage || '/images/default-cover.jpg'}" alt="${post.title}" class="timeline-thumbnail">
+            <h3 class="timeline-title">${post.title}</h3>
+            <p class="timeline-teaser">${post.shortText}</p>
+            <button class="btn-detail">Подробнее</button>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+      
+      // Вызываем инициализацию модалок, так как элементы только что создались
+      // Убедитесь, что ваш скрипт а-ля modal.js или tours-interactiv.js слушает клики динамически
+    } catch (e) {
+      console.error("Ошибка загрузки блогов:", e);
     }
+  }
 
-    closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-});
+  // Запускаем при загрузке страницы
+  document.addEventListener('DOMContentLoaded', displayPosts);
+  // На всякий случай дублируем для роутинга Astro
+  displayPosts();
 </script>

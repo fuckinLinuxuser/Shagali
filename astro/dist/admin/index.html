@@ -1,108 +1,88 @@
 <!DOCTYPE html><html lang="ru" data-astro-cid-2zp6q64z> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Админ-панель — Управление Блогом</title><style>body{font-family:Arial,sans-serif;background:#1a1a1a;color:#eee;margin:0;padding:20px}.container[data-astro-cid-2zp6q64z]{max-width:1100px;margin:40px auto;background:#222;padding:35px;border-radius:16px;box-shadow:0 10px 40px #000000b3}h1[data-astro-cid-2zp6q64z]{text-align:center;color:#d4af37;margin-bottom:10px}h2[data-astro-cid-2zp6q64z]{color:#ddd;margin-top:30px}input[data-astro-cid-2zp6q64z],textarea[data-astro-cid-2zp6q64z]{width:100%;padding:12px 14px;margin-bottom:14px;background:#333;color:#fff;border:none;border-radius:8px;font-size:1.02em}input[data-astro-cid-2zp6q64z][type=file]{background:#2a2a2a;padding:10px;border:2px dashed #d4af37;cursor:pointer;transition:all .3s}input[data-astro-cid-2zp6q64z][type=file]:hover{background:#333;border-color:#f4d47c}label[data-astro-cid-2zp6q64z]{display:block;margin:12px 0 6px;color:#d4af37;font-weight:600}.required[data-astro-cid-2zp6q64z]{color:#ff6b6b}.btn-primary[data-astro-cid-2zp6q64z]{background:#d4af37;color:#111;font-weight:700;padding:14px;border:none;border-radius:8px;cursor:pointer;font-size:1.1em;transition:all .3s}.btn-primary[data-astro-cid-2zp6q64z]:hover{background:#f4d47c;transform:translateY(-2px)}.btn[data-astro-cid-2zp6q64z]{padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-weight:600;transition:all .3s}.btn-edit[data-astro-cid-2zp6q64z]{background:#4ade80;color:#111}.btn-edit[data-astro-cid-2zp6q64z]:hover{background:#22c55e;transform:scale(1.05)}.btn-delete[data-astro-cid-2zp6q64z]{background:#f87171;color:#fff}.btn-delete[data-astro-cid-2zp6q64z]:hover{background:#ef4444;transform:scale(1.05)}table[data-astro-cid-2zp6q64z]{width:100%;border-collapse:collapse;margin:20px 0;background:#1f1f1f}th[data-astro-cid-2zp6q64z],td[data-astro-cid-2zp6q64z]{padding:14px;text-align:left;border-bottom:1px solid #444}th[data-astro-cid-2zp6q64z]{background:#2a2a2a;color:#d4af37}tr[data-astro-cid-2zp6q64z]:hover{background:#2a2a2a}.hidden[data-astro-cid-2zp6q64z]{display:none}#status[data-astro-cid-2zp6q64z]{margin-top:15px;text-align:center;font-weight:700;min-height:28px}
 </style></head> <body data-astro-cid-2zp6q64z> <div class="container" data-astro-cid-2zp6q64z> <!-- Логин --> <div id="loginScreen" data-astro-cid-2zp6q64z> <h1 data-astro-cid-2zp6q64z>Админ-панель</h1> <div style="max-width:420px; margin:100px auto;" data-astro-cid-2zp6q64z> <input type="password" id="passwordInput" placeholder="Введите пароль" data-astro-cid-2zp6q64z> <button id="loginBtn" class="btn-primary" data-astro-cid-2zp6q64z>Войти</button> </div> </div> <!-- Админка --> <div id="adminPanel" class="hidden" data-astro-cid-2zp6q64z> <h1 data-astro-cid-2zp6q64z>Управление постами</h1> <h2 id="formTitle" data-astro-cid-2zp6q64z>Новый пост</h2> <form id="postForm" data-astro-cid-2zp6q64z> <input type="hidden" id="postId" data-astro-cid-2zp6q64z> <input type="text" id="title" placeholder="Название поста" required data-astro-cid-2zp6q64z> <input type="text" id="date" placeholder="Дата (например: Март 2026)" required data-astro-cid-2zp6q64z> <label data-astro-cid-2zp6q64z>Фото обложки <span class="required" data-astro-cid-2zp6q64z>*</span></label> <input type="file" id="coverImage" accept="image/*" required data-astro-cid-2zp6q64z> <label data-astro-cid-2zp6q64z>Короткий текст <span class="required" data-astro-cid-2zp6q64z>*</span></label> <textarea id="shortText" rows="3" required data-astro-cid-2zp6q64z></textarea> <label data-astro-cid-2zp6q64z>Полный текст <span class="required" data-astro-cid-2zp6q64z>*</span></label> <textarea id="fullText" rows="9" required data-astro-cid-2zp6q64z></textarea> <label data-astro-cid-2zp6q64z>Основное медиа (видео/фото) <span class="required" data-astro-cid-2zp6q64z>*</span></label> <input type="file" id="mainMedia" accept="image/*,video/*" required data-astro-cid-2zp6q64z> <button type="submit" class="btn-primary" id="submitBtn" data-astro-cid-2zp6q64z>Опубликовать пост</button> </form> <div id="status" data-astro-cid-2zp6q64z></div> <h2 data-astro-cid-2zp6q64z>Существующие посты</h2> <table id="postsTable" data-astro-cid-2zp6q64z> <thead data-astro-cid-2zp6q64z> <tr data-astro-cid-2zp6q64z> <th data-astro-cid-2zp6q64z>Дата</th> <th data-astro-cid-2zp6q64z>Название</th> <th style="width: 220px;" data-astro-cid-2zp6q64z>Действия</th> </tr> </thead> <tbody data-astro-cid-2zp6q64z></tbody> </table> </div> </div> <script>(function(){const ADMIN_PASSWORD = "1111";
 
-        let currentEditId = null;
+       async function loadPosts() {
+    const res = await fetch('/api.php'); // Меняем путь
+    const posts = await res.json();
+    const tbody = document.querySelector('#postsTable tbody');
+    tbody.innerHTML = '';
+    posts.forEach(post => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+        <td>${post.date}</td>
+        <td>${post.title}</td>
+        <td>
+        <button class="btn btn-edit" onclick="editPost(${post.id})">✏️ Редактировать</button>
+        <button class="btn btn-delete" onclick="deletePost(${post.id})">🗑️ Удалить</button>
+        </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
 
-        // Логин
-        document.getElementById('loginBtn').addEventListener('click', () => {
-            if (document.getElementById('passwordInput').value.trim() === ADMIN_PASSWORD) {
-                document.getElementById('loginScreen').classList.add('hidden');
-                document.getElementById('adminPanel').classList.remove('hidden');
-                loadPosts();
-            } else {
-                alert('Неверный пароль!');
-            }
-        });
+window.editPost = async (id) => {
+    const res = await fetch(`/api.php?id=${id}`); // Меняем путь
+    const post = await res.json();
+    currentEditId = post.id;
+    document.getElementById('formTitle').textContent = 'Редактирование поста';
+    document.getElementById('title').value = post.title;
+    document.getElementById('date').value = post.date;
+    document.getElementById('shortText').value = post.shortText;
+    document.getElementById('fullText').value = post.fullText;
+    document.getElementById('coverImage').required = false;
+    document.getElementById('mainMedia').required = false;
+    document.getElementById('submitBtn').textContent = 'Сохранить изменения';
+};
 
-        async function loadPosts() {
-            const res = await fetch('/api/posts');
-            const posts = await res.json();
-            
-            const tbody = document.querySelector('#postsTable tbody');
-            tbody.innerHTML = '';
+window.deletePost = async (id) => {
+    if (!confirm('Удалить этот пост безвозвратно?')) return;
+    const res = await fetch(`/api.php?id=${id}`, { method: 'DELETE' }); // Меняем путь
+    if (res.ok) {
+        loadPosts();
+    } else {
+        alert('Ошибка при удалении');
+    }
+};
 
-            posts.forEach(post => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${post.date}</td>
-                    <td>${post.title}</td>
-                    <td>
-                        <button class="btn btn-edit" onclick="editPost(${post.id})">✏️ Редактировать</button>
-                        <button class="btn btn-delete" onclick="deletePost(${post.id})">🗑 Удалить</button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
+// Внутри обработчика отправки формы ('submit') замените блок определения url и method:
+document.getElementById('postForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const status = document.getElementById('status');
+    status.textContent = 'Сохранение...';
+    
+    const formData = new FormData();
+    formData.append('title', document.getElementById('title').value);
+    formData.append('date', document.getElementById('date').value);
+    formData.append('shortText', document.getElementById('shortText').value);
+    formData.append('fullText', document.getElementById('fullText').value);
+    
+    const coverFile = document.getElementById('coverImage').files[0];
+    const mainFile = document.getElementById('mainMedia').files[0];
+    if (coverFile) formData.append('coverImage', coverFile);
+    if (mainFile) formData.append('mainMedia', mainFile);
+
+    const isEdit = !!currentEditId;
+    // PHP не умеет из коробки читать FormData через PUT, поэтому шлем POST с флагом в query
+    const url = isEdit ? `/api.php?id=${currentEditId}&_method=PUT` : '/api.php';
+    const method = 'POST'; 
+
+    try {
+        const res = await fetch(url, { method, body: formData });
+        if (res.ok) {
+            status.style.color = '#4ade80';
+            status.textContent = isEdit ? '✅ Изменения сохранены!' : '✅ Пост успешно опубликован!';
+            document.getElementById('postForm').reset();
+            currentEditId = null;
+            document.getElementById('formTitle').textContent = 'Новый пост';
+            document.getElementById('submitBtn').textContent = 'Опубликовать пост';
+            document.getElementById('coverImage').required = true;
+            document.getElementById('mainMedia').required = true;
+            loadPosts();
         }
+    } catch (err) {
+        status.style.color = '#f87171';
+        status.textContent = '❌ Ошибка при сохранении';
+    }
+});
 
-        window.editPost = async (id) => {
-            const res = await fetch(`/api/posts/${id}`);
-            const post = await res.json();
-
-            currentEditId = post.id;
-            document.getElementById('formTitle').textContent = 'Редактирование поста';
-            document.getElementById('title').value = post.title;
-            document.getElementById('date').value = post.date;
-            document.getElementById('shortText').value = post.shortText;
-            document.getElementById('fullText').value = post.fullText;
-
-            document.getElementById('coverImage').required = false;
-            document.getElementById('mainMedia').required = false;
-            document.getElementById('submitBtn').textContent = 'Сохранить изменения';
-        };
-
-        window.deletePost = async (id) => {
-            if (!confirm('Удалить этот пост безвозвратно?')) return;
-            
-            const res = await fetch(`/api/posts/${id}`, { method: 'DELETE' });
-            if (res.ok) {
-                loadPosts();
-            } else {
-                alert('Ошибка при удалении');
-            }
-        };
-
-        // Отправка формы
-        document.getElementById('postForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const status = document.getElementById('status');
-            status.textContent = 'Сохранение...';
-
-            const formData = new FormData();
-            formData.append('title', document.getElementById('title').value);
-            formData.append('date', document.getElementById('date').value);
-            formData.append('shortText', document.getElementById('shortText').value);
-            formData.append('fullText', document.getElementById('fullText').value);
-
-            const coverFile = document.getElementById('coverImage').files[0];
-            const mainFile = document.getElementById('mainMedia').files[0];
-
-            if (coverFile) formData.append('coverImage', coverFile);
-            if (mainFile) formData.append('mainMedia', mainFile);
-
-            const isEdit = !!currentEditId;
-            const url = isEdit ? `/api/posts/${currentEditId}` : '/api/posts';
-            const method = isEdit ? 'PUT' : 'POST';
-
-            try {
-                const res = await fetch(url, { method, body: formData });
-                if (res.ok) {
-                    status.style.color = '#4ade80';
-                    status.textContent = isEdit ? '✅ Изменения сохранены!' : '✅ Пост успешно опубликован!';
-                    
-                    document.getElementById('postForm').reset();
-                    currentEditId = null;
-                    document.getElementById('formTitle').textContent = 'Новый пост';
-                    document.getElementById('submitBtn').textContent = 'Опубликовать пост';
-                    
-                    document.getElementById('coverImage').required = true;
-                    document.getElementById('mainMedia').required = true;
-
-                    loadPosts();
-                }
-            } catch (err) {
-                status.style.color = '#f87171';
-                status.textContent = '❌ Ошибка при сохранении';
-            }
-        });
     })();</script> </body> </html>
