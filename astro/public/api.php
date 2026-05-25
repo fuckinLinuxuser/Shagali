@@ -5,7 +5,7 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
 $posts_file = __DIR__ . '/posts.json';
-$images_dir = __DIR__ . '/images';
+$images_dir = __DIR__ . '/images/castings';
 $videos_dir = __DIR__ . '/videos';
 
 // Создаем папки, если их нет
@@ -77,7 +77,7 @@ if ($method === 'POST' || $method === 'PUT') {
         $ext = pathinfo($_FILES['coverImage']['name'], PATHINFO_EXTENSION) ?: 'jpg';
         $filename = "{$slug}-cover-{$timestamp}.{$ext}";
         if (move_uploaded_file($_FILES['coverImage']['tmp_name'], "{$images_dir}/{$filename}")) {
-            $coverPath = "/images/{filename}";
+            $coverPath = "/images/castings/{filename}";
         }
     }
 
