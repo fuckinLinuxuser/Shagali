@@ -183,173 +183,236 @@ const tours = [
 <text x="250" y="715" class="city-label" text-anchor="middle">Магнитогорск</text>
       </svg>
 
-      <div id="tour-popover" class="tour-popover hidden">
-        <div class="popover-content">
-          <img class="popover-img" src="" alt="" />
-          <h4 class="popover-title"></h4>
-          <p class="popover-desc"></p>
-          <a href="#" class="btn popover-btn">Купить билет</a>
-          <button class="popover-close">×</button>
+<!-- 1. ПОПОВЕР (ОКНО ТУРА) -->
+<div id="tour-popover" class="tour-popover hidden">
+  <div class="popover-content">
+    <img class="popover-img" src="" alt="" />
+    <h4 class="popover-title"></h4>
+    <p class="popover-desc"></p>
+    <a href="#" class="btn popover-btn">Купить билет</a>
+    <button class="popover-close">×</button>
+  </div>
+</div>
+
+<!-- 2. СПИСОК ТУРОВ (С жесткой фильтрацией пустых строк) -->
+<div class="timeline-tours">
+  {tours.map((tour) => {
+    const hasNote = tour.note && tour.note.trim() !== "";
+    const hasCities = tour.cities && tour.cities.length > 0;
+
+    return (
+      <div class="timeline-item">
+        <div class="timeline-date">{tour.month}</div>
+        <div class="timeline-content">
+          {tour.city && tour.city.trim() !== "" ? (
+            <span class="city main">
+              {tour.city.trim()}
+              {hasNote && <small> ({tour.note.trim()})</small>}
+            </span>
+          ) : hasCities ? (
+            <span class="cities">
+              {tour.cities.map(c => c.trim()).join(" • ")}
+            </span>
+          ) : null}
         </div>
       </div>
-    </div>
-
-    <div class="timeline-tours">
-      {tours.map((tour) => (
-        <div class="timeline-item" transition:animate="slide">
-          <div class="timeline-date">{tour.month}</div>
-          <div class="timeline-content">
-            {tour.city ? (
-              <span class="city main">
-                {tour.city}
-                {tour.note && <small>({tour.note})</small>}
-              </span>
-            ) : (
-              <span class="cities">
-                {tour.cities.join(" • ")}
-              </span>
-            )}
-          </div>
-        </div>
-      ))}
-    </div>
-
-    <div class="cta-wrapper">
-
-<div class="form-modal-trigger">
-  <button type="button" class="form-open-btn" id="openForm" onclick="openWaitlistModal()">
-    Записаться в лист ожидания
-  </button>
+    );
+  })}
 </div>
+
+<!-- 3. КНОПКА ЛИСТА ОЖИДАНИЯ (Закрыли враппер и убрали конфликтующий onclick) -->
+<div class="cta-wrapper">
+  <div class="form-modal-trigger">
+    <button type="button" class="form-open-btn" id="openForm">
+      Записаться в лист ожидания
+    </button>
+  </div>
+</div> <!-- ЗАКРЫВАЮЩИЙ ТЕГ БЫЛ ПОТЕРЯН И ИСПРАВЛЕН ЗДЕСЬ -->
+
+
 
 
 
 <script>
-  // JavaScript (дополни или замени существующий)
-const openBtn = document.getElementById('openForm');
-const closeBtn = document.getElementById('closeForm');
-const wrapper = document.getElementById('formWrapper');
+  function initFormModal() {
+    const openBtn = document.getElementById('openForm');
+    const closeBtn = document.getElementById('closeForm');
+    const wrapper = document.getElementById('formWrapper');
 
-function openModal() {
-  wrapper.removeAttribute('hidden');
-  document.body.classList.add('form-modal-open');
-}
+    // Проверяем, что ВСЕ элементы формы есть на текущей странице
+    if (!openBtn || !closeBtn || !wrapper) return;
 
-function closeModal() {
-  wrapper.setAttribute('hidden', '');
-  document.body.classList.remove('form-modal-open');
-}
+    function openModal() {
+      wrapper.removeAttribute('hidden');
+      // Если hidden не скрывает форму из-за стилей, жестко задаем display:
+      wrapper.style.display = 'flex'; 
+      document.body.classList.add('form-modal-open');
+    }
 
-openBtn?.addEventListener('click', openModal);
-closeBtn?.addEventListener('click', closeModal);
+    function closeModal() {
+      wrapper.setAttribute('hidden', '');
+      wrapper.style.display = 'none';
+      document.body.classList.remove('form-modal-open');
+    }
 
-// Закрытие по ESC
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && !wrapper.hasAttribute('hidden')) {
-    closeModal();
+    // Удаляем старые слушатели (защита от дублирования в Astro)
+    openBtn.removeEventListener('click', openModal);
+    closeBtn.removeEventListener('click', closeModal);
+
+    // Вешаем новые слушатели
+    openBtn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+
+    // Закрытие по ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && wrapper.style.display !== 'none' && !wrapper.hasAttribute('hidden')) {
+        closeModal();
+      }
+    });
+
+    // Клик по оверлею
+    wrapper.addEventListener('click', (e) => {
+      if (e.target === wrapper) closeModal();
+    });
   }
-});
 
-// Клик по оверлею тоже закрывает (опционально, но удобно)
-wrapper?.addEventListener('click', e => {
-  if (e.target === wrapper) closeModal();
-});
+  // Запуск при обычной загрузке страницы
+  document.addEventListener('DOMContentLoaded', initFormModal);
+  
+  // Запуск для поддержки View Transitions и мгновенного рендеринга Astro
+  initFormModal();
+  document.addEventListener('astro:page-load', initFormModal);
 </script>
+
 
 
 <style>
   .section.tours {
     padding: 6rem 1rem 8rem;
     background: linear-gradient(180deg, #0f0f0a 0%, #14120d 100%);
-  }
+}
 
-  h2 {
+h2 {
     font-family: 'Playfair Display', serif;
     font-size: clamp(2.8rem, 6vw, 4.8rem);
     color: #f5f0e6;
     text-align: center;
     margin-bottom: 0.6rem;
     letter-spacing: -0.5px;
-  }
+}
 
-  .city-label {
-    font-size: 0.9rem
-  }
-  .base-info {
+.city-label {
+    font-size: 0.9rem;
+}
+
+.base-info {
     text-align: center;
     font-size: 2.28rem;
     color: #d4af57;
     margin-bottom: 2.5rem;
     font-weight: 500;
-  }
+}
 
-  h3 {
+h3 {
     text-align: center;
     font-size: 1.9rem;
     color: #e0d9cc;
     margin: 1rem 0 2.5rem;
     font-weight: 400;
-  }
+}
 
-  .timeline-tours {
-    max-width: 960px;
-    margin: 4rem auto;
-  }
+/* РОДИТЕЛЬСКИЙ КОНТЕЙНЕР СПИСКА */
+.timeline-tours {
+    max-width: 800px; /* Слегка сузили общую ширину для лучшего восприятия */
+    margin: 3rem auto;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    /* Уменьшили расстояние между карточками по вертикали до аккуратных 0.8rem */
+    gap: 0.8rem; 
+}
 
-  .timeline-item {
+/* КАРТОЧКА ТУРА */
+.timeline-item {
     display: flex;
     align-items: center;
-    gap: 2.5rem;
-    margin-bottom: 3.5rem;
+    /* Расстояние по горизонтали между датой и карточкой уменьшено с 2.5rem до 1.5rem */
+    gap: 1.5rem; 
     position: relative;
-  }
+    margin: 0 !important;
+    padding: 0;
+    flex: 0 0 100px
+}
 
-  .timeline-item::before {
+/* ВЕРТИКАЛЬНАЯ ЛИНИЯ ШКАЛЫ */
+.timeline-item::before {
     content: "";
     position: absolute;
-    left: 220px;
+    /* Сдвигаем линию под новый горизонтальный gap */
+    left: 210px; 
     top: 0;
-    bottom: -2.8rem;
+    /* Линия строго следует за новым вертикальным gap */
+    bottom: -0.8rem; 
     width: 1px;
     background: linear-gradient(to bottom, #d4af57 0%, #d4af5733 100%);
-  }
+    z-index: 1;
+}
 
-  .timeline-date {
-    min-width: 200px;
-    font-size: 1.7rem;
+.timeline-item:last-child::before {
+    display: none;
+}
+
+/* ДАТА (МЕСЯЦ) */
+.timeline-date {
+    /* Чуть уменьшили ширину колонки даты, чтобы компенсировать уменьшение gap */
+    min-width: 170px; 
+    font-size: 1.5rem; /* Слегка уменьшили размер шрифта */
     font-weight: 700;
     color: #d4af57;
     text-align: right;
     font-family: 'Playfair Display', serif;
-  }
+}
 
-  .timeline-content {
+/* БЛОК С КОНТЕНТОМ */
+.timeline-content {
     flex: 1;
     background: rgba(28, 26, 22, 0.7);
     backdrop-filter: blur(8px);
-    border-radius: 16px;
-    padding: 1.4rem 1.8rem;
-    border-left: 5px solid #d4af57;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+    border-radius: 12px; /* Чуть более аккуратное скругление */
+    /* Уменьшили внутренние отступы (паддинги) карточки, чтобы она не была «жирной» */
+    padding: 0.8rem 1.2rem; 
+    border-left: 4px solid #d4af57;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.3);
     transition: all 0.4s ease;
-  }
+}
 
-  .timeline-content:hover {
-    transform: translateX(12px);
+.timeline-content:hover {
+    transform: translateX(8px);
     box-shadow: 0 12px 48px rgba(212, 175, 87, 0.22);
-  }
+}
 
-  .city.main {
+
+.city.main {
     font-size: 1.38rem;
     font-weight: 600;
     color: #fffaf0;
-  }
+    display: inline-block;
+}
 
-  .cities {
+/* Стили для примечания (note) внутри скобок, чтобы оно не распирало блок */
+.city.main small {
+    font-size: 0.95rem;
+    color: #d4af57;
+    margin-left: 0.5rem;
+    font-weight: 400;
+}
+
+.cities {
     font-size: 1.24rem;
     color: #e8e0d2;
     line-height: 1.7;
-  }
+    display: inline-block;
+}
 
   small {
     color: #c0b8a8;
