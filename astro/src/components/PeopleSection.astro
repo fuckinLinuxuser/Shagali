@@ -38,20 +38,20 @@
     transform: translateX(-50%);
   }
 
-.people-grid {
+  .people-grid {
     display: flex;
     flex-wrap: nowrap;
-    gap: 35px;
-    justify-content: center;        /* по центру */
+    gap: 20px;
+    justify-content: flex-start;
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 30px 20px 40px;
+    padding: 30px 40px 40px 20px;     /* Увеличен правый отступ */
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     width: 100%;
     box-sizing: border-box;
-    margin: 0 auto;
-}
+    scroll-padding-right: 40px;
+  }
 
 /* Фиксируем ширину карточек */
 .person-card {
@@ -273,28 +273,44 @@
   }
 
   @media (max-width: 768px) {
-    
-    
-    .modal-content {
-      margin: 20px auto;
-      width: 96%;
+    .people-grid {
+      gap: 18px;
+      padding: 25px 50px 45px 20px;     /* Большой правый отступ — главное исправление */
+      scroll-padding-right: 50px;
     }
-    .modal-header, .modal-body {
-      padding: 25px 24px;
+
+    .person-card {
+      width: 46vw;
+      flex: 0 0 46vw;
+      min-width: 158px;
+    }
+
+    .person-image {
+      height: 218px;
+    }
+
+    .person-name { font-size: 1.38em; }
+    .person-role { font-size: 1.02em; }
+    .person-info { padding: 18px 16px; }
+
+    .read-full-btn {
+      margin: 0 16px 16px;
+      padding: 0.6rem 1.1rem;
+      font-size: 0.93rem;
     }
   }
 
   @media (max-width: 480px) {
     .people-grid {
-      grid-template-columns: 1fr;
-      padding: 0 20px;
+      padding-right: 60px;           /* Ещё больше отступа на маленьких экранах */
+      scroll-padding-right: 60px;
     }
+  }
     .person-card {
       width: 100%;
       max-width: 360px;
-    }
   }
-
+  
 </style>
 
 <section id="people" class="our-people">
