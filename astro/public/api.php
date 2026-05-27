@@ -4,7 +4,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
-$posts_file = __DIR__ . '../posts.json';
+$posts_file = __DIR__ . '/posts.json';
 $images_dir = __DIR__ . '/images/castings';
 $videos_dir = __DIR__ . '/videos';
 
