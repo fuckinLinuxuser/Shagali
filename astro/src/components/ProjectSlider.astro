@@ -5,28 +5,34 @@ const slides = [
     title: "Родной мой Кукушонок",
     text: "Драму проживает каждый Ребенок, разочаровавший своих родителей. Трагедию носит в себе каждая Мать, оттолкнувшая своего ребенка. Просто разные. Еще пару лет назад была семья, где все друг друга любили. А сегодня – уже чужие взрослые люди. Как вернуться к самим себе? Как опять увидеть друг друга?",
     quote: "\"...Спектакль о том, как взрослеют родители...\"",
-    soon: true
+    soon: false,
+    eventId: 13893,
+    eventName: "Родной мой Кукушонок"
   },
   {
     img: "/images/projects/doggy.jpeg",
     title: "Мамочка, купи собаку!",
     text: "Милая пушистая игрушка, в которой отражается всё счастье твоего детства. Смешной товарищ по играм и соучастник мелких шалостей. И крупных семейных разборок заодно! Когда у Ребёнка из друзей только цифровая колонка, то собака становится заветной мечтой… А родители видят в собаке источник дополнительных проблем. Однажды собака может надоесть. Впрочем, не только родителям… ",
     quote: "Сказка про то, как собака учит быть взрослыми. Причем учит не только детей. ",
-    soon: true
+    soon: true,
+    eventId: null
   },
   {
     img: "/images/projects/papa_karlo.jpg",
     title: "Откуда взялся папа Карло?",
     text: "Детям всё прекрасно известно про Буратино. Он весёлый, забавный, симпатичный. Но когда ты взрослеешь, то начинаешь догадываться, что за этой сказкой стоит реальность итальянского Средневековья... И сквозь знакомые с детского сада яркие картинки проступает настоящая жизнь - такая же, какую живешь ты. Понятная - просто в старинных декорациях. Правдивая - просто случившаяся 400 лет назад. Дети до 15 лет на этот спектакль не приглашаются.",
     quote: "Готическая сказка, которую рассказывают только взрослым",
-    soon: true
+    soon: true,
+    eventId: null,
+    eventName: "Откуда взялся папа Карло"
   },
   {
     img: "/images/projects/indigo.jpg",
     title: "Растворимый Индиго",
     text: "Они родились в начале нового тысячелетия. Тогда человечество только открывало для себя новый мир - тот самый мир, где появились слова 'экологичность', 'ментальное здоровье', 'интеграция', 'энергия вселенной'... Мы впервые читали книги про то, что такое безусловная любовь. У нас рождались удивительные дети, которые знали про этику больше нас самих... А потом случилась жизнь. Дети Индиго выросли. А мир для них мы не вырастили. И наши маленькие волшебники пошли работать менеджерами продаж и автослесарями. Что-то внутри меняется, когда не сбывается хорошее будущее твоего ребенка. Как будто именно ты пообещал - и обманул...Философский детектив про то, как мы позвали волшебных детей в обычную жизнь.",
     quote: "Мы так ждали поколение волшебников...",
-    soon: true
+    soon: true,
+    eventId: null
   }
 ];
 ---
@@ -59,13 +65,32 @@ const slides = [
               >
                 Подробнее
               </button>
-              <button
-                type="button"
-                class="tickets-btn"
-                onclick="openWaitlistModal()"
-              >
-                Заявка
-              </button>
+              
+              {slide.soon ? (
+                <button
+                  type="button"
+                  class="tickets-btn waitlist-btn"
+                  onclick="openWaitlistModal()"
+                >
+                  Заявка
+                </button>
+              ) : slide.eventId ? (
+                <button
+                  type="button"
+                  class="tickets-btn buy-btn"
+                  onclick={`openTicketModal(${slide.eventId}, '${slide.eventName.replace(/'/g, "\\'")}')`}
+                >
+                  Купить билет
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  class="tickets-btn"
+                  onclick="openWaitlistModal()"
+                >
+                  Заявка
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -79,7 +104,7 @@ const slides = [
   </div>
 </div>
 
-<!-- Модальное окно -->
+<!-- Модальное окно для подробностей -->
 <div id="project-modal" class="modal">
   <div class="modal-content">
     <span class="close-modal">×</span>
@@ -89,7 +114,76 @@ const slides = [
   </div>
 </div>
 
+<!-- Модальное окно для билетов CBiletom -->
+<div id="ticket-modal" class="modal ticket-modal">
+  <div class="modal-content ticket-modal-content">
+    <span class="close-modal close-ticket-modal">×</span>
+    <h3 id="ticket-modal-title">Выбор билетов</h3>
+    <iframe id="ticket-iframe" src="" style="width: 100%; height: 500px; border: none; border-radius: 8px;"></iframe>
+  </div>
+</div>
+
 <script defer src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+
+<!-- CBiletom widget script и глобальные функции -->
+<script>
+// Глобальные функции для работы с билетами (ДО загрузки DOM)
+window.openTicketModal = function(eventId, eventName) {
+  if (!eventId) {
+    window.openWaitlistModal();
+    return;
+  }
+  
+  const modal = document.getElementById('ticket-modal');
+  const iframe = document.getElementById('ticket-iframe');
+  const titleEl = document.getElementById('ticket-modal-title');
+  
+  if (modal && iframe) {
+    iframe.src = `https://cbiletom.ru/widget/1/frame.php?id=${eventId}`;
+    titleEl.textContent = `Билеты: ${eventName}`;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  } else {
+    console.error('Модалка билетов не найдена');
+    // fallback - открываем в новой вкладке
+    window.open(`https://cbiletom.ru/widget/1/frame.php?id=${eventId}`, '_blank');
+  }
+};
+
+window.closeTicketModal = function() {
+  const modal = document.getElementById('ticket-modal');
+  const iframe = document.getElementById('ticket-iframe');
+  if (modal) {
+    modal.style.display = 'none';
+    if (iframe) iframe.src = '';
+    document.body.style.overflow = '';
+  }
+};
+
+window.openWaitlistModal = function() {
+  // Здесь можно сделать красивую модалку, пока просто alert
+  alert('Скоро билеты появятся! Оставьте заявку, и мы сообщим.');
+  // Если есть форма заявки - раскомментировать:
+  // document.getElementById('waitlist-modal').style.display = 'flex';
+};
+
+// Подключаем CBiletom
+(function(d){
+  if (typeof d.CB == 'object') return;
+  var s = d.createElement('script');
+  s.type = 'text/javascript'; 
+  s.id = 'cb-controller';
+  s.async = 1;
+  s.src = 'https://cbiletom.ru/widget/1/assets/controller.js?itok=' + Math.round(1* new Date() / 3600000);
+  s.onload = function() {
+    if (typeof CB !== 'undefined') {
+      new CB(d, {id:13893, view:2});
+    }
+  };
+  d.querySelector('head').append(s);
+})(document);
+</script>
+
 <script is:inline>
   document.addEventListener('DOMContentLoaded', () => {
     if (typeof Swiper === 'undefined') return console.error('Swiper не загрузился');
@@ -107,11 +201,12 @@ const slides = [
     document.querySelector('#projects .custom-btn.prev')?.addEventListener('click', () => swiper.slidePrev());
     document.querySelector('#projects .custom-btn.next')?.addEventListener('click', () => swiper.slideNext());
 
+    // Модалка подробностей
     const modal = document.getElementById('project-modal');
     const titleEl = document.getElementById('modal-title');
     const textEl = document.getElementById('modal-text');
     const quoteEl = document.getElementById('modal-quote');
-    const closeBtn = document.querySelector('.close-modal');
+    const closeBtn = document.querySelector('#project-modal .close-modal');
 
     document.querySelectorAll('.more-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -124,15 +219,42 @@ const slides = [
       });
     });
 
-    closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-    document.addEventListener('keydown', e => { 
-      if (e.key === 'Escape' && modal.style.display === 'flex') closeModal(); 
-    });
-
-    function closeModal() {
+    closeBtn.addEventListener('click', () => {
       modal.style.display = 'none';
       document.body.style.overflow = '';
+    });
+    
+    modal.addEventListener('click', e => { 
+      if (e.target === modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+    });
+    
+    // Закрытие по Escape для обеих модалок
+    document.addEventListener('keydown', e => { 
+      if (e.key === 'Escape') {
+        if (modal.style.display === 'flex') {
+          modal.style.display = 'none';
+          document.body.style.overflow = '';
+        }
+        if (document.getElementById('ticket-modal').style.display === 'flex') {
+          window.closeTicketModal();
+        }
+      }
+    });
+
+    // Модалка билетов — закрытие
+    const ticketModal = document.getElementById('ticket-modal');
+    const closeTicketBtn = document.querySelector('.close-ticket-modal');
+    
+    if (closeTicketBtn) {
+      closeTicketBtn.addEventListener('click', window.closeTicketModal);
+    }
+    if (ticketModal) {
+      ticketModal.addEventListener('click', e => {
+        if (e.target === ticketModal) window.closeTicketModal();
+      });
     }
   });
 </script>
@@ -304,26 +426,26 @@ const slides = [
     .quote { font-size: clamp(1rem, 3.8vw, 1.25rem); }
 
     .buttons-row {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;       /* ← главное: НЕ переносить */
-    gap: 12px !important;
-    justify-content: flex-start;
-    align-items: center;
-    margin-top: 1.2rem;
-  }
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      gap: 12px !important;
+      justify-content: flex-start;
+      align-items: center;
+      margin-top: 1.2rem;
+    }
 
-  .more-btn,
-  .tickets-btn {
-    flex: 1 1 45% !important;           /* примерно поровну делят ширину */
-    min-width: 0 !important;
-    max-width: 48% !important;
-    padding: 0.75rem .4rem !important;
-    font-size: clamp(0.95rem, 4vw, 1.15rem) !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-  }
+    .more-btn,
+    .tickets-btn {
+      flex: 1 1 45% !important;
+      min-width: 0 !important;
+      max-width: 48% !important;
+      padding: 0.75rem .4rem !important;
+      font-size: clamp(0.95rem, 4vw, 1.15rem) !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
 
     .desktop-only { display: none; }
     .mobile-only  { display: block; }
@@ -350,7 +472,7 @@ const slides = [
     }
   }
 
-  /* Модалка */
+  /* Модалка подробностей */
   .modal {
     display: none;
     position: fixed;
@@ -373,6 +495,34 @@ const slides = [
     padding: 2.5rem 2rem;
     position: relative;
     box-shadow: 0 15px 50px rgba(0,0,0,0.8);
+  }
+
+  /* Модалка билетов */
+  .ticket-modal .ticket-modal-content {
+    max-width: 900px;
+    width: 90%;
+    padding: 1.5rem;
+  }
+  
+  .ticket-modal-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.3rem, 4vw, 1.8rem);
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  #ticket-iframe {
+    min-height: 500px;
+  }
+  
+  @media (max-width: 768px) {
+    #ticket-iframe {
+      min-height: 450px;
+    }
+    .ticket-modal .ticket-modal-content {
+      width: 95%;
+      padding: 1rem;
+    }
   }
 
   .close-modal {

@@ -73,3 +73,5 @@
         <text x="849" y="651" class="city-label" text-anchor="middle">Комсомольск-на-Амуре</text>
 
         
+
+        
