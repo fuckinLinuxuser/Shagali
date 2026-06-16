@@ -1,5 +1,5 @@
 ---
-/* PeopleSection.astro — версия с фиксом "текст выпал" */
+/* PeopleSection.astro — FIXED: маленькие вертикальные видео */
 ---
 
 <style>
@@ -44,45 +44,20 @@
     gap: 20px;
     justify-content: flex-start;
     overflow-x: auto;
-    overflow-y: hidden;
-    padding: 30px 40px 40px 20px;     /* Увеличен правый отступ */
+    padding: 30px 40px 40px 20px;
     scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    width: 100%;
-    box-sizing: border-box;
-    scroll-padding-right: 40px;
   }
-
-/* Фиксируем ширину карточек */
-.person-card {
-    width: 250px;
-    flex: 0 0 250px;           /* очень важно для горизонтальной линии */
-    margin: 0;
-}
-
-/* Красивый скроллбар */
-.people-grid::-webkit-scrollbar {
-    height: 9px;
-}
-.people-grid::-webkit-scrollbar-thumb {
-    background: #d4af37;
-    border-radius: 10px;
-}
-.people-grid::-webkit-scrollbar-track {
-    background: #2a2a22;
-}
 
   .person-card {
     width: 250px;
+    flex: 0 0 250px;
     background: white;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 6px 18px rgba(0,0,0,0.12);
     transition: all 0.28s ease;
-    cursor: pointer;
     display: flex;
     flex-direction: column;
-    cursor: default !important;
   }
 
   .person-card:hover {
@@ -102,26 +77,6 @@
     text-align: center;
   }
 
-  .person-name {
-    font-size: 1.55em;
-    margin: 0 0 8px;
-    color: #222;
-  }
-
-  .person-role {
-    font-size: 1.15em;
-    color: #d4af37;
-    font-weight: 500;
-    margin-bottom: 14px;
-  }
-
-  .person-short {
-    font-size: 0.97em;
-    color: #555;
-    line-height: 1.45;
-    margin: 0;
-  }
-
   .read-full-btn {
     margin: 0 20px 20px;
     padding: 0.7rem 1.4rem;
@@ -131,36 +86,23 @@
     border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.25s ease;
     align-self: center;
-    width: fit-content;
-    min-width: 160px;
   }
 
-  .read-full-btn:hover {
-    background: #b8972e;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
+  .bio-content { display: none; }
 
-  .bio-content {
-    display: none;
-  }
-
-
-  /* ─────────────── МОДАЛЬНОЕ ОКНО ─────────────── */
-.modal {
+  /* ====================== МОДАЛЬНОЕ ОКНО ====================== */
+  .modal {
     display: none;
     position: fixed;
     inset: 0;
     z-index: 1000;
     background: rgba(0,0,0,0.78);
-    overflow-y: auto;          /* на всякий случай */
-    align-items: flex-start;   /* чтобы не центрировалось слишком высоко */
+    overflow-y: auto;
     padding: 20px 0;
-}
+  }
 
-.modal-content {
+  .modal-content {
     background: white;
     margin: 40px auto;
     border-radius: 12px;
@@ -171,52 +113,63 @@
     box-shadow: 0 10px 40px rgba(0,0,0,0.4);
     display: flex;
     flex-direction: column;
-}
-
-.modal-header {
-    padding: 30px 40px 20px;
-    flex-shrink: 0;            /* заголовок не сжимается */
-}
-
-.modal-body {
-    padding: 30px 40px;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    flex: 1 1 auto;            /* тело растягивается и получает прокрутку */
-}
-
-/* если видео есть — тоже не даём ему сломать прокрутку */
-.modal-video-wrapper {
-    margin: 25px 0 35px;
-    flex-shrink: 0;            /* видео не сжимается */
-}
-
-  .modal-header h2 {
-    margin: 0;
-    font-size: 2.1em;
   }
 
+  .modal-content.has-multiple-videos {
+    max-width: 1220px;
+  }
+
+  .modal-header {
+    padding: 30px 40px 20px;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .modal-body {
+    padding: 30px 40px;
+    overflow-y: auto;
+    flex: 1 1 auto;
+  }
+
+  .modal-header h2 { margin: 0; font-size: 2.1em; }
   .modal-header .role {
     color: #d4af37;
     font-size: 1.3em;
     margin-top: 8px;
   }
 
-  .modal-body {
-    padding: 30px 40px;
-    flex: 1 1 auto;
-    overflow-y: auto;           /* прокрутка только тела, если текст длинный */
-    -webkit-overflow-scrolling: touch;
+  #modal-bio {
+    line-height: 1.68;
+    font-size: 1.03em;
+    color: #333;
   }
 
+  #modal-bio p { margin: 0 0 1.2em; text-indent: 25px; }
+  #modal-bio .signature {
+    text-align: right;
+    font-style: italic;
+    color: #555;
+    margin-top: 2.4em;
+  }
+
+  .modal-full-image {
+    max-width: 45%;
+    border-radius: 12px;
+    margin: 0 auto 25px;
+    display: block;
+  }
+
+  /* Одиночное видео */
   .modal-video-wrapper {
     position: relative;
-    padding-bottom: 56.25%;
-    height: 0;
-    margin: 25px 0 35px;
-    border-radius: 8px;
+    width: 100%;
+    margin: 20px 0 35px;
+    border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    background: #000;
+    aspect-ratio: 16 / 9;
+    max-height: 420px;
   }
 
   .modal-video-wrapper video {
@@ -224,31 +177,45 @@
     inset: 0;
     width: 100%;
     height: 100%;
+    object-fit: contain;
   }
 
-  #modal-bio {
-    line-height: 1.68;
-    font-size: 1.03em;
-    color: #333;
-    word-wrap: break-word;
+  /* ====================== 5 ВЕРТИКАЛЬНЫХ ВИДЕО ====================== */
+  .modal-videos {
+    display: flex !important;
+    gap: 12px !important;
+    overflow-x: auto !important;
+    padding: 20px 0 30px !important;
+    margin: 10px 0 35px !important;
   }
 
-  #modal-bio p {
-    margin: 0 0  0;
-    text-indent: 25px;
+  .modal-video-item {
+    flex: 0 0 118px !important;
+    width: 118px !important;
+    max-width: 118px !important;
+    min-width: 118px !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+    background: #000 !important;
+    aspect-ratio: 9 / 16 !important;
+        background: red !important;   /* должно стать красным */
   }
 
-  #modal-bio p:first-child {
-    text-indent: 25px;
+  .modal-video-item video {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
   }
 
-  #modal-bio .signature {
-    text-indent: 0;
-    margin-top: 2.4em;
-    text-align: right;
-    font-style: italic;
-    color: #555;
-    font-size: 1.05em;
+  /* Мобильные */
+  @media (max-width: 768px) {
+    .modal-video-item {
+      flex: 0 0 105px !important;
+      width: 105px !important;
+      max-width: 105px !important;
+    }
   }
 
   .close {
@@ -262,55 +229,7 @@
     z-index: 10;
   }
 
-  .close:hover {
-    color: #d4af37;
-  }
-
-  .person-link {
-    color: #d4af37;
-    text-decoration: none;
-    transition: color 0.15s ease;
-  }
-
-  @media (max-width: 768px) {
-    .people-grid {
-      gap: 18px;
-      padding: 25px 50px 45px 20px;     /* Большой правый отступ — главное исправление */
-      scroll-padding-right: 50px;
-    }
-
-    .person-card {
-      width: 46vw;
-      flex: 0 0 46vw;
-      min-width: 158px;
-    }
-
-    .person-image {
-      height: 218px;
-    }
-
-    .person-name { font-size: 1.38em; }
-    .person-role { font-size: 1.02em; }
-    .person-info { padding: 18px 16px; }
-
-    .read-full-btn {
-      margin: 0 16px 16px;
-      padding: 0.6rem 1.1rem;
-      font-size: 0.93rem;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .people-grid {
-      padding-right: 60px;           /* Ещё больше отступа на маленьких экранах */
-      scroll-padding-right: 60px;
-    }
-  }
-    .person-card {
-      width: 100%;
-      max-width: 360px;
-  }
-  
+  .close:hover { color: #d4af37; }
 </style>
 
 <section id="people" class="our-people">
@@ -337,15 +256,19 @@
       </div>
     </div>
 
-        <div class="person-card" data-name="Ёжик" data-role="Актер." data-video="/videos/Ezhik.mp4">
-      <img src="/images/people/Ezhik.jpg" alt="Ёжик" class="person-image">
+    <!-- Ёжик с несколькими видео -->
+    <div class="person-card" 
+         data-name="Ёжик" 
+         data-role="Актер. Пёс."
+         data-videos='["/videos/ez1.mp4", "/videos/ez2.mp4", "/videos/ez3.mp4", "/videos/ez4.mp4", "/videos/ez5.mp4"]'>
+      <img src="/images/people/ezhik.jpg" alt="Ёжик" class="person-image">
       <div class="person-info">
         <h2 class="person-name">Ёжик</h2>
         <div class="person-role">Актер. Пёс.</div>
       </div>
       <button class="read-full-btn">Читать полностью</button>
 
-      <div class="bio-content">
+      <div class="bio-content" style="display:none;">
         <p></p>
         <div class="signature">Шагалиный театр</div>
       </div>
@@ -441,25 +364,26 @@
       </div>
     </div>
   </div>
-
-
-
-
 </section>
+
 
 <!-- Модальное окно -->
 <div id="people-modal" class="modal">
-  <div class="modal-content">
+  <div class="modal-content" id="modal-content">
     <span class="close">×</span>
     <div class="modal-header">
       <h2 id="modal-name"></h2>
       <div class="role" id="modal-role"></div>
     </div>
     <div class="modal-body">
-      <img id="modal-full-image" style="display:none; max-width:40%; border-radius:12px; margin:1.5rem auto; display:block;" alt="Фото">
+      <img id="modal-full-image" class="modal-full-image" style="display:none;" alt="Фото">
+
       <div id="modal-video-wrapper" class="modal-video-wrapper" style="display:none;">
-        <video id="modal-video" controls></video>
+        <video id="modal-video" controls playsinline></video>
       </div>
+
+      <div id="modal-videos" class="modal-videos" style="display:none;"></div>
+
       <div id="modal-bio"></div>
     </div>
   </div>
@@ -467,102 +391,108 @@
 
 <script is:inline>
 document.addEventListener('DOMContentLoaded', () => {
-  // берём все нужные элементы ОДИН раз
-  const modal       = document.getElementById('people-modal');
-  const nameEl      = document.getElementById('modal-name');
-  const roleEl      = document.getElementById('modal-role');
-  const bioEl       = document.getElementById('modal-bio');
-  const imgEl       = document.getElementById('modal-full-image');
-  const videoWrap   = document.getElementById('modal-video-wrapper');
-  const videoEl     = document.getElementById('modal-video');
-  const closeBtn    = modal?.querySelector('.close');
+    const modal         = document.getElementById('people-modal');
+    const modalContent  = document.getElementById('modal-content');
+    const nameEl        = document.getElementById('modal-name');
+    const roleEl        = document.getElementById('modal-role');
+    const bioEl         = document.getElementById('modal-bio');
+    const imgEl         = document.getElementById('modal-full-image');
+    const videoWrapper  = document.getElementById('modal-video-wrapper');
+    const modalVideo    = document.getElementById('modal-video');
+    const videosContainer = document.getElementById('modal-videos');
+    const closeBtn      = modal.querySelector('.close');
 
-  if (!modal) {
-    console.error("Модалка #people-modal не найдена");
-    return;
-  }
+    function showModal(card) {
+        nameEl.textContent = card.dataset.name || '—';
+        roleEl.textContent = card.dataset.role || '—';
 
-  // Функция открытия — одна на всех
-  function showModal(card) {
-    nameEl.textContent = card.dataset.name  || '—';
-    roleEl.textContent = card.dataset.role  || '—';
+        const bioContent = card.querySelector('.bio-content');
+        bioEl.innerHTML = bioContent?.innerHTML || '<p style="color:#777;">Биография отсутствует</p>';
 
-    // Биография — берём .bio-content из карточки
-    const bioContent = card.querySelector('.bio-content');
-    bioEl.innerHTML = bioContent?.innerHTML || '<p style="color:#777; font-style:italic;">био отсутствует</p>';
+        const fullSrc = card.dataset.fullImage;
+        imgEl.style.display = fullSrc ? 'block' : 'none';
+        if (fullSrc) imgEl.src = fullSrc;
 
-    // фото
-    const fullSrc = card.dataset.fullImage;
-    if (fullSrc) {
-      imgEl.src = fullSrc;
-      imgEl.style.display = 'block';
-    } else {
-      imgEl.style.display = 'none';
-    }
+        // Сброс
+        videoWrapper.style.display = 'none';
+        videosContainer.style.display = 'none';
+        videosContainer.innerHTML = '';
+        modalContent.classList.remove('has-multiple-videos');
 
-    // видео
-    const vidSrc = card.dataset.video;
-    if (vidSrc) {
-      videoEl.src = vidSrc;
-      videoWrap.style.display = 'block';
-    } else {
-      videoEl.src = '';
-      videoWrap.style.display = 'none';
-    }
+        const singleVideo = card.dataset.video;
+        const videosJson  = card.dataset.videos;
 
-    modal.style.display = 'block';
-  }
+        if (videosJson) {
+            try {
+                const videoList = JSON.parse(videosJson);
+                if (Array.isArray(videoList) && videoList.length > 0) {
+                    videoList.forEach(src => {
+                        if (!src) return;
+                        const div = document.createElement('div');
+                        div.className = 'modal-video-item';
+                        
+                        // Стили для видео
+                        div.style.flex = '0 0 200px';
+                        div.style.width = '200px';
+                        div.style.maxWidth = '200px';
+                        div.style.borderRadius = '10px';
+                        div.style.overflow = 'hidden';
+                        div.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+                        div.style.background = '#000';
+                        div.style.aspectRatio = '9 / 16';
 
-  // ────────────────────────────────────────────────
-  // Убрали кликабельность всей карточки
-  // ────────────────────────────────────────────────
+                        div.innerHTML = `<video src="${src}" controls playsinline style="width:100%; height:100%; object-fit:cover;"></video>`;
+                        videosContainer.appendChild(div);
+                    });
 
-  // Больше НЕ делаем карточку pointer и НЕ вешаем на неё click
-  // document.querySelectorAll('.person-card').forEach(card => {
-  //     card.style.cursor = 'pointer';
-  //     card.addEventListener('click', ...);
-  // });
+                    // Центрирование блока с видео
+                    videosContainer.style.display = 'flex';
+                    videosContainer.style.justifyContent = 'center';
+                    videosContainer.style.flexWrap = 'wrap';        // на всякий случай
+                    videosContainer.style.gap = '14px';
 
-  // Оставляем обработку ТОЛЬКО на кнопках
-  document.querySelectorAll('.read-full-btn, .btn-detail, .more-btn').forEach(btn => {
-    // На всякий случай убираем pointer и hover-эффекты с карточки, если они были
-    const card = btn.closest('.person-card');
-    if (card) {
-      card.style.cursor = 'default';
-      // card.style.pointerEvents = 'none';   // ← можно включить, если хотите полностью отключить любые взаимодействия с карточкой
-    }
-
-    btn.addEventListener('click', e => {
-      e.stopPropagation();           // на случай, если где-то выше есть другие обработчики
-      const card = btn.closest('.person-card');
-      if (card) {
-        showModal(card);
-      }
-    });
-  });
-
-  // закрытие (без изменений)
-  closeBtn?.addEventListener('click', () => {
-    modal.style.display = 'none';
-  });
-
-  modal.addEventListener('click', e => {
-    if (e.target === modal) {
-      modal.style.display = 'none';
-    }
-  });
-});
-
-
-document.querySelectorAll('.person-card').forEach(card => {
-    card.addEventListener('click', e => {
-        // Если цель клика — НЕ кнопка, НЕ ссылка и НЕ элемент с pointer-events: auto
-        if (!e.target.closest('button, .read-full-btn, a, [role="button"]')) {
-            e.stopPropagation();
-            e.preventDefault();
-            return false;           // максимально блокируем
+                    modalContent.classList.add('has-multiple-videos');
+                }
+            } catch (e) { console.error(e); }
+        } 
+        else if (singleVideo) {
+            modalVideo.src = singleVideo;
+            videoWrapper.style.display = 'block';
         }
-        // если кликнули по кнопке → пусть идёт дальше
-    }, { capture: true });          // перехватываем на фазе захвата
+
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    // Остальной код без изменений
+    document.querySelectorAll('.read-full-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+            e.stopPropagation();
+            const card = btn.closest('.person-card');
+            if (card) showModal(card);
+        });
+    });
+
+    closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+        modalVideo.src = '';
+    });
+
+    modal.addEventListener('click', e => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+            modalVideo.src = '';
+        }
+    });
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+            modalVideo.src = '';
+        }
+    });
 });
 </script>
