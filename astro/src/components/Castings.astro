@@ -337,20 +337,30 @@ try {
   <div class="modal-content">
     <span class="close">×</span>
     <div id="modal-body">
-      <h2 id="modalTitle"></h2>
-      <div id="modalDate"></div>
-      <div id="modalVideoContainer">
-        <video id="modalVideo" controls playsinline>
-          <source id="modalVideoSource" src="" type="video/mp4">
+      <h2 id="castingsModalTitle"></h2>
+      <div id="castingsModalDate"></div>
+      <div id="castingsModalVideoContainer">
+        <video id="castingsModalVideo" controls playsinline>
+          <source id="castingsModalVideoSource" src="" type="video/mp4">
           Ваш браузер не поддерживает видео.
         </video>
       </div>
-      <div id="modalDesc"></div>
+      <div id="castingsModalDesc"></div>
     </div>
   </div>
 </div>
 
 <script>
+  function escapeHtml(str: string) {
+    if (!str) return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   async function displayPosts() {
     try {
       const res = await fetch('/api.php');
@@ -378,11 +388,11 @@ try {
         item.setAttribute('data-cover', post.coverImage || '');
 
         item.innerHTML = `
-          <div class="timeline-date">${post.date || ''}</div>
+          <div class="timeline-date">${escapeHtml(post.date || '')}</div>
           <div class="timeline-content">
-            <img src="${post.coverImage || '/images/default-cover.jpg'}" alt="${post.title || ''}" class="timeline-thumbnail">
-            <h3 class="timeline-title">${post.title || ''}</h3>
-            <p class="timeline-teaser">${post.shortText || ''}</p>
+            <img src="${escapeHtml(post.coverImage || '/images/default-cover.jpg')}" alt="${escapeHtml(post.title || '')}" class="timeline-thumbnail" loading="lazy">
+            <h3 class="timeline-title">${escapeHtml(post.title || '')}</h3>
+            <p class="timeline-teaser">${escapeHtml(post.shortText || '')}</p>
             <button class="btn-detail">Подробнее</button>
           </div>
         `;
@@ -412,12 +422,12 @@ try {
   // Функция управления модальным окном
   function initDynamicModals() {
     const modal = document.getElementById('castings-modal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalDate = document.getElementById('modalDate');
-    const modalDesc = document.getElementById('modalDesc');
-    const modalVideoContainer = document.getElementById('modalVideoContainer');
-    const modalVideo = document.getElementById('modalVideo') as HTMLVideoElement;
-    const modalVideoSource = document.getElementById('modalVideoSource') as HTMLSourceElement;
+    const modalTitle = document.getElementById('castingsModalTitle');
+    const modalDate = document.getElementById('castingsModalDate');
+    const modalDesc = document.getElementById('castingsModalDesc');
+    const modalVideoContainer = document.getElementById('castingsModalVideoContainer');
+    const modalVideo = document.getElementById('castingsModalVideo') as HTMLVideoElement;
+    const modalVideoSource = document.getElementById('castingsModalVideoSource') as HTMLSourceElement;
     const closeBtn = document.querySelector('#castings-modal .close');
 
     if (!modal) return;
@@ -461,7 +471,7 @@ try {
 
         if (modalTitle) modalTitle.textContent = title;
         if (modalDate) modalDate.textContent = date;
-        if (modalDesc) modalDesc.innerHTML = desc.replace(/\n/g, '<br>');
+        if (modalDesc) modalDesc.innerHTML = escapeHtml(desc).replace(/\n/g, '<br>');
 
         if (mediaUrl && isVideo) {
           if (modalVideoContainer) modalVideoContainer.style.display = 'block';
@@ -494,7 +504,6 @@ try {
     document.addEventListener('keydown', handleEscPress);
   }
 
-  // Запуск процесса загрузки при инициализации
-  document.addEventListener('DOMContentLoaded', displayPosts);
+  // Скрипт модульный — DOM уже готов к моменту выполнения, DOMContentLoaded не нужен
   displayPosts();
 </script>

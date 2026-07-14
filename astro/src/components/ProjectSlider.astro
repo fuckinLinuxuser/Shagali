@@ -1,7 +1,12 @@
 ---
 const slides = [
   {
-    img: "/images/projects/kukushonok.jpeg",
+    img: "/images/projects/kukushonok.JPG",
+    images: [
+      "/images/projects/kukushonok/IMG_3111.JPG",
+      "/images/projects/kukushonok/IMG_3052.JPG",
+      "/images/projects/kukushonok/IMG_3076.JPG"
+    ],
     title: "Родной мой Кукушонок",
     text: "Драму проживает каждый Ребенок, разочаровавший своих родителей. Трагедию носит в себе каждая Мать, оттолкнувшая своего ребенка. Просто разные. Еще пару лет назад была семья, где все друг друга любили. А сегодня – уже чужие взрослые люди. Как вернуться к самим себе? Как опять увидеть друг друга?",
     quote: "\"...Спектакль о том, как взрослеют родители...\"",
@@ -11,6 +16,11 @@ const slides = [
   },
   {
     img: "/images/projects/doggy.jpeg",
+    images: [
+      "/images/projects/doggy.jpeg",
+      "/images/projects/doggy-2.jpg",
+      "/images/projects/doggy-3.jpg"
+    ],
     title: "Мамочка, купи собаку!",
     text: "Милая пушистая игрушка, в которой отражается всё счастье твоего детства. Смешной товарищ по играм и соучастник мелких шалостей. И крупных семейных разборок заодно! Когда у Ребёнка из друзей только цифровая колонка, то собака становится заветной мечтой… А родители видят в собаке источник дополнительных проблем. Однажды собака может надоесть. Впрочем, не только родителям… ",
     quote: "Сказка про то, как собака учит быть взрослыми. Причем учит не только детей. ",
@@ -19,6 +29,9 @@ const slides = [
   },
   {
     img: "/images/projects/papa_karlo.jpg",
+    images: [
+
+    ],
     title: "Откуда взялся папа Карло?",
     text: "Детям всё прекрасно известно про Буратино. Он весёлый, забавный, симпатичный. Но когда ты взрослеешь, то начинаешь догадываться, что за этой сказкой стоит реальность итальянского Средневековья... И сквозь знакомые с детского сада яркие картинки проступает настоящая жизнь - такая же, какую живешь ты. Понятная - просто в старинных декорациях. Правдивая - просто случившаяся 400 лет назад. Дети до 15 лет на этот спектакль не приглашаются.",
     quote: "Готическая сказка, которую рассказывают только взрослым",
@@ -28,6 +41,11 @@ const slides = [
   },
   {
     img: "/images/projects/indigo.jpg",
+    images: [
+      "/images/projects/indigo.jpg",
+      "/images/projects/indigo-2.jpg",
+      "/images/projects/indigo-3.jpg"
+    ],
     title: "Растворимый Индиго",
     text: "Они родились в начале нового тысячелетия. Тогда человечество только открывало для себя новый мир - тот самый мир, где появились слова 'экологичность', 'ментальное здоровье', 'интеграция', 'энергия вселенной'... Мы впервые читали книги про то, что такое безусловная любовь. У нас рождались удивительные дети, которые знали про этику больше нас самих... А потом случилась жизнь. Дети Индиго выросли. А мир для них мы не вырастили. И наши маленькие волшебники пошли работать менеджерами продаж и автослесарями. Что-то внутри меняется, когда не сбывается хорошее будущее твоего ребенка. Как будто именно ты пообещал - и обманул...Философский детектив про то, как мы позвали волшебных детей в обычную жизнь.",
     quote: "Мы так ждали поколение волшебников...",
@@ -62,6 +80,7 @@ const slides = [
                 data-title={slide.title}
                 data-text={slide.text}
                 data-quote={slide.quote || ''}
+                data-images={JSON.stringify(slide.images || [slide.img])}
               >
                 Подробнее
               </button>
@@ -104,13 +123,27 @@ const slides = [
   </div>
 </div>
 
-<!-- Модальное окно для подробностей -->
+<!-- Модальное окно для подробностей с каруселью -->
+<!-- Модальное окно для подробностей с каруселью внизу -->
 <div id="project-modal" class="modal">
   <div class="modal-content">
     <span class="close-modal">×</span>
+    
     <h3 id="modal-title"></h3>
     <p id="modal-text"></p>
     <p id="modal-quote" class="quote"></p>
+    
+    <!-- Карусель изображений внизу модалки -->
+    <div class="modal-slider swiper">
+      <div class="swiper-wrapper" id="modal-images-wrapper">
+        <!-- Сюда будут добавляться слайды -->
+      </div>
+      <div class="modal-slider-nav">
+        <button class="modal-slider-btn prev-modal">❮</button>
+        <button class="modal-slider-btn next-modal">❯</button>
+      </div>
+      <div class="swiper-pagination modal-pagination"></div>
+    </div>
   </div>
 </div>
 
@@ -188,6 +221,7 @@ window.openWaitlistModal = function() {
   document.addEventListener('DOMContentLoaded', () => {
     if (typeof Swiper === 'undefined') return console.error('Swiper не загрузился');
     
+    // Главный слайдер
     const swiper = new Swiper('#projects', {
       loop: true,
       speed: 2000,
@@ -201,33 +235,107 @@ window.openWaitlistModal = function() {
     document.querySelector('#projects .custom-btn.prev')?.addEventListener('click', () => swiper.slidePrev());
     document.querySelector('#projects .custom-btn.next')?.addEventListener('click', () => swiper.slideNext());
 
-    // Модалка подробностей
+    // Модалка подробностей с каруселью внизу
     const modal = document.getElementById('project-modal');
     const titleEl = document.getElementById('modal-title');
     const textEl = document.getElementById('modal-text');
     const quoteEl = document.getElementById('modal-quote');
     const closeBtn = document.querySelector('#project-modal .close-modal');
+    const imagesWrapper = document.getElementById('modal-images-wrapper');
+    
+    let modalSwiper = null;
 
+    // Функция инициализации слайдера в модалке
+    function initModalSwiper() {
+      if (modalSwiper) {
+        modalSwiper.destroy(true, true);
+        modalSwiper = null;
+      }
+      
+      const slides = imagesWrapper.querySelectorAll('.swiper-slide');
+      if (slides.length > 0) {
+        modalSwiper = new Swiper('.modal-slider', {
+          loop: slides.length > 1,
+          navigation: {
+            nextEl: '.next-modal',
+            prevEl: '.prev-modal',
+          },
+          pagination: {
+            el: '.modal-pagination',
+            clickable: true,
+          },
+          speed: 600,
+          grabCursor: true,
+        });
+        
+        // Показываем навигацию, если больше 1 слайда
+        if (slides.length > 1) {
+          document.querySelector('.modal-slider-nav').style.display = 'flex';
+          document.querySelector('.modal-pagination').style.display = 'block';
+        } else {
+          document.querySelector('.modal-slider-nav').style.display = 'none';
+          document.querySelector('.modal-pagination').style.display = 'none';
+        }
+      }
+    }
+
+    // Обработчик кнопки "Подробнее"
     document.querySelectorAll('.more-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        titleEl.textContent = btn.dataset.title;
-        textEl.textContent = btn.dataset.text;
-        quoteEl.textContent = btn.dataset.quote || '';
-        quoteEl.style.display = btn.dataset.quote ? 'block' : 'none';
+        const title = btn.dataset.title;
+        const text = btn.dataset.text;
+        const quote = btn.dataset.quote || '';
+        let images = [];
+        
+        try {
+          images = JSON.parse(btn.dataset.images);
+          if (!Array.isArray(images)) images = [images];
+        } catch(e) {
+          images = [btn.dataset.images || '/images/projects/default.jpg'];
+        }
+        
+        // Заполняем заголовки
+        titleEl.textContent = title;
+        textEl.textContent = text;
+        quoteEl.textContent = quote;
+        quoteEl.style.display = quote ? 'block' : 'none';
+        
+        // Очищаем и заполняем слайды изображений
+        imagesWrapper.innerHTML = '';
+        images.forEach((imgSrc, index) => {
+          const slide = document.createElement('div');
+          slide.className = 'swiper-slide';
+          slide.innerHTML = `<img src="${imgSrc}" alt="${title} - фото ${index + 1}" loading="lazy" />`;
+          imagesWrapper.appendChild(slide);
+        });
+        
+        // Показываем модалку
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
+        
+        // Инициализируем слайдер после рендера
+        setTimeout(() => initModalSwiper(), 100);
       });
     });
 
+    // Закрытие модалки
     closeBtn.addEventListener('click', () => {
       modal.style.display = 'none';
       document.body.style.overflow = '';
+      if (modalSwiper) {
+        modalSwiper.destroy(true, true);
+        modalSwiper = null;
+      }
     });
     
     modal.addEventListener('click', e => { 
       if (e.target === modal) {
         modal.style.display = 'none';
         document.body.style.overflow = '';
+        if (modalSwiper) {
+          modalSwiper.destroy(true, true);
+          modalSwiper = null;
+        }
       }
     });
     
@@ -237,6 +345,10 @@ window.openWaitlistModal = function() {
         if (modal.style.display === 'flex') {
           modal.style.display = 'none';
           document.body.style.overflow = '';
+          if (modalSwiper) {
+            modalSwiper.destroy(true, true);
+            modalSwiper = null;
+          }
         }
         if (document.getElementById('ticket-modal').style.display === 'flex') {
           window.closeTicketModal();
@@ -485,16 +597,101 @@ window.openWaitlistModal = function() {
   }
 
   .modal-content {
-    background: #111;
-    color: white;
+    background: #ffffffd8;
+    color: rgb(28, 15, 15);
     border-radius: 16px;
     max-width: 92%;
-    width: 100%;
+    width: 60%;
     max-height: 82vh;
     overflow-y: auto;
     padding: 2.5rem 2rem;
     position: relative;
     box-shadow: 0 15px 50px rgba(0,0,0,0.8);
+  }
+
+  /* Карусель внутри модалки */
+  .modal-slider {
+    width: 85%;
+    height: 100%;
+    margin-bottom: 1.5rem;
+    border-radius: 30px;
+    overflow: hidden;
+    position: relative;
+    background: #222;
+  }
+
+  .modal-slider .swiper-slide {
+    width: 100%;
+    height: 100%;
+  }
+
+  .modal-slider .swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .modal-slider-nav {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    display: none;
+    justify-content: space-between;
+    padding: 0 10px;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .modal-slider-btn {
+    pointer-events: auto;
+    width: 44px;
+    height: 44px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-slider-btn:hover {
+    background: rgba(212, 175, 55, 0.8);
+  }
+
+  .modal-pagination {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 10;
+    display: none;
+  }
+
+  .modal-pagination .swiper-pagination-bullet {
+    background: rgba(255,255,255,0.5);
+    opacity: 1;
+  }
+
+  .modal-pagination .swiper-pagination-bullet-active {
+    background: #d4af37;
+  }
+
+  @media (max-width: 768px) {
+    .modal-slider {
+      height: 220px;
+    }
+    .modal-slider-btn {
+      width: 36px;
+      height: 36px;
+      font-size: 1rem;
+    }
   }
 
   /* Модалка билетов */
@@ -532,6 +729,7 @@ window.openWaitlistModal = function() {
     font-size: 2.8rem;
     color: #d4af37;
     cursor: pointer;
+    z-index: 20;
   }
 
   .modal-content h3 {

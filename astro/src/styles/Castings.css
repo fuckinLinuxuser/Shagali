@@ -308,19 +308,19 @@
         text-align: center;
     }
 
-    #modalTitle {
+    #castingsModalTitle {
         margin: 0 0 8px;
         font-size: 2.1em;
         color: #222;
     }
 
-    #modalDate {
+    #castingsModalDate {
         color: #d4af37;
         font-size: 1.3em;
         margin-bottom: 24px;
     }
 
-    #modalVideoContainer {
+    #castingsModalVideoContainer {
         position: relative;
         padding-bottom: 56.25%;
         height: 0;
@@ -330,7 +330,7 @@
         margin: 20px 0 32px;
     }
 
-    #modalVideo {
+    #castingsModalVideo {
         position: absolute;
         inset: 0;
         width: 100%;
@@ -338,7 +338,7 @@
         border: none;
     }
 
-    #modalDesc {
+    #castingsModalDesc {
         text-align: left;
         line-height: 1.7;
         color: #444;
