@@ -20,6 +20,7 @@
       <button class="modal-close" id="modalClose">✕</button>
       <img class="modal-image" id="modalImage" src="" alt="" />
       <h2 class="modal-title" id="modalTitle"></h2>
+      <div class="modal-date" id="modalDate"></div>
       <div class="modal-quote" id="modalQuote"></div>
       <p class="modal-description" id="modalDescription"></p>
 
@@ -32,8 +33,12 @@
   <div class="modal-overlay" id="actorModal">
     <div class="modal-content actor-modal-content">
       <button class="modal-close" id="actorModalClose">✕</button>
+      <img class="modal-image" id="actorModalImage" src="" alt="" style="display:none;" />
       <h2 class="modal-title" id="actorModalName"></h2>
       <div class="modal-quote" id="actorModalRole"></div>
+      <div class="actor-modal-video" id="actorModalVideoWrapper" style="display:none;">
+        <video id="actorModalVideo" controls playsinline></video>
+      </div>
       <p class="modal-description" id="actorModalBio"></p>
     </div>
   </div>
@@ -201,6 +206,24 @@
     margin-bottom: 2rem;
   }
 
+  .modal-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 auto 1.4rem;
+    padding: 0.45rem 1.2rem;
+    border: 1px solid #d4af37;
+    border-radius: 999px;
+    color: #a4831f;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+  }
+
+  .modal-date::before {
+    content: '📅';
+  }
+
   .modal-actors-title {
     color: #d4af37;
     font-weight: 600;
@@ -249,6 +272,25 @@
   #actorModalBio {
     color: #444;
     line-height: 1.6;
+    text-align: left;
+  }
+
+  .actor-modal-video {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #000;
+    margin-bottom: 1.6rem;
+  }
+
+  .actor-modal-video video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 </style>
 
@@ -263,7 +305,7 @@
       .replace(/'/g, '&#39;');
   }
 
-  type Actor = { name: string; role: string; bio?: string };
+  type Actor = { name: string; role: string; bio?: string; image?: string; video?: string };
 
   const playsData: {
     id: string;
@@ -279,16 +321,31 @@
     {
       id: 'kukushonok',
       title: 'Родной мой Кукушонок',
-      dates: ['27 июня 2026'],
+      dates: ['28 июня 2026'],
       description: 'Драму проживает каждый Ребенок, разочаровавший своих родителей. Трагедию носит в себе каждая Мать, оттолкнувшая своего ребенка...',
       quote: '"Спектакль о том, как взрослеют родители..."',
       image: '/images/projects/kukushonok.JPG',
       actors: [
-        { name: 'Анна Иванова', role: 'Мать' },
-        { name: 'Дмитрий Петров', role: 'Отец' },
-        { name: 'Елена Смирнова', role: 'Дочь' },
-        { name: 'Михаил Козлов', role: 'Сын' },
-        { name: 'Татьяна Васильева', role: 'Бабушка' }
+        {
+          name: 'Валерия',
+          role: 'Актриса',
+          video: '/videos/valeria.mp4',
+          bio: 'Она из тех людей, которых хочешь видеть в своем будущем сталкерском отряде. С пути не свернёт даже при сильном шторме. Патроны вовремя поднесёт (причем молча, что особенно важно в сложной ситуации). Будет уверенно держать атаку зомби в узком дверном проёме, отбиваясь попеременно лопатой и букетом гладиолусов… При этом шикарно танцует танго, готовит какие-то невероятные оладушки и вечерами смотрит с детворой хорошие советские фильмы.\n\nЛюблю видеть её на сцене. Знаю, что буду чувствовать и проживать вслед за ней. Буду внутри повторять ее реплики и тайком плакать ее слезами. Живая. Сложная. Странная.\n\nВ общем, не актриса, а мечта. Не ту женщину Сарой Коннор назвали.\n\nДа и не надо. Наша – интереснее. И моложе, кстати!'
+        },
+        {
+          name: 'Анна',
+          role: 'Актриса. Хореограф.',
+          video: '/videos/anna.mp4',
+          bio: 'При всей своей внешней хрупкости эта девушка умеет упереться лапкой и упорно добиваться поставленной цели – сказывается балетная выучка. Мечтает об ярком музыкальном шоу, которое мы могли бы провезти по всей стране. И мы шаг за шагом идем к тому, чтобы реализовать эту красивую мечту.\n\nПотому что какой смысл жить в мире, который не украшен музыкой и движением?\n\nМожет, она не построит мощный каменный дом. Зато вы бы видели, какие нежные и парящие воздушные замки она строит одним поворотом головы.\n\nВероятно, она не будет угощать нас на репетициях свежевыращенными кабачками. Но когда она заходит в театр – все лица расцветают улыбками.\n\nКрасоту нужно уметь создавать, и это идёт изнутри.\n\nУ неё – получается.'
+        },
+        {
+          name: 'Егор',
+          role: 'Актер'
+        },
+        {
+          name: 'Алексей',
+          role: 'Актер'
+        }
       ],
       duration: '1 час 30 минут',
       ageRestriction: '16+'
@@ -302,19 +359,23 @@
     const modalClose = document.getElementById('modalClose');
     const modalImage = document.getElementById('modalImage') as HTMLImageElement;
     const modalTitle = document.getElementById('modalTitle');
+    const modalDate = document.getElementById('modalDate');
     const modalQuote = document.getElementById('modalQuote');
     const modalDescription = document.getElementById('modalDescription');
     const modalActors = document.getElementById('modalActors');
 
     const actorModal = document.getElementById('actorModal');
     const actorModalClose = document.getElementById('actorModalClose');
+    const actorModalImage = document.getElementById('actorModalImage') as HTMLImageElement;
     const actorModalName = document.getElementById('actorModalName');
     const actorModalRole = document.getElementById('actorModalRole');
+    const actorModalVideoWrapper = document.getElementById('actorModalVideoWrapper');
+    const actorModalVideo = document.getElementById('actorModalVideo') as HTMLVideoElement;
     const actorModalBio = document.getElementById('actorModalBio');
 
-    if (!playsGrid || !modal || !modalClose || !modalImage || !modalTitle || !modalQuote ||
-        !modalDescription || !modalActors || !actorModal || !actorModalClose ||
-        !actorModalName || !actorModalRole || !actorModalBio) {
+    if (!playsGrid || !modal || !modalClose || !modalImage || !modalTitle || !modalDate || !modalQuote ||
+        !modalDescription || !modalActors || !actorModal || !actorModalClose || !actorModalImage ||
+        !actorModalName || !actorModalRole || !actorModalVideoWrapper || !actorModalVideo || !actorModalBio) {
       return;
     }
 
@@ -356,6 +417,7 @@
     function openModal(play: typeof playsData[number]) {
       modalImage.src = play.image;
       modalTitle!.textContent = play.title;
+      modalDate!.textContent = play.dates.join(' • ');
       modalQuote!.textContent = play.quote || '';
       modalDescription!.textContent = play.description;
 
@@ -383,14 +445,32 @@
     function openActorModal(actor: Actor) {
       actorModalName!.textContent = actor.name;
       actorModalRole!.textContent = actor.role;
-      actorModalBio!.textContent = actor.bio && actor.bio.trim()
-        ? actor.bio
-        : 'Информация об актёре появится позже.';
+
+      if (actor.image) {
+        actorModalImage.src = actor.image;
+        actorModalImage.alt = actor.name;
+        actorModalImage.style.display = 'block';
+      } else {
+        actorModalImage.style.display = 'none';
+      }
+
+      if (actor.video) {
+        actorModalVideo!.src = actor.video;
+        actorModalVideoWrapper!.style.display = 'block';
+      } else {
+        actorModalVideoWrapper!.style.display = 'none';
+      }
+
+      const bio = actor.bio && actor.bio.trim() ? actor.bio : 'Информация об актёре появится позже.';
+      actorModalBio!.innerHTML = escapeHtml(bio).replace(/\n/g, '<br>');
+
       actorModal!.classList.add('visible');
     }
 
     function closeActorModal() {
       actorModal!.classList.remove('visible');
+      actorModalVideo!.pause();
+      actorModalVideo!.src = '';
     }
 
     modalClose.addEventListener('click', closeModal);
