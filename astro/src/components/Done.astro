@@ -14,7 +14,7 @@
     <div class="plays-grid" id="playsGrid"></div>
   </div>
 
-  <!-- Модалка -->
+  <!-- Модалка спектакля -->
   <div class="modal-overlay" id="playModal">
     <div class="modal-content">
       <button class="modal-close" id="modalClose">✕</button>
@@ -23,14 +23,18 @@
       <div class="modal-quote" id="modalQuote"></div>
       <p class="modal-description" id="modalDescription"></p>
 
-      <div class="modal-meta">
-        <div class="modal-meta-item">⏱️ <span id="modalDuration"></span></div>
-        <div class="modal-meta-item">🔞 <span id="modalAge"></span></div>
-        <div class="modal-meta-item">📅 <span id="modalDates"></span></div>
-      </div>
-
       <div class="modal-actors-title">Актёры</div>
       <ul class="actors-list" id="modalActors"></ul>
+    </div>
+  </div>
+
+  <!-- Модалка актёра -->
+  <div class="modal-overlay" id="actorModal">
+    <div class="modal-content actor-modal-content">
+      <button class="modal-close" id="actorModalClose">✕</button>
+      <h2 class="modal-title" id="actorModalName"></h2>
+      <div class="modal-quote" id="actorModalRole"></div>
+      <p class="modal-description" id="actorModalBio"></p>
     </div>
   </div>
 </section>
@@ -207,32 +211,87 @@
     list-style: none;
     color: #333;
     padding-left: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+  }
+
+  .actor-btn {
+    background: #fff;
+    border: 1.5px solid #d4af37;
+    color: #222;
+    border-radius: 999px;
+    padding: 0.5rem 1.1rem;
+    font-size: 0.95rem;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .actor-btn:hover {
+    background: #d4af37;
+    color: #1a1a1a;
+  }
+
+  /* Модалка актёра — компактнее, поверх модалки спектакля */
+  .actor-modal-content {
+    max-width: 480px;
+    text-align: center;
+    padding: 3rem 2.4rem;
+  }
+
+  #actorModalRole {
+    color: #d4af37;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  #actorModalBio {
+    color: #444;
+    line-height: 1.6;
   }
 </style>
 
 <script>
-  const playsData = [
+  function escapeHtml(str: string) {
+    if (!str) return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  type Actor = { name: string; role: string; bio?: string };
+
+  const playsData: {
+    id: string;
+    title: string;
+    dates: string[];
+    description: string;
+    quote?: string;
+    image: string;
+    actors: Actor[];
+    duration: string;
+    ageRestriction: string;
+  }[] = [
     {
       id: 'kukushonok',
       title: 'Родной мой Кукушонок',
-      dates: ['15 марта 2023', '22 апреля 2023', '10 мая 2023', '5 июня 2024'],
+      dates: ['27 июня 2026'],
       description: 'Драму проживает каждый Ребенок, разочаровавший своих родителей. Трагедию носит в себе каждая Мать, оттолкнувшая своего ребенка...',
       quote: '"Спектакль о том, как взрослеют родители..."',
       image: '/images/projects/kukushonok.JPG',
-      actors: ['Анна Иванова — Мать', 'Дмитрий Петров — Отец', 'Елена Смирнова — Дочь', 'Михаил Козлов — Сын', 'Татьяна Васильева — Бабушка'],
+      actors: [
+        { name: 'Анна Иванова', role: 'Мать' },
+        { name: 'Дмитрий Петров', role: 'Отец' },
+        { name: 'Елена Смирнова', role: 'Дочь' },
+        { name: 'Михаил Козлов', role: 'Сын' },
+        { name: 'Татьяна Васильева', role: 'Бабушка' }
+      ],
       duration: '1 час 30 минут',
       ageRestriction: '16+'
-    },
-    {
-      id: 'doggy',
-      title: 'Мамочка, купи собаку!',
-      dates: ['1 февраля 2023', '14 марта 2023', '2 апреля 2024', '15 ноября 2024'],
-      description: 'Милая пушистая игрушка, в которой отражается всё счастье твоего детства...',
-      quote: 'Сказка про то, как собака учит быть взрослыми...',
-      image: '/images/projects/doggy.jpeg',
-      actors: ['Ольга Новикова — Мама', 'Алексей Морозов — Папа', 'Катя Соколова — Дочь', 'Игорь Федоров — Сын', 'Анна Коваль — Соседка'],
-      duration: '1 час 15 минут',
-      ageRestriction: '6+'
     }
   ];
 
@@ -241,17 +300,21 @@
 
     const modal = document.getElementById('playModal');
     const modalClose = document.getElementById('modalClose');
-    const modalImage = document.getElementById('modalImage');
+    const modalImage = document.getElementById('modalImage') as HTMLImageElement;
     const modalTitle = document.getElementById('modalTitle');
     const modalQuote = document.getElementById('modalQuote');
     const modalDescription = document.getElementById('modalDescription');
-    const modalDuration = document.getElementById('modalDuration');
-    const modalAge = document.getElementById('modalAge');
-    const modalDates = document.getElementById('modalDates');
     const modalActors = document.getElementById('modalActors');
 
+    const actorModal = document.getElementById('actorModal');
+    const actorModalClose = document.getElementById('actorModalClose');
+    const actorModalName = document.getElementById('actorModalName');
+    const actorModalRole = document.getElementById('actorModalRole');
+    const actorModalBio = document.getElementById('actorModalBio');
+
     if (!playsGrid || !modal || !modalClose || !modalImage || !modalTitle || !modalQuote ||
-        !modalDescription || !modalDuration || !modalAge || !modalDates || !modalActors) {
+        !modalDescription || !modalActors || !actorModal || !actorModalClose ||
+        !actorModalName || !actorModalRole || !actorModalBio) {
       return;
     }
 
@@ -280,9 +343,9 @@
         </div>
       `).join('');
 
-      playsGrid.innerHTML = html;
+      playsGrid!.innerHTML = html;
 
-      playsGrid.querySelectorAll('[data-play-id]').forEach(item => {
+      playsGrid!.querySelectorAll('[data-play-id]').forEach(item => {
         item.addEventListener('click', () => {
           const play = playsData.find(p => p.id === (item as HTMLElement).dataset.playId);
           if (play) openModal(play);
@@ -292,28 +355,57 @@
 
     function openModal(play: typeof playsData[number]) {
       modalImage.src = play.image;
-      modalTitle.textContent = play.title;
-      modalQuote.textContent = play.quote || '';
-      modalDescription.textContent = play.description;
-      modalDuration.textContent = play.duration;
-      modalAge.textContent = play.ageRestriction;
-      modalDates.textContent = play.dates.join(' • ');
-      modalActors.innerHTML = play.actors.map(actor => `<li>${actor}</li>`).join('');
+      modalTitle!.textContent = play.title;
+      modalQuote!.textContent = play.quote || '';
+      modalDescription!.textContent = play.description;
 
-      modal.classList.add('visible');
+      modalActors!.innerHTML = play.actors.map((actor, i) => `
+        <li><button type="button" class="actor-btn" data-actor-index="${i}">${escapeHtml(actor.name)} — ${escapeHtml(actor.role)}</button></li>
+      `).join('');
+
+      modalActors!.querySelectorAll('.actor-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = Number((btn as HTMLElement).dataset.actorIndex);
+          const actor = play.actors[idx];
+          if (actor) openActorModal(actor);
+        });
+      });
+
+      modal!.classList.add('visible');
       document.body.style.overflow = 'hidden';
     }
 
     function closeModal() {
-      modal.classList.remove('visible');
+      modal!.classList.remove('visible');
       document.body.style.overflow = '';
+    }
+
+    function openActorModal(actor: Actor) {
+      actorModalName!.textContent = actor.name;
+      actorModalRole!.textContent = actor.role;
+      actorModalBio!.textContent = actor.bio && actor.bio.trim()
+        ? actor.bio
+        : 'Информация об актёре появится позже.';
+      actorModal!.classList.add('visible');
+    }
+
+    function closeActorModal() {
+      actorModal!.classList.remove('visible');
     }
 
     modalClose.addEventListener('click', closeModal);
     modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 
+    actorModalClose.addEventListener('click', closeActorModal);
+    actorModal.addEventListener('click', e => { if (e.target === actorModal) closeActorModal(); });
+
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && modal.classList.contains('visible')) closeModal();
+      if (e.key !== 'Escape') return;
+      if (actorModal!.classList.contains('visible')) {
+        closeActorModal();
+      } else if (modal!.classList.contains('visible')) {
+        closeModal();
+      }
     });
 
     renderPlays();
