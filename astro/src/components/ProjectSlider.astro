@@ -11,7 +11,7 @@ const slides = [
     text: "Драму проживает каждый Ребенок, разочаровавший своих родителей. Трагедию носит в себе каждая Мать, оттолкнувшая своего ребенка. Просто разные. Еще пару лет назад была семья, где все друг друга любили. А сегодня – уже чужие взрослые люди. Как вернуться к самим себе? Как опять увидеть друг друга?",
     quote: "\"...Спектакль о том, как взрослеют родители...\"",
     soon: false,
-    eventId: 13893,
+    eventId: 14088,
     eventName: "Родной мой Кукушонок"
   },
   {
@@ -168,14 +168,14 @@ window.openTicketModal = function(eventId, eventName) {
   const titleEl = document.getElementById('ticket-modal-title');
   
   if (modal && iframe) {
-    iframe.src = `https://cbiletom.ru/widget/1/frame.php?id=${eventId}`;
+    iframe.src = `https://cbiletom.ru/widget/1/frame.php?id=${eventId}&mode=1`;
     titleEl.textContent = `Билеты: ${eventName}`;
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
   } else {
     console.error('Модалка билетов не найдена');
     // fallback - открываем в новой вкладке
-    window.open(`https://cbiletom.ru/widget/1/frame.php?id=${eventId}`, '_blank');
+    window.open(`https://cbiletom.ru/widget/1/frame.php?id=${eventId}&mode=1`, '_blank');
   }
 };
 
@@ -206,7 +206,7 @@ window.openWaitlistModal = function() {
   s.src = 'https://cbiletom.ru/widget/1/assets/controller.js?itok=' + Math.round(1* new Date() / 3600000);
   s.onload = function() {
     if (typeof CB !== 'undefined') {
-      new CB(d, {id:13893, view:2});
+      new CB(d, {id:14088, view:2});
     }
   };
   d.querySelector('head').append(s);
