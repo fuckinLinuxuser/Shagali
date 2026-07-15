@@ -40,17 +40,19 @@
 
   .people-grid {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 20px;
-    justify-content: center;
+    justify-content: safe center;
     overflow-x: auto;
     padding: 30px 40px 40px;
     scroll-behavior: smooth;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
   }
 
   .person-card {
     width: 250px;
-    flex: 0 0 250px;
+    flex: 0 0 auto;
     background: white;
     border-radius: 12px;
     overflow: hidden;
@@ -58,6 +60,7 @@
     transition: all 0.28s ease;
     display: flex;
     flex-direction: column;
+    scroll-snap-align: center;
   }
 
   .person-card:hover {
@@ -211,6 +214,19 @@
 
   /* Мобильные */
   @media (max-width: 768px) {
+    .people-grid {
+      padding: 24px 20px 32px;
+      gap: 14px;
+    }
+
+    .person-card {
+      width: 220px;
+    }
+
+    .person-image {
+      height: 220px;
+    }
+
     .modal-video-item {
       flex: 0 0 105px !important;
       width: 105px !important;
@@ -238,7 +254,7 @@
   <div class="people-grid">
         
     <div class="person-card" data-name="Елена Владимировна ШАГАЛИ" data-role="Театральный продюсер. Драматург. Режиссер." data-video="/videos/shagali.mp4">
-      <img src="/images/people/people_shagali.JPG" alt="Елена Шагали" class="person-image">
+      <img src="/images/people/people_shagali.JPG" alt="Елена Шагали" class="person-image" loading="lazy">
       <div class="person-info">
         <h2 class="person-name">Елена Шагали</h2>
         <div class="person-role">Театральный продюсер. Драматург. Режиссер.</div>
@@ -261,7 +277,7 @@
          data-name="Ёжик" 
          data-role="Актер. Пёс."
          data-videos='["/videos/ez1.mp4", "/videos/ez2.mp4", "/videos/ez3.mp4", "/videos/ez4.mp4", "/videos/ez5.mp4"]'>
-      <img src="/images/people/ezhik.jpg" alt="Ёжик" class="person-image">
+      <img src="/images/people/ezhik.jpg" alt="Ёжик" class="person-image" loading="lazy">
       <div class="person-info">
         <h2 class="person-name">Ёжик</h2>
         <div class="person-role">Актер. Пёс.</div>
@@ -275,7 +291,7 @@
     </div>
 
         <div class="person-card" data-name="Август Вишневский" data-role="Сопродюсер. Актер." data-video="/videos/august.mp4">
-      <img src="/images/people/people_august.jpg" alt="Август" class="person-image">
+      <img src="/images/people/people_august.jpg" alt="Август" class="person-image" loading="lazy">
       <div class="person-info">
         <h2 class="person-name">Август Вишневский</h2>
         <div class="person-role">Сопродюсер. Актер.</div>

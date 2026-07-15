@@ -16,7 +16,7 @@
 
   <!-- Модалка спектакля -->
   <div class="modal-overlay" id="playModal">
-    <div class="modal-content">
+    <div class="done-modal-content">
       <button class="modal-close" id="modalClose">✕</button>
       <img class="modal-image" id="modalImage" src="" alt="" />
       <h2 class="modal-title" id="modalTitle"></h2>
@@ -31,7 +31,7 @@
 
   <!-- Модалка актёра -->
   <div class="modal-overlay" id="actorModal">
-    <div class="modal-content actor-modal-content">
+    <div class="done-modal-content actor-modal-content">
       <button class="modal-close" id="actorModalClose">✕</button>
       <img class="modal-image" id="actorModalImage" src="" alt="" style="display:none;" />
       <h2 class="modal-title" id="actorModalName"></h2>
@@ -98,7 +98,7 @@
 
   .plays-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(290px, 100%), 1fr));
     gap: 1.6rem;
   }
 
@@ -173,7 +173,7 @@
 
   .modal-overlay.visible { display: flex; }
 
-  .modal-content {
+  .done-modal-content {
     background: white;
     color: #222;
     border-radius: 20px;
@@ -188,14 +188,22 @@
 
   .modal-close {
     position: absolute;
-    top: 1.2rem;
-    right: 1.8rem;
-    font-size: 2.8rem;
-    color: #d4af37;
+    top: 1rem;
+    right: 1rem;
+    z-index: 5;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    color: #fff;
     cursor: pointer;
-    background: none;
+    background: rgba(0, 0, 0, 0.45);
     border: none;
+    border-radius: 50%;
     line-height: 1;
+    backdrop-filter: blur(2px);
   }
 
   .modal-image {
@@ -292,6 +300,78 @@
     height: 100%;
     object-fit: contain;
   }
+
+  /* ─── Мобильные стили ────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .done-plays {
+      padding: 2rem 0.9rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.9rem, 8vw, 2.6rem);
+      margin-bottom: 0.6rem;
+    }
+
+    .section-title::after {
+      bottom: -14px;
+      width: 100px;
+    }
+
+    .subtitle {
+      margin-bottom: 2.2rem;
+      font-size: 0.95rem;
+    }
+
+    .plays-header {
+      margin-bottom: 1.8rem;
+    }
+
+    .plays-header h2 {
+      font-size: clamp(1.5rem, 6.5vw, 2rem);
+    }
+
+    .kukushonok-image {
+      height: 220px;
+    }
+
+    .kukushonok-info {
+      padding: 1.4rem 1.2rem;
+    }
+
+    .modal-overlay {
+      padding: 0.75rem;
+    }
+
+    .done-modal-content {
+      padding: 3.6rem 1.3rem 2rem;
+      border-radius: 16px;
+    }
+
+    .modal-image {
+      height: 200px;
+      margin-bottom: 1.4rem;
+    }
+
+    .modal-date {
+      font-size: 0.85rem;
+      padding: 0.4rem 1rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .actors-list {
+      gap: 0.55rem;
+    }
+
+    .actor-btn {
+      padding: 0.7rem 1.1rem;
+      font-size: 0.92rem;
+      min-height: 44px;
+    }
+
+    .actor-modal-content {
+      padding: 3.6rem 1.3rem 2rem;
+    }
+  }
 </style>
 
 <script>
@@ -387,7 +467,7 @@
       if (kukushonok) {
         html += `
           <div class="special-play-kukushonok" data-play-id="${kukushonok.id}">
-            <img src="${kukushonok.image}" alt="${kukushonok.title}" class="kukushonok-image">
+            <img src="${kukushonok.image}" alt="${kukushonok.title}" class="kukushonok-image" loading="lazy">
             <div class="kukushonok-info">
               <div class="kukushonok-title">${kukushonok.title}</div>
               <p style="color: #666; margin-top: 0.5rem;">Нажмите для подробностей</p>

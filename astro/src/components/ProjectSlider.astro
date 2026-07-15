@@ -12,7 +12,8 @@ const slides = [
     quote: "\"...Спектакль о том, как взрослеют родители...\"",
     soon: false,
     eventId: 14088,
-    eventName: "Родной мой Кукушонок"
+    eventName: "Родной мой Кукушонок",
+    eventDate: "Тюмень, 1 августа"
   },
   {
     img: "/images/projects/doggy.jpeg",
@@ -51,17 +52,24 @@ const slides = [
 ];
 ---
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css" />
 
 <div id="projects" class="hero-slider swiper">
   <div class="swiper-wrapper">
     {
-      slides.map((slide) => (
+      slides.map((slide, i) => (
         <div class="swiper-slide">
-          <img src={slide.img} alt={slide.title} loading="lazy" />
+          <img
+            src={slide.img}
+            alt={slide.title}
+            loading={i === 0 ? 'eager' : 'lazy'}
+            fetchpriority={i === 0 ? 'high' : 'auto'}
+          />
           <div class="slide-content">
             {slide.soon && (
               <div class="soon-badge mobile-only">Скоро...</div>
+            )}
+            {slide.eventDate && (
+              <div class="event-date-badge">{slide.eventDate}</div>
             )}
             <div class="info-block">
               <h2>{slide.title}</h2>
@@ -93,7 +101,7 @@ const slides = [
                 <button
                   type="button"
                   class="tickets-btn buy-btn"
-                  onclick={`openTicketModal(${slide.eventId}, '${slide.eventName.replace(/'/g, "\\'")}')`}
+                  onclick={`openTicketModal(${slide.eventId}, '${slide.eventName.replace(/'/g, "\\'")}', '${(slide.eventDate || '').replace(/'/g, "\\'")}')`}
                 >
                   Купить билет
                 </button>
@@ -148,28 +156,32 @@ const slides = [
   <div class="modal-content ticket-modal-content">
     <span class="close-modal close-ticket-modal">×</span>
     <h3 id="ticket-modal-title">Выбор билетов</h3>
+    <p id="ticket-modal-date"></p>
     <iframe id="ticket-iframe" src="" style="width: 100%; height: 500px; border: none; border-radius: 8px;"></iframe>
   </div>
 </div>
 
-<script defer src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
-
 <!-- CBiletom widget script и глобальные функции -->
 <script>
 // Глобальные функции для работы с билетами (ДО загрузки DOM)
-window.openTicketModal = function(eventId, eventName) {
+window.openTicketModal = function(eventId, eventName, eventDate) {
   if (!eventId) {
     window.openWaitlistModal();
     return;
   }
-  
+
   const modal = document.getElementById('ticket-modal');
   const iframe = document.getElementById('ticket-iframe');
   const titleEl = document.getElementById('ticket-modal-title');
-  
+  const dateEl = document.getElementById('ticket-modal-date');
+
   if (modal && iframe) {
     iframe.src = `https://cbiletom.ru/widget/1/frame.php?id=${eventId}&mode=1`;
     titleEl.textContent = `Билеты: ${eventName}`;
+    if (dateEl) {
+      dateEl.textContent = eventDate || '';
+      dateEl.style.display = eventDate ? 'block' : 'none';
+    }
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
   } else {
@@ -213,10 +225,11 @@ window.openWaitlistModal = function() {
 })(document);
 </script>
 
-<script is:inline>
+<script>
+  import Swiper from 'swiper/bundle';
+  import 'swiper/css/bundle';
+
   document.addEventListener('DOMContentLoaded', () => {
-    if (typeof Swiper === 'undefined') return console.error('Swiper не загрузился');
-    
     // Главный слайдер
     const swiper = new Swiper('#projects', {
       loop: true,
@@ -301,7 +314,9 @@ window.openWaitlistModal = function() {
         images.forEach((imgSrc, index) => {
           const slide = document.createElement('div');
           slide.className = 'swiper-slide';
-          slide.innerHTML = `<img src="${imgSrc}" alt="${title} - фото ${index + 1}" loading="lazy" />`;
+          slide.style.width = '100%';
+          slide.style.height = '100%';
+          slide.innerHTML = `<img src="${imgSrc}" alt="${title} - фото ${index + 1}" loading="lazy" style="width:100%;height:100%;object-fit:contain;background:#111;" />`;
           imagesWrapper.appendChild(slide);
         });
         
@@ -447,6 +462,50 @@ window.openWaitlistModal = function() {
 
   .tickets-btn:hover { background: #e6c24a; }
 
+  .buy-btn {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    background: linear-gradient(135deg, #f2da96 0%, #d4af37 45%, #b8901f 100%);
+    box-shadow: 0 8px 26px rgba(212, 175, 55, 0.5), 0 2px 8px rgba(0, 0, 0, 0.45);
+    animation: buyBtnPulse 2.6s ease-in-out infinite;
+  }
+
+  .buy-btn::before {
+    content: '🎟️';
+    font-size: 1.05em;
+    line-height: 1;
+  }
+
+  .buy-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    left: -60%;
+    width: 40%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.7s ease;
+    pointer-events: none;
+  }
+
+  .buy-btn:hover {
+    background: linear-gradient(135deg, #f8e6ae 0%, #e6c24a 45%, #c9a02e 100%);
+    box-shadow: 0 14px 38px rgba(212, 175, 55, 0.65), 0 4px 14px rgba(0, 0, 0, 0.5);
+    animation-play-state: paused;
+  }
+
+  .buy-btn:hover::after {
+    left: 130%;
+  }
+
+  @keyframes buyBtnPulse {
+    0%, 100% { box-shadow: 0 8px 26px rgba(212, 175, 55, 0.5), 0 2px 8px rgba(0, 0, 0, 0.45); }
+    50% { box-shadow: 0 8px 32px rgba(212, 175, 55, 0.85), 0 2px 8px rgba(0, 0, 0, 0.45); }
+  }
+
   .soon-badge {
     position: absolute;
     top: 5%;
@@ -461,6 +520,28 @@ window.openWaitlistModal = function() {
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.5);
     z-index: 10;
+  }
+
+  .event-date-badge {
+    position: absolute;
+    top: 5%;
+    right: 3%;
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    background: rgba(15, 15, 10, 0.72);
+    border: 1px solid #d4af37;
+    color: #f5e6b8;
+    font-weight: 600;
+    font-size: clamp(0.95rem, 1.8vw, 1.25rem);
+    padding: 0.5em 1.1em;
+    border-radius: 50px;
+    backdrop-filter: blur(3px);
+    z-index: 10;
+  }
+
+  .event-date-badge::before {
+    content: '📍';
   }
 
   .description {
@@ -607,13 +688,13 @@ window.openWaitlistModal = function() {
 
   /* Карусель внутри модалки */
   .modal-slider {
-    width: 85%;
-    height: 100%;
+    width: 100%;
+    aspect-ratio: 4 / 3;
     margin-bottom: 1.5rem;
     border-radius: 30px;
     overflow: hidden;
     position: relative;
-    background: #222;
+    background: #111;
   }
 
   .modal-slider .swiper-slide {
@@ -624,7 +705,8 @@ window.openWaitlistModal = function() {
   .modal-slider .swiper-slide img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    background: #111;
   }
 
   .modal-slider-nav {
@@ -680,13 +762,30 @@ window.openWaitlistModal = function() {
   }
 
   @media (max-width: 768px) {
-    .modal-slider {
-      height: 220px;
+    .modal-content {
+      width: 94%;
+      max-width: 94%;
+      max-height: 88vh;
+      padding: 1.8rem 1.2rem;
+      border-radius: 20px;
     }
+
     .modal-slider-btn {
-      width: 36px;
-      height: 36px;
-      font-size: 1rem;
+      width: 40px;
+      height: 40px;
+      font-size: 1.05rem;
+    }
+
+    .modal-content h3 {
+      margin-bottom: 1rem;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .modal-content {
+      width: 96%;
+      max-width: 96%;
+      padding: 1.5rem 1rem;
     }
   }
 
@@ -700,10 +799,17 @@ window.openWaitlistModal = function() {
   .ticket-modal-content h3 {
     font-family: 'Playfair Display', serif;
     font-size: clamp(1.3rem, 4vw, 1.8rem);
-    margin-bottom: 1rem;
+    margin-bottom: 0.3rem;
     text-align: center;
   }
-  
+
+  #ticket-modal-date {
+    text-align: center;
+    color: #d4af37;
+    font-weight: 600;
+    margin: 0 0 1.2rem;
+  }
+
   #ticket-iframe {
     min-height: 500px;
   }

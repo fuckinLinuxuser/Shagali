@@ -17,16 +17,12 @@ const { title = "Мир За Сценой" } = Astro.props;
 <div class="about-producer">
   <video
     class="producer-video"
-    autoplay
     loop
     muted
     playsinline
-    preload="auto"
-    
+    preload="none"
   >
     <source src="/videos/ez.mp4" type="video/mp4">
-    <!-- Тестовое видео -->
-    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
     Ваш браузер не поддерживает видео.
   </video>
 
@@ -227,25 +223,21 @@ const { title = "Мир За Сценой" } = Astro.props;
   });
 
 
-  // === Принудительный запуск видео ===
+  // === Видео грузится и запускается только при наведении на шапку (там же, где .about-producer становится видимым) ===
 const video = document.querySelector('.producer-video');
-if (video) {
-  video.muted = true;           // обязательно
-  
-  const playPromise = video.play();
-  
-  if (playPromise !== undefined) {
-    playPromise.catch(error => {
-      console.warn("Autoplay prevented:", error);
-      // Пробуем ещё раз после взаимодействия
-      document.addEventListener('click', () => video.play(), { once: true });
-    });
-  }
+const header = document.querySelector('.header');
+if (video && header) {
+  video.muted = true;
+  let started = false;
 
-  // Отладка
-  video.addEventListener('loadedmetadata', () => console.log('Видео загружено, длительность:', video.duration));
-  video.addEventListener('error', (e) => console.error('Ошибка видео:', e));
-  video.addEventListener('playing', () => console.log('Видео начало играть'));
+  const startVideo = () => {
+    if (started) return;
+    started = true;
+    video.play().catch(error => console.warn('Autoplay prevented:', error));
+  };
+
+  header.addEventListener('mouseenter', startVideo);
+  header.addEventListener('touchstart', startVideo, { passive: true, once: true });
 }
 </script>
 

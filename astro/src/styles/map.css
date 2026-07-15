@@ -38,6 +38,16 @@
   filter: drop-shadow(0 0 12px #ffd700aa);
 }
 
+/* Города, где спектакль уже был показан */
+.city-dot.visited {
+  fill: #8b1a3a;
+}
+
+.city-dot.visited:hover {
+  fill: #b0294f;
+  filter: drop-shadow(0 0 12px #8b1a3aaa);
+}
+
 @keyframes appearDot {
   to { opacity: 1; }
 }

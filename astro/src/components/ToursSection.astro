@@ -146,6 +146,9 @@ const tours = [
         <circle class="city-dot" cx="336" cy="607" r="7" data-city="tyumen" />
         <text x="336" y="637" class="city-label" text-anchor="middle">Тюмень</text>
 
+        <circle class="city-dot visited" cx="75" cy="577" r="7" data-city="spb" />
+        <text x="88" y="581" class="city-label" text-anchor="start">Санкт-Петербург</text>
+
         <!-- Ялуторовск (юго-восточнее Тюмени)<circle class="city-dot" cx="355" cy="625" r="5" data-city="yalutorovsk" />
 <text x="355" y="655" class="city-label" text-anchor="middle">Ялуторовск</text>
 
@@ -323,7 +326,6 @@ const tours = [
 
     const cityToShow: Record<string, string> = {
       moscow: "Скрипичное Шоу",
-      spb: "Мамочка, Купи Собаку",
       ekb: "Родной Мой Кукушонок",
       novosib: "Неделя Испании",
     };
@@ -410,19 +412,52 @@ const tours = [
       requestAnimationFrame(() => positionPopover(cityDot));
     }
 
+    // Открывает карточку сыгранного спектакля в разделе "Пройденные спектакли"
+    function openDonePlayModal(playId: string) {
+      const card = document.querySelector(`[data-play-id="${playId}"]`) as HTMLElement | null;
+      if (!card) return;
+      card.click();
+    }
+
+    // Открывает модалку покупки билетов актуального спектакля из слайдера
+    function openTicketModalForSlide(slideTitle: string) {
+      const moreBtn = document.querySelector(`.more-btn[data-title="${slideTitle}"]`) as HTMLElement | null;
+      const slide = moreBtn?.closest('.swiper-slide');
+      const buyBtn = slide?.querySelector('.buy-btn') as HTMLElement | null;
+      if (!buyBtn) return;
+      buyBtn.click();
+    }
+
+    // Точки СПб и Тюмени ведут сразу к модалкам, минуя поповер
+    function handleCityDotClick(cityDot: HTMLElement) {
+      const cityKey = cityDot.dataset.city || '';
+
+      if (cityKey === 'spb') {
+        openDonePlayModal('kukushonok');
+        return;
+      }
+
+      if (cityKey === 'tyumen') {
+        openTicketModalForSlide('Родной мой Кукушонок');
+        return;
+      }
+
+      showPopoverForCity(cityDot);
+    }
+
     const svg = document.querySelector('.map-container svg');
 
     if (svg) {
       svg.addEventListener('click', (e) => {
         const dot = (e.target as HTMLElement).closest('.city-dot') as HTMLElement | null;
-        if (dot) showPopoverForCity(dot);
+        if (dot) handleCityDotClick(dot);
       });
 
       svg.addEventListener('touchstart', (e) => {
         const dot = (e.target as HTMLElement).closest('.city-dot') as HTMLElement | null;
         if (dot) {
           e.preventDefault();
-          showPopoverForCity(dot);
+          handleCityDotClick(dot);
         }
       }, { passive: false });
     }
@@ -560,7 +595,8 @@ h3 {
 /* ДАТА (МЕСЯЦ) */
 .timeline-date {
     /* Чуть уменьшили ширину колонки даты, чтобы компенсировать уменьшение gap */
-    min-width: 170px; 
+    width: 170px;
+    flex-shrink: 0;
     font-size: 1.5rem; /* Слегка уменьшили размер шрифта */
     font-weight: 700;
     color: #d4af57;
@@ -570,16 +606,16 @@ h3 {
 
 /* БЛОК С КОНТЕНТОМ */
 .timeline-content {
-    flex: 1;
+    flex: 0 1 auto;
+    max-width: 480px;
     background: rgba(28, 26, 22, 0.7);
     backdrop-filter: blur(8px);
     border-radius: 12px; /* Чуть более аккуратное скругление */
     /* Уменьшили внутренние отступы (паддинги) карточки, чтобы она не была «жирной» */
-    padding: 0.8rem 1.2rem; 
+    padding: 0.8rem 1.2rem;
     border-left: 4px solid #d4af57;
     box-shadow: 0 6px 24px rgba(0,0,0,0.3);
     transition: all 0.4s ease;
-    min-height: none;
 }
 
 .timeline-content:hover {
@@ -667,7 +703,7 @@ h3 {
 
     .timeline-date {
       text-align: center;
-      min-width: auto;
+      width: auto;
     }
 
     .timeline-item::before {
