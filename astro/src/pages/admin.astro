@@ -338,9 +338,6 @@
     <script>
         // КЛИЕНТСКИЙ СКРИПТ
         (function() {
-            const ADMIN_PASSWORD = 'Saai1001hgl';
-            // Должен совпадать с ADMIN_TOKEN в public/api.php
-            const ADMIN_TOKEN = 'c8f2b6e4a1d94f7c9b3e5a0d2f6c8b41';
             let currentEditId = null;
 
             const loginScreen = document.getElementById('loginScreen');
@@ -354,25 +351,57 @@
             const formTitle = document.getElementById('formTitle');
             const statusEl = document.getElementById('status');
 
+            function showPanel() {
+                if (loginScreen) loginScreen.style.display = 'none';
+                if (adminPanel) adminPanel.style.display = 'block';
+                loadPosts();
+            }
+
+            function showLogin() {
+                if (adminPanel) adminPanel.style.display = 'none';
+                if (loginScreen) loginScreen.style.display = 'flex';
+            }
+
+            // Если сессия уже подтверждена сервером (например, после перезагрузки страницы) — не просим пароль повторно
+            fetch('/api.php?action=check', { credentials: 'include' })
+                .then(res => res.json())
+                .then(data => { if (data.authenticated) showPanel(); })
+                .catch(() => {});
+
             // Вход
             if (loginBtn) {
-                loginBtn.addEventListener('click', () => {
-                    if (passwordInput && passwordInput.value.trim() === ADMIN_PASSWORD) {
-                        if (loginScreen) loginScreen.style.display = 'none';
-                        if (adminPanel) adminPanel.style.display = 'block';
-                        loadPosts();
-                    } else {
-                        alert('Неверный пароль администратора!');
+                loginBtn.addEventListener('click', async () => {
+                    const password = passwordInput ? passwordInput.value.trim() : '';
+                    loginBtn.disabled = true;
+                    try {
+                        const res = await fetch('/api.php?action=login', {
+                            method: 'POST',
+                            credentials: 'include',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ password })
+                        });
+                        if (res.ok) {
+                            if (passwordInput) passwordInput.value = '';
+                            showPanel();
+                        } else {
+                            alert('Неверный пароль администратора!');
+                        }
+                    } catch (err) {
+                        alert('Ошибка сети при попытке входа');
+                    } finally {
+                        loginBtn.disabled = false;
                     }
                 });
             }
 
             // Выход
             if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => {
+                logoutBtn.addEventListener('click', async () => {
+                    try {
+                        await fetch('/api.php?action=logout', { method: 'POST', credentials: 'include' });
+                    } catch (err) {}
                     if (passwordInput) passwordInput.value = '';
-                    if (adminPanel) adminPanel.style.display = 'none';
-                    if (loginScreen) loginScreen.style.display = 'flex';
+                    showLogin();
                     currentEditId = null;
                     if (formTitle) formTitle.textContent = 'Новый пост';
                     if (submitBtn) submitBtn.textContent = 'Опубликовать пост';
@@ -467,7 +496,7 @@
                         try {
                             const res = await fetch(`/api.php?id=${id}`, {
                             method: 'DELETE',
-                            headers: { 'X-Admin-Token': ADMIN_TOKEN }
+                            credentials: 'include'
                         });
                             if (res.ok) {
                                 loadPosts();
@@ -527,7 +556,7 @@
                     try {
                         const res = await fetch(url, {
                             method: 'POST',
-                            headers: { 'X-Admin-Token': ADMIN_TOKEN },
+                            credentials: 'include',
                             body: formData
                         });
                         if (res.ok) {

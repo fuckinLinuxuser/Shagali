@@ -1,12 +1,23 @@
 <?php
+// Пароль администратора хранится только здесь (серверный файл, клиенту не отдаётся).
+// Проверка — PBKDF2-SHA256, без внешних расширений PHP.
+define('ADMIN_PASSWORD_SALT', 'e45202a9233478cf8d6c0169d6b70b95');
+define('ADMIN_PASSWORD_HASH', 'd970f54b36bb2126a4a14366b31bff6a5c74da119fa9061403490fe59a1bc914');
+define('ADMIN_PASSWORD_ITERATIONS', 100000);
+
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/',
+    'secure' => !empty($_SERVER['HTTPS']),
+    'httponly' => true,
+    'samesite' => 'Lax',
+]);
+session_start();
+
 header("Content-Type: application/json; charset=utf-8");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, X-Admin-Token");
-
-// Секретный токен для админ-панели. Должен совпадать со значением
-// ADMIN_TOKEN в src/pages/admin.astro. Смените оба значения при компрометации.
-define('ADMIN_TOKEN', 'c8f2b6e4a1d94f7c9b3e5a0d2f6c8b41');
+header("Access-Control-Allow-Headers: Content-Type");
 
 define('ALLOWED_IMAGE_EXT', ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp', 'gif' => 'image/gif']);
 define('ALLOWED_VIDEO_EXT', ['mp4' => 'video/mp4', 'webm' => 'video/webm', 'mov' => 'video/quicktime']);
@@ -30,14 +41,17 @@ function savePosts($file, $posts) {
     file_put_contents($file, json_encode($posts, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 }
 
-function requireAdminToken() {
-    $headers = function_exists('getallheaders') ? getallheaders() : [];
-    $token = $headers['X-Admin-Token'] ?? $headers['X-admin-token'] ?? ($_SERVER['HTTP_X_ADMIN_TOKEN'] ?? '');
-    if (!hash_equals(ADMIN_TOKEN, (string)$token)) {
+function requireAdminSession() {
+    if (empty($_SESSION['admin'])) {
         http_response_code(401);
         echo json_encode(["error" => "Unauthorized"]);
         exit;
     }
+}
+
+function verifyAdminPassword($password) {
+    $computed = hash_pbkdf2('sha256', (string)$password, ADMIN_PASSWORD_SALT, ADMIN_PASSWORD_ITERATIONS);
+    return hash_equals(ADMIN_PASSWORD_HASH, $computed);
 }
 
 // Проверяет расширение и реальное (не заявленное клиентом) содержимое файла.
@@ -62,6 +76,39 @@ if ($method === 'POST' && isset($_GET['_method']) && $_GET['_method'] === 'PUT')
     $method = 'PUT';
 }
 
+$action = $_GET['action'] ?? '';
+
+// ====================== Аутентификация ======================
+if ($method === 'POST' && $action === 'login') {
+    $body = json_decode(file_get_contents('php://input'), true) ?: [];
+    $password = $body['password'] ?? ($_POST['password'] ?? '');
+
+    // Небольшая задержка усложняет перебор пароля
+    usleep(300000);
+
+    if (verifyAdminPassword($password)) {
+        $_SESSION['admin'] = true;
+        session_regenerate_id(true);
+        echo json_encode(["success" => true]);
+    } else {
+        http_response_code(401);
+        echo json_encode(["error" => "Неверный пароль"]);
+    }
+    exit;
+}
+
+if ($method === 'POST' && $action === 'logout') {
+    $_SESSION = [];
+    session_destroy();
+    echo json_encode(["success" => true]);
+    exit;
+}
+
+if ($method === 'GET' && $action === 'check') {
+    echo json_encode(["authenticated" => !empty($_SESSION['admin'])]);
+    exit;
+}
+
 $id_param = isset($_GET['id']) ? (int)$_GET['id'] : null;
 
 // ====================== GET ======================
@@ -84,7 +131,7 @@ if ($method === 'GET') {
 
 // ====================== POST & PUT ======================
 if ($method === 'POST' || $method === 'PUT') {
-    requireAdminToken();
+    requireAdminSession();
 
     $title = $_POST['title'] ?? '';
     $date = $_POST['date'] ?? '';
@@ -184,7 +231,7 @@ if ($method === 'POST' || $method === 'PUT') {
 
 // ====================== DELETE ======================
 if ($method === 'DELETE') {
-    requireAdminToken();
+    requireAdminSession();
 
     if (!$id_param) {
         http_response_code(400);
