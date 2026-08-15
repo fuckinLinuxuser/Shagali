@@ -11,26 +11,39 @@ const devEmail = "samotuga621@gmail.com";
 
 <footer class="footer">
   <div class="container">
-    <div class="footer-inner">
+    <div class="footer-grid">
 
-      <p class="copyright">
-        © {currentYear} {producer} • Все права защищены
-      </p>
+      <div class="footer-brand">
+        <p class="footer-logo">{producer}</p>
+        <p class="footer-tagline">Театр, который начинается там, где заканчивается сцена.</p>
+        <p class="copyright">© {currentYear} {producer} • Все права защищены</p>
+      </div>
 
-      <p class="credits">
-        Продюсер: 
-        <a href="https://vk.com/shagali" class="person-link">{owner}</a>
-        •
-        Сайт: 
-        <a href="https://t.me/GaiusAugust" class="person-link">{dev}</a>
-      </p>
+      <div class="footer-col">
+        <h3 class="footer-heading">Навигация</h3>
+        <nav class="footer-nav">
+          <a href="#projects">Проекты</a>
+          <a href="#people">Люди</a>
+          <a href="#tours">Гастроли</a>
+          <a href="#blog">Блог</a>
+          <a href="#collaboration-teaser">Сотрудничество</a>
+        </nav>
+      </div>
 
-      <div class="footer-links">
-        <a href="https://vk.com/shagali" class="footer-link">Связаться</a>
-        <span class="sep">•</span>
-        <a href="#projects" class="footer-link">Проекты</a>
-        <span class="sep">•</span>
-        <a href="#tours" class="footer-link">Гастроли</a>
+      <div class="footer-col">
+        <h3 class="footer-heading">Контакты</h3>
+        <a href={`mailto:${ownerEmail}`} class="footer-contact-link">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M3 5.5A1.5 1.5 0 0 1 4.5 4h15A1.5 1.5 0 0 1 21 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5v-13Zm2.2.5 6.8 5.4L18.8 6H5.2Zm13.8 1.4-6.4 5.1a1 1 0 0 1-1.2 0L5 7.4V18h14V7.4Z"/></svg>
+          {ownerEmail}
+        </a>
+        <a href="https://vk.com/shagali" class="footer-social-link" target="_blank" rel="noopener">
+          <span class="vk-badge" aria-hidden="true">VK</span>
+          vk.com/shagali
+        </a>
+        <p class="credits">
+          Продюсер: <a href="https://vk.com/shagali" class="person-link">{owner}</a><br />
+          Сайт: <a href="https://t.me/GaiusAugust" class="person-link">{dev}</a>
+        </p>
       </div>
 
     </div>
@@ -39,12 +52,11 @@ const devEmail = "samotuga621@gmail.com";
 
 <style>
   .footer {
-    background: #1a1a1a;
+    background: #14120e;
     color: #aaa;
-    font-size: 0.9rem;
-    padding: 32px 0 24px;
-    text-align: center;
-    border-top: 1px solid #333;
+    font-size: 0.92rem;
+    padding: 56px 0 28px;
+    border-top: 1px solid #2c2820;
   }
 
   .container {
@@ -53,26 +65,96 @@ const devEmail = "samotuga621@gmail.com";
     padding: 0 20px;
   }
 
-  .footer-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 40px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid #2c2820;
+  }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: #e8c766;
+    margin: 0 0 10px;
+  }
+
+  .footer-tagline {
+    color: #8f8672;
+    font-style: italic;
+    max-width: 34ch;
+    margin: 0 0 20px;
+    line-height: 1.5;
   }
 
   .copyright {
     margin: 0;
-    color: #ccc;
-    font-weight: 500;
+    color: #776f5c;
+    font-size: 0.84rem;
+  }
+
+  .footer-heading {
+    color: #e8dcb8;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0 0 16px;
+    font-weight: 600;
+  }
+
+  .footer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer-nav a,
+  .footer-contact-link,
+  .footer-social-link {
+    color: #bbb;
+    text-decoration: none;
+    transition: color 0.2s;
+    width: fit-content;
+  }
+
+  .footer-nav a:hover,
+  .footer-contact-link:hover,
+  .footer-social-link:hover {
+    color: #d4af37;
+  }
+
+  .footer-contact-link,
+  .footer-social-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .vk-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background: #2c2820;
+    color: #d4af37;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
   }
 
   .credits {
-    margin: 4px 0 0;
-    color: #888;
+    margin: 18px 0 0;
+    color: #776f5c;
+    line-height: 1.6;
   }
 
   .person-link {
-    color: #d4af37;
+    color: #a8956a;
     text-decoration: none;
     transition: color 0.15s ease;
   }
@@ -83,37 +165,17 @@ const devEmail = "samotuga621@gmail.com";
     text-decoration: underline;
   }
 
-  .footer-links {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 4px;
-  }
-
-  .footer-link {
-    color: #bbb;
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-
-  .footer-link:hover {
-    color: #d4af37;
-  }
-
-  .sep {
-    color: #555;
-    user-select: none;
+  @media (max-width: 768px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
   }
 
   @media (max-width: 480px) {
     .footer {
-      padding: 28px 0 20px;
-      font-size: 0.85rem;
-    }
-    .footer-links {
-      flex-wrap: wrap;
-      gap: 8px 14px;
+      padding: 40px 0 24px;
+      font-size: 0.88rem;
     }
   }
 </style>
