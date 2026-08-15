@@ -3,38 +3,122 @@ const { title = "Мир За Сценой" } = Astro.props;
 ---
 
 <header class="header">
-  <div class="curtain-left"></div>
-  <div class="curtain-right"></div>
+  <div class="curtain-left">
+    <div class="curtain-valance"></div>
+    <div class="curtain-tassel"></div>
+  </div>
+  <div class="curtain-right">
+    <div class="curtain-valance"></div>
+    <div class="curtain-tassel"></div>
+  </div>
+
+  <div class="spotlight-cone"></div>
+  <div class="dust-motes"></div>
 
   <div class="spotlight">
     <h1>{title}</h1>
-    
+
     <p class="touch-phrase" id="touchPhrase">
       Прикоснись к театру
     </p>
   </div>
 
-<div class="about-producer">
-  <video
-    class="producer-video"
-    loop
-    muted
-    playsinline
-    preload="none"
-  >
-    <source src="/videos/ez.mp4" type="video/mp4">
-    Ваш браузер не поддерживает видео.
-  </video>
+  <div class="about-producer">
+    <div class="producer-frame">
+      <div class="producer-glow"></div>
+      <video
+        class="producer-video"
+        loop
+        muted
+        playsinline
+        preload="none"
+      >
+        <source src="/videos/ez.mp4" type="video/mp4">
+        Ваш браузер не поддерживает видео.
+      </video>
+    </div>
+    <div class="producer-puddle"></div>
 
-  <h2>Ёжик</h2>
-  <blockquote>Талисман Шагалиного театра</blockquote>
-</div>
+    <h2>Ёжик</h2>
+    <blockquote>Талисман Шагалиного театра</blockquote>
+  </div>
 
   <div class="beam-left"></div>
   <div class="beam-right"></div>
 </header>
 
 <style>
+  .header {
+    isolation: isolate;
+  }
+
+  .header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.55) 100%);
+  }
+
+  /* ═══════════════════ Софит ═══════════════════ */
+
+  .spotlight-cone {
+    position: absolute;
+    top: -8%;
+    left: 50%;
+    width: min(1100px, 140vw);
+    height: 120%;
+    transform: translateX(-50%);
+    background:
+      radial-gradient(ellipse 55% 45% at 50% 0%, rgba(255, 238, 180, 0.32) 0%, rgba(255, 224, 140, 0.14) 32%, transparent 62%),
+      conic-gradient(from 200deg at 50% -10%, transparent 0deg, rgba(255, 232, 170, 0.16) 45deg, rgba(255, 232, 170, 0.22) 90deg, rgba(255, 232, 170, 0.16) 135deg, transparent 180deg);
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 2.4s ease;
+    animation: spotlight-flicker 6s ease-in-out infinite;
+  }
+
+  .header.opened .spotlight-cone {
+    opacity: 1;
+  }
+
+  @keyframes spotlight-flicker {
+    0%, 96%, 100% { filter: brightness(1); }
+    97% { filter: brightness(0.92); }
+    98% { filter: brightness(1.06); }
+  }
+
+  .dust-motes {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 3s ease 0.6s;
+    background-image:
+      radial-gradient(1.5px 1.5px at 20% 30%, rgba(255, 240, 200, 0.55), transparent),
+      radial-gradient(1px 1px at 35% 55%, rgba(255, 240, 200, 0.4), transparent),
+      radial-gradient(1.5px 1.5px at 55% 20%, rgba(255, 240, 200, 0.5), transparent),
+      radial-gradient(1px 1px at 65% 65%, rgba(255, 240, 200, 0.35), transparent),
+      radial-gradient(1.5px 1.5px at 78% 40%, rgba(255, 240, 200, 0.5), transparent),
+      radial-gradient(1px 1px at 45% 75%, rgba(255, 240, 200, 0.4), transparent);
+    background-size: 100% 100%;
+    animation: motes-drift 18s linear infinite;
+  }
+
+  .header.opened .dust-motes {
+    opacity: 1;
+  }
+
+  @keyframes motes-drift {
+    0%   { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+    100% { background-position: 8px -220px, -12px -260px, 6px -200px, -8px -240px, 10px -230px, -6px -210px; }
+  }
+
+  /* ═══════════════════ Заголовок ═══════════════════ */
+
   .touch-phrase {
     display: none;
     font-size: clamp(1.5rem, 6vw, 2.6rem);
@@ -55,7 +139,7 @@ const { title = "Мир За Сценой" } = Astro.props;
   .touch-phrase.appear {
     opacity: 1;
     transform: translateY(0) scale(1);
-    animation: 
+    animation:
       float-up-down 1.5s ease-in-out infinite alternate,
       soft-glow-breath 4.8s ease-in-out infinite;
   }
@@ -69,14 +153,30 @@ const { title = "Мир За Сценой" } = Astro.props;
 
   .spotlight {
     position: relative;
-    z-index: 1;
-    animation: spotlight 2.8s infinite alternate;
+    z-index: 3;
     color: rgb(253, 245, 199);
   }
 
-  @keyframes spotlight {
-    0%   { text-shadow: 0 0 8px gold; }
-    100% { text-shadow: 0 0 24px gold; }
+  .spotlight h1 {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+    letter-spacing: 0.04em;
+    transition: opacity 1.4s ease, transform 1.4s cubic-bezier(0.22, 1, 0.36, 1), text-shadow 2.8s ease-in-out;
+    animation: spotlight-glow 2.8s infinite alternate;
+    animation-play-state: paused;
+  }
+
+  .header.opened .spotlight h1 {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition-delay: 0.9s;
+    animation-play-state: running;
+    animation-delay: 2.3s;
+  }
+
+  @keyframes spotlight-glow {
+    0%   { text-shadow: 0 0 10px gold, 0 0 26px rgba(212, 175, 55, 0.35); }
+    100% { text-shadow: 0 0 26px gold, 0 0 60px rgba(212, 175, 55, 0.55); }
   }
 
   @keyframes float-up-down {
@@ -85,78 +185,168 @@ const { title = "Мир За Сценой" } = Astro.props;
   }
 
   @keyframes soft-glow-breath {
-    0%   { 
-      text-shadow: 0 0 20px rgba(212,175,55,0.65), 0 0 40px rgba(212,175,55,0.3); 
+    0%   {
+      text-shadow: 0 0 20px rgba(212,175,55,0.65), 0 0 40px rgba(212,175,55,0.3);
       filter: brightness(1);
     }
-    100% { 
-      text-shadow: 0 0 50px rgba(212,175,55,0.95), 0 0 90px rgba(212,175,55,0.55); 
+    100% {
+      text-shadow: 0 0 50px rgba(212,175,55,0.95), 0 0 90px rgba(212,175,55,0.55);
       filter: brightness(1.12);
     }
   }
 
+  /* ═══════════════════ Блок «Ёжик» ═══════════════════ */
 
- .about-producer h2 {
-  margin-top: 80px;
-  margin-bottom: auto;
-}
-  /* === Видео === */
-.producer-video {
-  border-radius: 100%;
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-  width: 350px;
-  height: 350px;
-  object-fit: cover;
-  border: 3px solid gold;
-  display: block;
-  background: #111;
-  transform: translateZ(0);           /* фиксит rendering в Chrome */
-  -webkit-transform: translateZ(0);
-  will-change: transform;
-  margin: auto;
-}
+  .about-producer h2 {
+    margin: 1.6rem 0 0.4rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    color: #ffd54f;
+    letter-spacing: 0.02em;
+  }
 
-.producer-video:playing {
-  background: transparent;
-}
+  .about-producer blockquote {
+    margin: 0 auto;
+    max-width: 420px;
+    font-style: italic;
+    color: #d8cdb8;
+    font-size: 1.05rem;
+  }
+
+  .producer-frame {
+    position: relative;
+    width: 350px;
+    height: 350px;
+    margin: 0 auto;
+  }
+
+  .producer-glow {
+    position: absolute;
+    inset: -18px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.35) 0%, transparent 70%);
+    filter: blur(6px);
+    animation: producer-glow-pulse 3.6s ease-in-out infinite;
+  }
+
+  @keyframes producer-glow-pulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50%      { opacity: 1; transform: scale(1.05); }
+  }
+
+  .producer-video {
+    position: relative;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px #0f0f0a, 0 0 0 6px gold, 0 12px 40px rgba(0, 0, 0, 0.6);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    background: #111;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform;
+  }
+
+  .producer-puddle {
+    width: 220px;
+    height: 34px;
+    margin: 4px auto 0;
+    background: radial-gradient(ellipse, rgba(255, 215, 0, 0.28) 0%, transparent 75%);
+    filter: blur(2px);
+  }
 
   .about-producer {
     text-align: center;
     opacity: 0;
-    transform: translateY(30px);
-    filter: blur(5px);
-    transition: all 1.5s ease 0.5s;
+    transform: translateY(40px);
+    filter: blur(6px);
+    transition: opacity 1.6s ease, transform 1.6s cubic-bezier(0.22, 1, 0.36, 1), filter 1.6s ease;
     margin-top: 20px;
     z-index: 1;
     display: flex;
-    flex-direction: column; /* Элементы встают друг под друга: видео сверху, h2 снизу */
-    align-items: center;    /* Центрирует и видео, и h2 по горизонтали */
-    min-height: 500px;      /* Задайте высоту блоку, чтобы h2 было куда падать вниз */
+    flex-direction: column;
+    align-items: center;
+    min-height: 500px;
     position: relative;
-    
   }
 
-  .header:hover .about-producer {
+  .header.opened .about-producer {
     opacity: 1;
     transform: translateY(0);
     filter: blur(0);
+    transition-delay: 2.6s;
   }
 
-  /* Остальные стили (шторы, лучи и т.д.) */
+  /* ═══════════════════ Кулисы ═══════════════════ */
+
   .curtain-left, .curtain-right {
     position: absolute;
     top: 0;
-    width: 50%;
+    width: 52%;
     height: 100%;
-    background: rgba(139, 0, 0, 0.53);
-    transition: transform 2s ease;
+    z-index: 5;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.32) 0px,
+        rgba(255, 255, 255, 0.05) 7px,
+        rgba(0, 0, 0, 0.28) 15px,
+        rgba(0, 0, 0, 0) 26px
+      ),
+      linear-gradient(180deg, #7d0f26 0%, #57091b 45%, #380611 80%, #240309 100%);
+    box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.55);
+    transition: transform 1.7s cubic-bezier(0.65, 0, 0.35, 1), box-shadow 1.7s ease;
+    transform-origin: top center;
   }
 
-  .curtain-left  { left: 0; }
-  .curtain-right { right: 0; }
+  .curtain-left  { left: 0; box-shadow: inset -40px 0 60px -20px rgba(0, 0, 0, 0.6); }
+  .curtain-right { right: 0; box-shadow: inset 40px 0 60px -20px rgba(0, 0, 0, 0.6); }
 
-  .header:hover .curtain-left  { transform: translateX(-100%); }
-  .header:hover .curtain-right { transform: translateX(100%); }
+  .curtain-valance {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 46px;
+    background:
+      repeating-linear-gradient(90deg, #a4172f 0 18px, #7d0f26 18px 36px),
+      linear-gradient(180deg, #b8862a 0%, #d4af37 40%, #b8862a 100%);
+    background-blend-mode: multiply, normal;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
+  }
+
+  .curtain-tassel {
+    position: absolute;
+    top: 46px;
+    width: 10px;
+    height: 90px;
+    background: linear-gradient(180deg, #d4af37, #8a6a1f);
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  }
+
+  .curtain-left .curtain-tassel  { right: 14px; }
+  .curtain-right .curtain-tassel { left: 14px; }
+
+  .header.opened .curtain-left {
+    transform: translateX(-104%) rotateZ(-2deg);
+  }
+
+  .header.opened .curtain-right {
+    transform: translateX(104%) rotateZ(2deg);
+  }
+
+  /* Лёгкое дыхание кулис в состоянии покоя (открыты) */
+  .header.opened .curtain-left,
+  .header.opened .curtain-right {
+    animation: curtain-idle-sway 7s ease-in-out 2.5s infinite;
+  }
+
+  @keyframes curtain-idle-sway {
+    0%, 100% { filter: brightness(1); }
+    50%      { filter: brightness(1.04); }
+  }
 
   .beam-left, .beam-right {
     position: absolute;
@@ -168,51 +358,73 @@ const { title = "Мир За Сценой" } = Astro.props;
     pointer-events: none;
     background: linear-gradient(to top, rgba(255, 215, 0, 0.8) 0%, rgba(255, 215, 0, 0.4) 30%, transparent 70%);
     filter: blur(12px);
-    transition: opacity 2.5s ease-out;
+    transition: opacity 2.5s ease 1.6s;
   }
 
-  .header:hover .beam-left,
-  .header:hover .beam-right {
-    opacity: 0.75;
+  .header.opened .beam-left,
+  .header.opened .beam-right {
+    opacity: 0.55;
   }
 
   .beam-left  { left: 0; clip-path: polygon(0 100%, 100% 100%, 70% 0); }
   .beam-right { right: 0; clip-path: polygon(0 100%, 100% 100%, 30% 0); }
 
   @media (max-width: 768px) {
-    .producer-video {
+    .producer-frame {
       width: 250px;
       height: 250px;
+    }
+
+    .producer-puddle {
+      width: 160px;
+    }
+
+    .spotlight-cone {
+      width: 220vw;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .curtain-left, .curtain-right,
+    .spotlight h1, .about-producer, .spotlight-cone, .dust-motes,
+    .touch-phrase {
+      transition-duration: 0.01ms !important;
+      animation: none !important;
     }
   }
 </style>
 
 <script is:inline>
-  document.addEventListener('DOMContentLoaded', () => {
+  (() => {
+    const header = document.querySelector('.header');
     const phrase = document.getElementById('touchPhrase');
-    if (!phrase) return;
+    const video = document.querySelector('.producer-video');
 
-    // Появление фразы
-    setTimeout(() => {
-      phrase.classList.add('appear');
-    }, 800);
+    // === Открытие занавеса при загрузке страницы ===
+    if (header) {
+      setTimeout(() => header.classList.add('opened'), 350);
+    }
 
-    const hideHandler = () => {
-      if (phrase.classList.contains('hide')) return;
-      
-      phrase.classList.remove('appear');
-      phrase.classList.add('hide');
-      phrase.removeEventListener('click', hideHandler);
-      phrase.removeEventListener('touchstart', hideHandler);
-    };
+    // === Появление фразы «Прикоснись к театру» после открытия кулис ===
+    if (phrase) {
+      setTimeout(() => {
+        phrase.classList.add('appear');
+      }, 2100);
 
-    phrase.addEventListener('click', hideHandler);
-    phrase.addEventListener('touchstart', hideHandler, { passive: true });
+      const hideHandler = () => {
+        if (phrase.classList.contains('hide')) return;
 
-    // Мобильная большая зона касания
-    if (window.matchMedia("(max-width: 768px)").matches) {
-      const header = phrase.closest('.header');
-      if (header) {
+        phrase.classList.remove('appear');
+        phrase.classList.add('hide');
+        phrase.removeEventListener('click', hideHandler);
+        phrase.removeEventListener('touchstart', hideHandler);
+      };
+
+      phrase.addEventListener('click', hideHandler);
+      phrase.addEventListener('touchstart', hideHandler, { passive: true });
+
+      // Мобильная большая зона касания
+      if (window.matchMedia("(max-width: 768px)").matches && header) {
         const overlay = document.createElement('div');
         overlay.className = 'touch-overlay';
         header.appendChild(overlay);
@@ -220,25 +432,15 @@ const { title = "Мир За Сценой" } = Astro.props;
         overlay.addEventListener('touchstart', hideHandler, { passive: true });
       }
     }
-  });
 
-
-  // === Видео грузится и запускается только при наведении на шапку (там же, где .about-producer становится видимым) ===
-const video = document.querySelector('.producer-video');
-const header = document.querySelector('.header');
-if (video && header) {
-  video.muted = true;
-  let started = false;
-
-  const startVideo = () => {
-    if (started) return;
-    started = true;
-    video.play().catch(error => console.warn('Autoplay prevented:', error));
-  };
-
-  header.addEventListener('mouseenter', startVideo);
-  header.addEventListener('touchstart', startVideo, { passive: true, once: true });
-}
+    // === Видео Ёжика запускается вместе с появлением его блока ===
+    if (video) {
+      video.muted = true;
+      setTimeout(() => {
+        video.play().catch(error => console.warn('Autoplay prevented:', error));
+      }, 2650);
+    }
+  })();
 </script>
 
 <!-- Мобильный overlay -->
@@ -247,7 +449,7 @@ if (video && header) {
   .touch-overlay {
     position: absolute;
     inset: 0;
-    z-index: 5;
+    z-index: 6;
     background: transparent;
     touch-action: manipulation;
   }
