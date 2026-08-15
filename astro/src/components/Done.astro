@@ -124,39 +124,109 @@
     margin-bottom: 0.8rem;
   }
 
-  /* Специальный контейнер для Кукушонка */
+  /* Афиша текущего спектакля */
   .special-play-kukushonok {
-    background: white;
-    border-radius: 20px;
+    display: grid;
+    grid-template-columns: minmax(260px, 1fr) minmax(320px, 1.15fr);
+    align-items: stretch;
+    background: #fff;
+    border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
     cursor: pointer;
     transition: all 0.4s ease;
-    max-width: 520px;
+    max-width: 980px;
     margin: 0 auto 3rem;
+    text-align: left;
   }
 
   .special-play-kukushonok:hover {
-    transform: translateY(-12px);
-    box-shadow: 0 25px 60px rgba(212, 175, 55, 0.3);
+    transform: translateY(-10px);
+    box-shadow: 0 30px 65px rgba(212, 175, 55, 0.28);
+  }
+
+  .kukushonok-media {
+    position: relative;
+    min-height: 320px;
   }
 
   .kukushonok-image {
     width: 100%;
-    height: 340px;
+    height: 100%;
     object-fit: cover;
+    display: block;
+  }
+
+  .kukushonok-badge {
+    position: absolute;
+    top: 1.2rem;
+    left: 1.2rem;
+    background: rgba(20, 18, 12, 0.75);
+    color: #e8c766;
+    font-size: 0.76rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid rgba(212, 175, 55, 0.5);
   }
 
   .kukushonok-info {
-    padding: 1.8rem 2rem;
-    text-align: center;
+    padding: 2.6rem 2.6rem 2.4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: linear-gradient(160deg, #fffdf7, #f6efe0);
+  }
+
+  .kukushonok-eyebrow {
+    color: #a4831f;
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
   }
 
   .kukushonok-title {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(1.8rem, 4.5vw, 2.4rem);
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
     color: #222;
-    margin-bottom: 0.5rem;
+    line-height: 1.15;
+    margin-bottom: 1rem;
+  }
+
+  .kukushonok-quote {
+    font-style: italic;
+    color: #555;
+    border-left: 3px solid #d4af37;
+    padding-left: 1rem;
+    margin: 0 0 1.4rem;
+  }
+
+  .kukushonok-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .kukushonok-meta span {
+    font-size: 0.8rem;
+    color: #8a7a4e;
+    border: 1px solid #dfd2ab;
+    border-radius: 999px;
+    padding: 0.3rem 0.8rem;
+  }
+
+  .kukushonok-cta {
+    color: #a4831f;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .special-play-kukushonok:hover .kukushonok-cta {
+    color: #d4af37;
   }
 
   /* Модалка */
@@ -330,12 +400,16 @@
       font-size: clamp(1.5rem, 6.5vw, 2rem);
     }
 
-    .kukushonok-image {
-      height: 220px;
+    .special-play-kukushonok {
+      grid-template-columns: 1fr;
+    }
+
+    .kukushonok-media {
+      min-height: 220px;
     }
 
     .kukushonok-info {
-      padding: 1.4rem 1.2rem;
+      padding: 1.6rem 1.4rem 1.8rem;
     }
 
     .modal-overlay {
@@ -467,10 +541,20 @@
       if (kukushonok) {
         html += `
           <div class="special-play-kukushonok" data-play-id="${kukushonok.id}">
-            <img src="${kukushonok.image}" alt="${kukushonok.title}" class="kukushonok-image" loading="lazy">
+            <div class="kukushonok-media">
+              <img src="${kukushonok.image}" alt="${kukushonok.title}" class="kukushonok-image" loading="lazy">
+              <span class="kukushonok-badge">Идёт сейчас</span>
+            </div>
             <div class="kukushonok-info">
+              <span class="kukushonok-eyebrow">Играем в Санкт-Петербурге</span>
               <div class="kukushonok-title">${kukushonok.title}</div>
-              <p style="color: #666; margin-top: 0.5rem;">Нажмите для подробностей</p>
+              ${kukushonok.quote ? `<p class="kukushonok-quote">${escapeHtml(kukushonok.quote)}</p>` : ''}
+              <div class="kukushonok-meta">
+                <span>${escapeHtml(kukushonok.duration)}</span>
+                <span>${escapeHtml(kukushonok.ageRestriction)}</span>
+                <span>${escapeHtml(kukushonok.dates.join(' • '))}</span>
+              </div>
+              <span class="kukushonok-cta">Подробнее о спектакле →</span>
             </div>
           </div>
         `;

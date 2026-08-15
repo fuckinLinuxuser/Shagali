@@ -3,28 +3,29 @@
 ---
 
 <style>
-  body {
-    font-family: 'Arial', sans-serif;
-    background-color: #1e1e17ec;
-    color: #000000;
-    margin: 0;
-    padding: 0;
-  }
-
   .our-people {
-    max-width: 1400px;
-    margin: 60px auto;
-    padding: 0 20px;
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    padding: 90px 20px 100px;
     text-align: center;
+    background: radial-gradient(circle at 50% 0%, #262117 0%, #14120d 60%, #0f0e0a 100%);
   }
 
   .our-people h1 {
     font-size: 2.8em;
-    margin-bottom: 50px;
-    color: #222;
+    margin-bottom: 12px;
+    color: #f1e6c9;
     text-transform: uppercase;
     letter-spacing: 3px;
     position: relative;
+  }
+
+  .our-people .people-subtitle {
+    color: #a9a08a;
+    font-style: italic;
+    margin: 0 0 50px;
+    font-size: 1.02rem;
   }
 
   .our-people h1::after {
@@ -40,56 +41,81 @@
 
   .people-grid {
     display: flex;
-    flex-wrap: nowrap;
-    gap: 20px;
-    justify-content: safe center;
-    overflow-x: auto;
-    padding: 30px 40px 40px;
-    scroll-behavior: smooth;
-    scroll-snap-type: x proximity;
-    -webkit-overflow-scrolling: touch;
+    flex-wrap: wrap;
+    gap: 32px;
+    justify-content: center;
+    padding: 30px 20px 10px;
   }
 
   .person-card {
-    width: 250px;
+    width: 240px;
     flex: 0 0 auto;
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-    transition: all 0.28s ease;
+    background: transparent;
+    border-radius: 0;
+    overflow: visible;
+    box-shadow: none;
+    transition: transform 0.3s ease;
     display: flex;
     flex-direction: column;
-    scroll-snap-align: center;
   }
 
   .person-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 12px 28px rgba(0,0,0,0.18);
   }
 
   .person-image {
-    width: 100%;
-    height: 250px;
+    width: 176px;
+    height: 176px;
+    margin: 0 auto;
+    border-radius: 50%;
     object-fit: cover;
+    border: 3px solid #d4af37;
+    box-shadow: 0 0 0 6px rgba(212, 175, 55, 0.14), 0 14px 30px rgba(0, 0, 0, 0.55);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .person-card:hover .person-image {
+    box-shadow: 0 0 0 8px rgba(212, 175, 55, 0.22), 0 18px 36px rgba(0, 0, 0, 0.6);
   }
 
   .person-info {
     flex-grow: 1;
-    padding: 22px 20px;
+    padding: 20px 8px 8px;
     text-align: center;
   }
 
-  .read-full-btn {
-    margin: 0 20px 20px;
-    padding: 0.7rem 1.4rem;
-    background: #d4af37;
-    color: #1a1a1a;
-    border: none;
-    border-radius: 8px;
+  .person-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.28rem;
     font-weight: 600;
+    color: #f3ead2;
+    margin: 0 0 6px;
+  }
+
+  .person-role {
+    color: #b9ac86;
+    font-size: 0.9rem;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  .read-full-btn {
+    margin: 18px 20px 0;
+    padding: 0.6rem 1.3rem;
+    background: transparent;
+    color: #d4af37;
+    border: 1px solid #d4af37;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.85rem;
     cursor: pointer;
     align-self: center;
+    transition: all 0.25s ease;
+  }
+
+  .read-full-btn:hover {
+    background: #d4af37;
+    color: #1a1a1a;
   }
 
   .bio-content { display: none; }
@@ -202,7 +228,7 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
     background: #000 !important;
     aspect-ratio: 9 / 16 !important;
-        background: red !important;   /* должно стать красным */
+    background: #000 !important;
   }
 
   .modal-video-item video {
@@ -250,6 +276,7 @@
 
 <section id="people" class="our-people">
   <h1>Драйверы проекта</h1>
+  <p class="people-subtitle">Те, кто держит на себе Шагалиный театр</p>
 
   <div class="people-grid">
         
