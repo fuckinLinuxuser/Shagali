@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "dev:php": "php -S localhost:8000 -t public",
+    "dev:all": "concurrently -n astro,php -c blue,magenta \"npm:dev\" \"npm:dev:php\"",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
@@ -18,5 +19,8 @@
     "keen-slider": "^6.8.6",
     "leaflet": "^1.9.4",
     "swiper": "^12.1.0"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
   }
 }
