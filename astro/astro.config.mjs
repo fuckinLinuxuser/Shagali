@@ -14,5 +14,15 @@ export default defineConfig({
   trailingSlash: 'never',
   build: {
     format: 'directory'
+  },
+
+  // В деве api.php выполняется отдельным PHP-сервером (см. README/скрипт dev:php),
+  // проксируем запросы к нему, чтобы фронтенд работал как на проде через один порт.
+  vite: {
+    server: {
+      proxy: {
+        '/api.php': 'http://localhost:8000'
+      }
+    }
   }
 });
