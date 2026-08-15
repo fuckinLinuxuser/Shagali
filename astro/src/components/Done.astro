@@ -2,7 +2,6 @@
 // Done.astro
 
 const upcoming = [
-  { img: '/images/projects/doggy.jpeg', title: 'Мамочка, купи собаку!' },
   { img: '/images/projects/papa_karlo.jpg', title: 'Откуда взялся папа Карло?' },
   { img: '/images/projects/indigo.jpg', title: 'Растворимый Индиго' },
 ];
@@ -12,10 +11,6 @@ const upcoming = [
   <div class="container">
     <h1 class="section-title">Пройденные спектакли</h1>
     <p class="subtitle">Города, в которых мы играли</p>
-
-    <div class="plays-header">
-      <h2 id="playsTitle">Санкт-Петербург — спектакли</h2>
-    </div>
 
     <div class="plays-grid" id="playsGrid"></div>
 
@@ -116,31 +111,22 @@ const upcoming = [
   }
 
   .plays-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+  }
+
+  .city-group + .city-group {
+    padding-top: 3rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .featured-plays {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(290px, 100%), 1fr));
-    gap: 1.6rem;
-  }
-
-  .play-item {
-    background: white;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 16px;
-    padding: 1.8rem;
-    cursor: pointer;
-    transition: all 0.35s ease;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
-  }
-
-  .play-item:hover {
-    border-color: #d4af37;
-    transform: translateY(-6px);
-    box-shadow: 0 15px 35px rgba(212, 175, 55, 0.18);
-  }
-
-  .play-title {
-    font-size: clamp(1.2rem, 3vw, 1.45rem);
-    font-weight: 600;
-    margin-bottom: 0.8rem;
+    grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+    gap: 2rem;
+    max-width: 980px;
+    margin: 0 auto;
   }
 
   /* Анонсы будущих постановок */
@@ -230,8 +216,6 @@ const upcoming = [
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
     cursor: pointer;
     transition: all 0.4s ease;
-    max-width: 980px;
-    margin: 0 auto 3rem;
     text-align: left;
   }
 
@@ -495,6 +479,14 @@ const upcoming = [
       font-size: clamp(1.5rem, 6.5vw, 2rem);
     }
 
+    .featured-plays {
+      grid-template-columns: 1fr;
+    }
+
+    .city-group + .city-group {
+      padding-top: 2rem;
+    }
+
     .special-play-kukushonok {
       grid-template-columns: 1fr;
     }
@@ -556,8 +548,30 @@ const upcoming = [
 
   type Actor = { name: string; role: string; bio?: string; image?: string; video?: string };
 
+  const kukushonokActors: Actor[] = [
+    {
+      name: 'Валерия',
+      role: 'Актриса',
+      video: '/videos/valeria.mp4',
+      bio: 'Она из тех людей, которых хочешь видеть в своем будущем сталкерском отряде. С пути не свернёт даже при сильном шторме. Патроны вовремя поднесёт (причем молча, что особенно важно в сложной ситуации). Будет уверенно держать атаку зомби в узком дверном проёме, отбиваясь попеременно лопатой и букетом гладиолусов… При этом шикарно танцует танго, готовит какие-то невероятные оладушки и вечерами смотрит с детворой хорошие советские фильмы.\n\nЛюблю видеть её на сцене. Знаю, что буду чувствовать и проживать вслед за ней. Буду внутри повторять ее реплики и тайком плакать ее слезами. Живая. Сложная. Странная.\n\nВ общем, не актриса, а мечта. Не ту женщину Сарой Коннор назвали.\n\nДа и не надо. Наша – интереснее. И моложе, кстати!'
+    },
+    {
+      name: 'Анна',
+      role: 'Актриса. Хореограф.',
+      video: '/videos/anna.mp4',
+      bio: 'При всей своей внешней хрупкости эта девушка умеет упереться лапкой и упорно добиваться поставленной цели – сказывается балетная выучка. Мечтает об ярком музыкальном шоу, которое мы могли бы провезти по всей стране. И мы шаг за шагом идем к тому, чтобы реализовать эту красивую мечту.\n\nПотому что какой смысл жить в мире, который не украшен музыкой и движением?\n\nМожет, она не построит мощный каменный дом. Зато вы бы видели, какие нежные и парящие воздушные замки она строит одним поворотом головы.\n\nВероятно, она не будет угощать нас на репетициях свежевыращенными кабачками. Но когда она заходит в театр – все лица расцветают улыбками.\n\nКрасоту нужно уметь создавать, и это идёт изнутри.\n\nУ неё – получается.'
+    },
+    { name: 'Егор', role: 'Актер' },
+    { name: 'Алексей', role: 'Актер' }
+  ];
+
+  const kukushonokDescription = 'Драму проживает каждый Ребенок, разочаровавший своих родителей. Трагедию носит в себе каждая Мать, оттолкнувшая своего ребенка...';
+  const kukushonokQuote = '"Спектакль о том, как взрослеют родители..."';
+
   const playsData: {
     id: string;
+    city: string;
+    citySlug: string;
     title: string;
     dates: string[];
     description: string;
@@ -569,35 +583,42 @@ const upcoming = [
   }[] = [
     {
       id: 'kukushonok',
+      city: 'Санкт-Петербург',
+      citySlug: 'spb',
       title: 'Родной мой Кукушонок',
       dates: ['28 июня 2026'],
-      description: 'Драму проживает каждый Ребенок, разочаровавший своих родителей. Трагедию носит в себе каждая Мать, оттолкнувшая своего ребенка...',
-      quote: '"Спектакль о том, как взрослеют родители..."',
+      description: kukushonokDescription,
+      quote: kukushonokQuote,
       image: '/images/projects/kukushonok.JPG',
-      actors: [
-        {
-          name: 'Валерия',
-          role: 'Актриса',
-          video: '/videos/valeria.mp4',
-          bio: 'Она из тех людей, которых хочешь видеть в своем будущем сталкерском отряде. С пути не свернёт даже при сильном шторме. Патроны вовремя поднесёт (причем молча, что особенно важно в сложной ситуации). Будет уверенно держать атаку зомби в узком дверном проёме, отбиваясь попеременно лопатой и букетом гладиолусов… При этом шикарно танцует танго, готовит какие-то невероятные оладушки и вечерами смотрит с детворой хорошие советские фильмы.\n\nЛюблю видеть её на сцене. Знаю, что буду чувствовать и проживать вслед за ней. Буду внутри повторять ее реплики и тайком плакать ее слезами. Живая. Сложная. Странная.\n\nВ общем, не актриса, а мечта. Не ту женщину Сарой Коннор назвали.\n\nДа и не надо. Наша – интереснее. И моложе, кстати!'
-        },
-        {
-          name: 'Анна',
-          role: 'Актриса. Хореограф.',
-          video: '/videos/anna.mp4',
-          bio: 'При всей своей внешней хрупкости эта девушка умеет упереться лапкой и упорно добиваться поставленной цели – сказывается балетная выучка. Мечтает об ярком музыкальном шоу, которое мы могли бы провезти по всей стране. И мы шаг за шагом идем к тому, чтобы реализовать эту красивую мечту.\n\nПотому что какой смысл жить в мире, который не украшен музыкой и движением?\n\nМожет, она не построит мощный каменный дом. Зато вы бы видели, какие нежные и парящие воздушные замки она строит одним поворотом головы.\n\nВероятно, она не будет угощать нас на репетициях свежевыращенными кабачками. Но когда она заходит в театр – все лица расцветают улыбками.\n\nКрасоту нужно уметь создавать, и это идёт изнутри.\n\nУ неё – получается.'
-        },
-        {
-          name: 'Егор',
-          role: 'Актер'
-        },
-        {
-          name: 'Алексей',
-          role: 'Актер'
-        }
-      ],
+      actors: kukushonokActors,
       duration: '1 час 30 минут',
       ageRestriction: '16+'
+    },
+    {
+      id: 'kukushonok-tyumen',
+      city: 'Тюмень',
+      citySlug: 'tyumen',
+      title: 'Родной мой Кукушонок',
+      dates: ['1 августа 2026'],
+      description: kukushonokDescription,
+      quote: kukushonokQuote,
+      image: '/images/projects/kukushonok.JPG',
+      actors: kukushonokActors,
+      duration: '1 час 30 минут',
+      ageRestriction: '16+'
+    },
+    {
+      id: 'sobaka-tyumen',
+      city: 'Тюмень',
+      citySlug: 'tyumen',
+      title: 'Мамочка, купи собаку!',
+      dates: ['1 августа 2026'],
+      description: 'Милая пушистая игрушка, в которой отражается всё счастье твоего детства. Смешной товарищ по играм и соучастник мелких шалостей. И крупных семейных разборок заодно! Когда у Ребёнка из друзей только цифровая колонка, то собака становится заветной мечтой… А родители видят в собаке источник дополнительных проблем. Однажды собака может надоесть. Впрочем, не только родителям…',
+      quote: 'Сказка про то, как собака учит быть взрослыми. Причем учит не только детей.',
+      image: '/images/projects/doggy.jpeg',
+      actors: [],
+      duration: '',
+      ageRestriction: ''
     }
   ];
 
@@ -628,40 +649,53 @@ const upcoming = [
       return;
     }
 
-    function renderPlays() {
-      let html = '';
-
-      // Специальный блок для Кукушонка
-      const kukushonok = playsData.find(p => p.id === 'kukushonok');
-      if (kukushonok) {
-        html += `
-          <div class="special-play-kukushonok" data-play-id="${kukushonok.id}">
-            <div class="kukushonok-media">
-              <img src="${kukushonok.image}" alt="${kukushonok.title}" class="kukushonok-image" loading="lazy">
-              <span class="kukushonok-badge">Идёт сейчас</span>
+    function renderPlayCard(play: typeof playsData[number]) {
+      return `
+        <div class="special-play-kukushonok" data-play-id="${play.id}">
+          <div class="kukushonok-media">
+            <img src="${play.image}" alt="${escapeHtml(play.title)}" class="kukushonok-image" loading="lazy">
+            <span class="kukushonok-badge">Идёт сейчас</span>
+          </div>
+          <div class="kukushonok-info">
+            <span class="kukushonok-eyebrow">Играем в ${escapeHtml(play.city)}</span>
+            <div class="kukushonok-title">${escapeHtml(play.title)}</div>
+            ${play.quote ? `<p class="kukushonok-quote">${escapeHtml(play.quote)}</p>` : ''}
+            <div class="kukushonok-meta">
+              ${play.duration ? `<span>${escapeHtml(play.duration)}</span>` : ''}
+              ${play.ageRestriction ? `<span>${escapeHtml(play.ageRestriction)}</span>` : ''}
+              <span>${escapeHtml(play.dates.join(' • '))}</span>
             </div>
-            <div class="kukushonok-info">
-              <span class="kukushonok-eyebrow">Играем в Санкт-Петербурге</span>
-              <div class="kukushonok-title">${kukushonok.title}</div>
-              ${kukushonok.quote ? `<p class="kukushonok-quote">${escapeHtml(kukushonok.quote)}</p>` : ''}
-              <div class="kukushonok-meta">
-                <span>${escapeHtml(kukushonok.duration)}</span>
-                <span>${escapeHtml(kukushonok.ageRestriction)}</span>
-                <span>${escapeHtml(kukushonok.dates.join(' • '))}</span>
-              </div>
-              <span class="kukushonok-cta">Подробнее о спектакле →</span>
+            <span class="kukushonok-cta">Подробнее о спектакле →</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderPlays() {
+      // Группируем спектакли по городам, сохраняя порядок первого появления
+      const citySlugs: string[] = [];
+      const byCity: Record<string, typeof playsData> = {};
+      playsData.forEach(play => {
+        if (!byCity[play.citySlug]) {
+          byCity[play.citySlug] = [];
+          citySlugs.push(play.citySlug);
+        }
+        byCity[play.citySlug].push(play);
+      });
+
+      const html = citySlugs.map(slug => {
+        const plays = byCity[slug];
+        return `
+          <div class="city-group" id="done-${slug}">
+            <div class="plays-header">
+              <h2>${escapeHtml(plays[0].city)} — спектакли</h2>
+            </div>
+            <div class="featured-plays">
+              ${plays.map(renderPlayCard).join('')}
             </div>
           </div>
         `;
-      }
-
-      // Остальные спектакли
-      html += playsData.filter(p => p.id !== 'kukushonok').map(play => `
-        <div class="play-item" data-play-id="${play.id}">
-          <div class="play-title">${play.title}</div>
-          <div class="play-dates">${play.dates.map(d => `<span>${d}</span>`).join(' • ')}</div>
-        </div>
-      `).join('');
+      }).join('');
 
       playsGrid!.innerHTML = html;
 
