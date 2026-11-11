@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)", "Bash(npm test:*)", "Bash(npm ci)",
+      "Bash(npx playwright:*)", "Bash(docker compose:*)", "Bash(php -l:*)",
+      "Bash(git status:*)", "Bash(git diff:*)", "Bash(git log:*)",
+      "Bash(git checkout -b:*)", "Bash(git add:*)", "Bash(git commit:*)"
+    ],
+    "deny": [
+      "Bash(git push origin main:*)", "Bash(git push -f:*)",
+      "Bash(git push --force:*)", "Bash(git reset --hard:*)",
+      "Read(./docker/config.local.php)", "Read(./.env)", "Read(./.env.*)"
+    ]
+  }
+}
