@@ -37,3 +37,7 @@ pnpm-debug.log*
 
 # build output
 dist/
+
+# Playwright
+test-results/
+playwright-report/
