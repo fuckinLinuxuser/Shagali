@@ -338,9 +338,8 @@
     <script>
         // КЛИЕНТСКИЙ СКРИПТ
         (function() {
-            const ADMIN_PASSWORD = 'Saai1001hgl';
-            // Должен совпадать с ADMIN_TOKEN в public/api.php
-            const ADMIN_TOKEN = 'c8f2b6e4a1d94f7c9b3e5a0d2f6c8b41';
+            // Секретов в клиенте нет: пароль проверяет api.php, дальше работает httponly-сессия + CSRF-токен.
+            let csrfToken = '';
             let currentEditId = null;
 
             const loginScreen = document.getElementById('loginScreen');
@@ -356,20 +355,46 @@
 
             // Вход
             if (loginBtn) {
-                loginBtn.addEventListener('click', () => {
-                    if (passwordInput && passwordInput.value.trim() === ADMIN_PASSWORD) {
-                        if (loginScreen) loginScreen.style.display = 'none';
-                        if (adminPanel) adminPanel.style.display = 'block';
-                        loadPosts();
-                    } else {
-                        alert('Неверный пароль администратора!');
+                loginBtn.addEventListener('click', async () => {
+                    try {
+                        const res = await fetch('/api.php?action=login', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ password: passwordInput ? passwordInput.value : '' })
+                        });
+                        if (!res.ok) {
+                            alert(res.status === 401 ? 'Неверный пароль администратора!' : 'Сервер не настроен или недоступен');
+                            return;
+                        }
+                        csrfToken = (await res.json()).csrf;
+                        showPanel();
+                    } catch (err) {
+                        alert('Ошибка сети при входе');
                     }
                 });
             }
 
+            function showPanel() {
+                if (passwordInput) passwordInput.value = '';
+                if (loginScreen) loginScreen.style.display = 'none';
+                if (adminPanel) adminPanel.style.display = 'block';
+                loadPosts();
+            }
+
+            // Если сессия ещё жива (обновили страницу) — войти без пароля
+            fetch('/api.php?action=status').then(async (res) => {
+                if (!res.ok) return;
+                const data = await res.json();
+                if (!data.authenticated) return;
+                csrfToken = data.csrf;
+                showPanel();
+            }).catch(() => {});
+
             // Выход
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', () => {
+                    fetch('/api.php?action=logout', { method: 'POST', headers: { 'X-CSRF-Token': csrfToken } }).catch(() => {});
+                    csrfToken = '';
                     if (passwordInput) passwordInput.value = '';
                     if (adminPanel) adminPanel.style.display = 'none';
                     if (loginScreen) loginScreen.style.display = 'flex';
@@ -467,7 +492,7 @@
                         try {
                             const res = await fetch(`/api.php?id=${id}`, {
                             method: 'DELETE',
-                            headers: { 'X-Admin-Token': ADMIN_TOKEN }
+                            headers: { 'X-CSRF-Token': csrfToken }
                         });
                             if (res.ok) {
                                 loadPosts();
@@ -527,7 +552,7 @@
                     try {
                         const res = await fetch(url, {
                             method: 'POST',
-                            headers: { 'X-Admin-Token': ADMIN_TOKEN },
+                            headers: { 'X-CSRF-Token': csrfToken },
                             body: formData
                         });
                         if (res.ok) {

@@ -6,7 +6,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest run",
+    "lint:php": "find public/api.php public/api -name '*.php' -print0 2>/dev/null | xargs -0 -n1 php -l"
   },
   "dependencies": {
     "@astrojs/node": "^10.1.1",
@@ -17,5 +19,8 @@
     "keen-slider": "^6.8.6",
     "leaflet": "^1.9.4",
     "swiper": "^12.1.0"
+  },
+  "devDependencies": {
+    "vitest": "^5.1.0"
   }
 }
