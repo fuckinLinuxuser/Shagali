@@ -1,12 +1,23 @@
 <?php
-header("Content-Type: application/json; charset=utf-8");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, X-Admin-Token");
+// Секреты (хеш пароля админа) живут в shagali-config.php вне корня сайта:
+//   прод:      /var/www/u3413841/data/shagali-config.php
+//   локально/тесты: путь в переменной окружения SHAGALI_CONFIG
+// Шаблон — shagali-config.example.php в корне репозитория. В этом файле секретов нет.
+define('ALLOWED_ORIGIN', 'https://shagali.ru');
 
-// Секретный токен для админ-панели. Должен совпадать со значением
-// ADMIN_TOKEN в src/pages/admin.astro. Смените оба значения при компрометации.
-define('ADMIN_TOKEN', 'c8f2b6e4a1d94f7c9b3e5a0d2f6c8b41');
+header("Content-Type: application/json; charset=utf-8");
+header("Vary: Origin");
+// CORS: только свой домен, никакого "*" на методах записи.
+if (($_SERVER['HTTP_ORIGIN'] ?? '') === ALLOWED_ORIGIN) {
+    header("Access-Control-Allow-Origin: " . ALLOWED_ORIGIN);
+    header("Access-Control-Allow-Credentials: true");
+    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, X-CSRF-Token");
+}
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
 
 define('ALLOWED_IMAGE_EXT', ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp', 'gif' => 'image/gif']);
 define('ALLOWED_VIDEO_EXT', ['mp4' => 'video/mp4', 'webm' => 'video/webm', 'mov' => 'video/quicktime']);
@@ -30,14 +41,43 @@ function savePosts($file, $posts) {
     file_put_contents($file, json_encode($posts, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 }
 
-function requireAdminToken() {
-    $headers = function_exists('getallheaders') ? getallheaders() : [];
-    $token = $headers['X-Admin-Token'] ?? $headers['X-admin-token'] ?? ($_SERVER['HTTP_X_ADMIN_TOKEN'] ?? '');
-    if (!hash_equals(ADMIN_TOKEN, (string)$token)) {
-        http_response_code(401);
-        echo json_encode(["error" => "Unauthorized"]);
-        exit;
-    }
+function jsonError($code, $message) {
+    http_response_code($code);
+    echo json_encode(["error" => $message], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+function loadConfig() {
+    $path = getenv('SHAGALI_CONFIG') ?: dirname(__DIR__, 2) . '/shagali-config.php';
+    if (!is_file($path)) return null;
+    $config = include $path;
+    return is_array($config) ? $config : null;
+}
+
+function startAdminSession() {
+    if (session_status() === PHP_SESSION_ACTIVE) return;
+    $https = !empty($_SERVER['HTTPS']) || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https';
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'secure' => $https,
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+    session_start();
+}
+
+// Запись только для админа: сессия (иначе 401) + CSRF-токен в заголовке X-CSRF-Token (иначе 403).
+function requireAdminSession() {
+    startAdminSession();
+    if (empty($_SESSION['admin'])) jsonError(401, "Unauthorized");
+}
+
+function requireAdminWrite() {
+    requireAdminSession();
+    $sent = (string)($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
+    $expected = (string)($_SESSION['csrf'] ?? '');
+    if ($expected === '' || !hash_equals($expected, $sent)) jsonError(403, "Bad CSRF token");
 }
 
 // Проверяет расширение и реальное (не заявленное клиентом) содержимое файла.
@@ -64,6 +104,45 @@ if ($method === 'POST' && isset($_GET['_method']) && $_GET['_method'] === 'PUT')
 
 $id_param = isset($_GET['id']) ? (int)$_GET['id'] : null;
 
+// ====================== АВТОРИЗАЦИЯ ======================
+$action = $_GET['action'] ?? '';
+if ($action === 'login' && $method === 'POST') {
+    $config = loadConfig();
+    if (!$config || empty($config['admin_password_hash'])) jsonError(500, "Server is not configured");
+    $input = json_decode(file_get_contents('php://input'), true);
+    $password = is_array($input) ? (string)($input['password'] ?? '') : '';
+    if ($password === '' || !password_verify($password, $config['admin_password_hash'])) {
+        usleep(400000); // притормаживаем перебор
+        jsonError(401, "Wrong password");
+    }
+    startAdminSession();
+    session_regenerate_id(true);
+    $_SESSION['admin'] = true;
+    $_SESSION['csrf'] = bin2hex(random_bytes(32));
+    echo json_encode(["success" => true, "csrf" => $_SESSION['csrf']]);
+    exit;
+}
+// Проба «есть ли живая сессия» для страницы /admin: всегда 200, чтобы не шуметь 401 в консоли.
+if ($action === 'status' && $method === 'GET') {
+    startAdminSession();
+    echo json_encode(empty($_SESSION['admin'])
+        ? ["authenticated" => false]
+        : ["authenticated" => true, "csrf" => $_SESSION['csrf']]);
+    exit;
+}
+if ($action === 'csrf' && $method === 'GET') {
+    requireAdminSession();
+    echo json_encode(["csrf" => $_SESSION['csrf']]);
+    exit;
+}
+if ($action === 'logout' && $method === 'POST') {
+    requireAdminWrite();
+    $_SESSION = [];
+    session_destroy();
+    echo json_encode(["success" => true]);
+    exit;
+}
+
 // ====================== GET ======================
 if ($method === 'GET') {
     $posts = readPosts($posts_file);
@@ -84,7 +163,7 @@ if ($method === 'GET') {
 
 // ====================== POST & PUT ======================
 if ($method === 'POST' || $method === 'PUT') {
-    requireAdminToken();
+    requireAdminWrite();
 
     $title = $_POST['title'] ?? '';
     $date = $_POST['date'] ?? '';
@@ -184,7 +263,7 @@ if ($method === 'POST' || $method === 'PUT') {
 
 // ====================== DELETE ======================
 if ($method === 'DELETE') {
-    requireAdminToken();
+    requireAdminWrite();
 
     if (!$id_param) {
         http_response_code(400);
