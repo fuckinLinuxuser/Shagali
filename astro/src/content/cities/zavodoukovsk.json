@@ -1,0 +1,9 @@
+{
+  "id": "zavodoukovsk",
+  "name": "Заводоуковск",
+  "map": {
+    "x": 348,
+    "y": 640
+  },
+  "visited": false
+}

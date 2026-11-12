@@ -1,0 +1,9 @@
+{
+  "id": "kurgan",
+  "name": "Курган",
+  "map": {
+    "x": 320,
+    "y": 660
+  },
+  "visited": false
+}
