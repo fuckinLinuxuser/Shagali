@@ -1,30 +1,100 @@
 name: Deploy to Reg.ru
 
+# PR и пуши в main: тесты. Деплой — только пуш в main и только после зелёных тестов (needs).
 on:
   push:
     branches: [ main ]
+  pull_request:
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: astro
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: astro/package-lock.json
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - run: npm ci
+      - run: npm run lint:php
+      - run: npm test
+      - run: npm run build
+      - run: npm run check:links
+      - run: npm run check:content
+
+      - name: В dist нет секретов админки
+        run: |
+          if grep -rIEn "ADMIN_TOKEN|X-Admin-Token|c8f2b6e4" dist; then
+            echo "::error::В dist найден токен/пароль админки"
+            exit 1
+          fi
+
+      - name: Поднять docker-стенд
+        working-directory: .
+        run: |
+          sh docker/init-config.sh
+          docker compose up -d
+          for i in $(seq 1 30); do
+            curl -fs -o /dev/null http://localhost:8080/ && exit 0
+            sleep 2
+          done
+          docker compose logs
+          echo "::error::Стенд не поднялся"
+          exit 1
+
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+
+      - name: Отчёт Playwright
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            astro/playwright-report
+            astro/test-results
+          if-no-files-found: ignore
+
+      - name: Собранный сайт для деплоя
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: astro/dist
+
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   deploy:
+    needs: [ test, gitleaks ]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      # Выкладываем ровно тот dist, который прошёл тесты.
+      - name: Скачать собранный сайт
+        uses: actions/download-artifact@v4
         with:
-          node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: astro/package-lock.json   # ← важно!
-
-      - name: Install dependencies
-        working-directory: astro                         # ← здесь!
-        run: npm ci
-
-      - name: Build Astro
-        working-directory: astro                         # ← здесь!
-        run: npm run build
+          name: dist
+          path: astro/dist
 
       - name: Deploy via SSH (rsync)
         uses: burnett01/rsync-deployments@v8

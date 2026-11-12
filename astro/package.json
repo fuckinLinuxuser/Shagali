@@ -8,7 +8,10 @@
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest run",
-    "lint:php": "find public/api.php public/api -name '*.php' -print0 2>/dev/null | xargs -0 -n1 php -l"
+    "lint:php": "find public/api.php public/api -name '*.php' -print0 2>/dev/null | xargs -0 -n1 php -l",
+    "check:links": "node scripts/check-links.mjs",
+    "check:content": "node scripts/check-content.mjs",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@astrojs/node": "^10.1.1",
@@ -21,6 +24,7 @@
     "swiper": "^12.1.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.0",
     "vitest": "^5.1.0"
   }
 }
