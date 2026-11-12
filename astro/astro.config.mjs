@@ -1,11 +1,12 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import contentIntegrity from './scripts/content-integrity.mjs';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://shagali.ru',
-  integrations: [sitemap()],
+  integrations: [sitemap(), contentIntegrity()],
 
   // Переключаем Astro в полностью статический режим
   output: 'static',

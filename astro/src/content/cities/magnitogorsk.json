@@ -1,0 +1,9 @@
+{
+  "id": "magnitogorsk",
+  "name": "Магнитогорск",
+  "map": {
+    "x": 250,
+    "y": 685
+  },
+  "visited": false
+}
