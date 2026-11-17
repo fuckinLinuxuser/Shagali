@@ -1,0 +1,9 @@
+{
+  "id": "ishim",
+  "name": "Ишим",
+  "map": {
+    "x": 400,
+    "y": 625
+  },
+  "visited": false
+}

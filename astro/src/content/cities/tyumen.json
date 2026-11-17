@@ -1,0 +1,9 @@
+{
+  "id": "tyumen",
+  "name": "Тюмень",
+  "map": {
+    "x": 336,
+    "y": 607
+  },
+  "visited": false
+}

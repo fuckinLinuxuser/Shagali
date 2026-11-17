@@ -1,0 +1,9 @@
+{
+  "id": "omsk",
+  "name": "Омск",
+  "map": {
+    "x": 470,
+    "y": 640
+  },
+  "visited": false
+}

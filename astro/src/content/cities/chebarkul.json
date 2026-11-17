@@ -1,0 +1,9 @@
+{
+  "id": "chebarkul",
+  "name": "Чебаркуль",
+  "map": {
+    "x": 240,
+    "y": 635
+  },
+  "visited": false
+}

@@ -1,0 +1,9 @@
+{
+  "id": "yalutorovsk",
+  "name": "Ялуторовск",
+  "map": {
+    "x": 355,
+    "y": 625
+  },
+  "visited": false
+}
