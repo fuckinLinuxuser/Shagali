@@ -1,0 +1,78 @@
+---
+// /spektakli/<id> — спектакль и все его показы. Разделы без данных (галерея, отзывы) не выводятся.
+import MainLayout from '../../layouts/MainLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import PerformanceCard from '../../components/PerformanceCard.astro';
+import { loadCatalog } from '../../lib/catalog';
+import '../../styles/pages.css';
+
+export async function getStaticPaths() {
+  const catalog = await loadCatalog();
+  return catalog.shows.map((show) => ({ params: { slug: show.id }, props: { show, ...catalog.byShow(show.id) } }));
+}
+
+const { show, upcoming, past } = Astro.props;
+const quote = show.quote.trim().replace(/^["«]+|["»]+$/g, '');
+---
+
+<MainLayout title={`${show.title} — спектакль | Мир За Сценой`} description={show.text.slice(0, 160)}>
+  <Nav />
+  <main class="page">
+    <div class="page__inner">
+      <nav class="crumbs" aria-label="Навигация"><a href="/">Главная</a> / Спектакли / {show.title}</nav>
+
+      <div class="show__head">
+        <img class="show__cover" src={show.cover} alt={show.title} />
+        <div>
+          <h1 class="page__title">{show.title}</h1>
+          <p class="show__quote">«{quote}»</p>
+          <p class="show__text">{show.text}</p>
+        </div>
+      </div>
+
+      {
+        upcoming.length > 0 ? (
+          <section data-upcoming>
+            <h2>Ближайшие показы</h2>
+            <ul class="perfs">
+              {upcoming.map((p) => <PerformanceCard {...p} context="show" />)}
+            </ul>
+          </section>
+        ) : (
+          <section data-no-performances>
+            <h2>Ближайшие показы</h2>
+            <div class="empty">
+              <p>Новых дат пока нет.</p>
+              <p>Запишитесь в лист ожидания — сообщим, когда спектакль приедет в ваш город.</p>
+              <a class="pbtn" href="/waitlist">Записаться в лист ожидания</a>
+            </div>
+          </section>
+        )
+      }
+
+      {
+        show.gallery.length > 0 && (
+          <section>
+            <h2>Фото</h2>
+            <div class="show__gallery">
+              {show.gallery.map((src) => <img src={src} alt={show.title} loading="lazy" />)}
+            </div>
+          </section>
+        )
+      }
+
+      {
+        past.length > 0 && (
+          <section data-past>
+            <h2>Прошедшие показы</h2>
+            <ul class="perfs">
+              {past.map((p) => <PerformanceCard {...p} context="show" />)}
+            </ul>
+          </section>
+        )
+      }
+    </div>
+  </main>
+  <Footer />
+</MainLayout>
