@@ -1,0 +1,12 @@
+{
+  "id": "test-gorod-2020-01-10-papa-karlo",
+  "show": "papa-karlo",
+  "city": "test-gorod",
+  "date": "2020-01-10",
+  "time": "19:00",
+  "venue": "Тестовый драмтеатр",
+  "address": "ул. Тестовая, 1",
+  "cbiletomId": 14000,
+  "status": "on_sale",
+  "priceFrom": 900
+}

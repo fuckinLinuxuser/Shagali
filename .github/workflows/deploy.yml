@@ -39,6 +39,9 @@ jobs:
             exit 1
           fi
 
+      # Стенду — отдельная сборка с фикстурами (показы в продаже и т. п.). В деплой уходит только dist выше.
+      - run: npm run build:stand
+
       - name: Поднять docker-стенд
         working-directory: .
         run: |

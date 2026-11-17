@@ -32,9 +32,11 @@
 
 ```
 npm run dev          # дев-сервер Astro (без PHP)
-npm run build        # сборка в astro/dist
+npm run build        # сборка в astro/dist — она и уходит в деплой
+npm run build:stand  # сборка с фикстурами tests/fixtures/content в astro/dist-stand — для стенда и e2e
 npm test             # Vitest: данные, схемы, утилиты
 npm run test:e2e     # Playwright против docker-стенда (статика + PHP + MySQL)
+npm run test:visual  # скриншот-тесты в контейнере Playwright (test:visual:update — переснять базу)
 npm run lint:php     # php -l по всем файлам в public/api
 npm run check:links  # битые ссылки и href="#" в dist
 npm run lhci         # Lighthouse CI по ключевым страницам
@@ -69,6 +71,8 @@ docker compose up -d # из корня репо: локальный стенд A
 - Показ: `id`, `show` (ссылка на спектакль), `city`, `date` (ISO), `time`, `venue`, `address`,
   `cbiletomId` (число или null), `status` (`on_sale` | `sold_out` | `soon` | `past`), `priceFrom`.
 - Если в данных ошибка, сборка должна падать, а не рендерить пустую карточку.
+- Тестовые данные (показ в продаже и т. п.) — только в `astro/tests/fixtures/content`, id на `test-`.
+  В `src/content` фейковых записей не класть: оттуда всё уходит в прод.
 
 ## Безопасность — не обсуждается
 

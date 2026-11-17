@@ -1,0 +1,12 @@
+{
+  "id": "test-gorod-2099-01-15-kukushonok",
+  "show": "kukushonok",
+  "city": "test-gorod",
+  "date": "2099-01-15",
+  "time": "19:00",
+  "venue": "Тестовый драмтеатр",
+  "address": "ул. Тестовая, 1",
+  "cbiletomId": 14088,
+  "status": "on_sale",
+  "priceFrom": 1200
+}

@@ -9,7 +9,19 @@ import {
   tourPlanSchema,
 } from './content/schemas';
 
-const json = (dir: string) => glob({ pattern: '*.json', base: `./src/content/${dir}` });
+// Фикстуры стенда (tests/fixtures/content) — только при SHAGALI_FIXTURES=1, т. е. в `npm run build:stand`.
+// В dist для деплоя их нет: это проверяет check:content.
+const WITH_FIXTURES = process.env.SHAGALI_FIXTURES === '1';
+
+// id записи = поле id (оно же имя файла — это проверяют тесты), а не путь: путей теперь два.
+const json = (dir: string) =>
+  glob({
+    pattern: WITH_FIXTURES
+      ? [`src/content/${dir}/*.json`, `tests/fixtures/content/${dir}/*.json`]
+      : `src/content/${dir}/*.json`,
+    base: '.',
+    generateId: ({ data }) => String(data.id),
+  });
 
 // Ошибка в данных роняет сборку (CLAUDE.md, «Данные»): схема строгая, пустых карточек не будет.
 const shows = defineCollection({ loader: json('shows'), schema: showSchema });
