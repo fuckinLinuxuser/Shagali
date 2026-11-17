@@ -1,10 +1,15 @@
 name: Deploy to Reg.ru
 
-# PR и пуши в main: тесты. Деплой — только пуш в main и только после зелёных тестов (needs).
+# PR и пуши в main: тесты. Деплой — пуш в main и ночная пересборка, только после зелёных тестов (needs).
+# Ночная пересборка нужна статическому сайту: показ, дата которого прошла, уходит в «Прошедшие»
+# и теряет кнопку «Купить» только при сборке (src/lib/performances.ts, effectiveStatus).
 on:
   push:
     branches: [ main ]
   pull_request:
+  schedule:
+    - cron: '17 0 * * *'   # 03:17 по Москве
+  workflow_dispatch:
 
 jobs:
   test:
@@ -90,7 +95,9 @@ jobs:
 
   deploy:
     needs: [ test, gitleaks ]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      contains(fromJSON('["push", "schedule", "workflow_dispatch"]'), github.event_name)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

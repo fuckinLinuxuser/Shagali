@@ -1,0 +1,33 @@
+name: Мониторинг shagali.ru
+
+# Раз в день: сайт открывается по HTTPS с проверкой сертификата, до конца сертификата > 14 дней.
+# Упало — GitHub пришлёт письмо о неуспешном запуске. Так 10 сентября 2026 сайт и лежал два
+# месяца с истёкшим сертификатом, и никто не знал.
+on:
+  schedule:
+    - cron: '23 5 * * *'   # 08:23 по Москве
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        host: [ shagali.ru, www.shagali.ru ]
+    steps:
+      - name: Сайт отвечает по HTTPS
+        run: |
+          code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 30 --retry 3 --retry-delay 20 "https://${{ matrix.host }}/")
+          echo "HTTP $code"
+          if [ "$code" -ge 400 ]; then echo "::error::https://${{ matrix.host }}/ отвечает $code"; exit 1; fi
+
+      - name: Сертификат действует ещё 14+ дней
+        run: |
+          end=$(echo | openssl s_client -servername "${{ matrix.host }}" -connect "${{ matrix.host }}:443" 2>/dev/null | openssl x509 -noout -enddate | cut -d= -f2)
+          days=$(( ( $(date -d "$end" +%s) - $(date +%s) ) / 86400 ))
+          echo "Сертификат до: $end (осталось $days дн.)"
+          if [ "$days" -lt 14 ]; then
+            echo "::error::Сертификат ${{ matrix.host }} истекает через $days дн. ($end) — продлить в панели reg.ru"
+            exit 1
+          fi
