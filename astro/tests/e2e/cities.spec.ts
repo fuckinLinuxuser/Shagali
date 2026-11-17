@@ -36,7 +36,8 @@ test('путь «Города → город → Купить» — 2 тапа, 
   const taps = { n: 0 };
   await page.goto('/goroda');
   await tap(page, page.locator('a[href="/goroda/test-gorod"]'), taps);
-  await expect(page).toHaveURL(/\/goroda\/test-gorod$/);
+  // Apache (стенд и reg.ru) добавляет к каталогу слеш редиректом 301 — убрать его: задача 2.6.
+  await expect(page).toHaveURL(/\/goroda\/test-gorod\/?$/);
 
   const card = page.locator('[data-performance="test-gorod-2099-01-15-kukushonok"]');
   await expect(card).toContainText('15 января 2099');

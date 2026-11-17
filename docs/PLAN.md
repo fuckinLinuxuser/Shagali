@@ -173,6 +173,9 @@
 ### 2.6 Изображения и скорость — 2 ч
 Что сделать: `astro:assets` (webp/avif, `sizes`, `loading="lazy"` ниже первого экрана), шрифты
 с `display=swap`, лишние скрипты убрать.
+Убрать лишний редирект 301 `/goroda/spb` → `/goroda/spb/`: Apache добавляет слеш к каталогу
+(`DirectorySlash`), а ссылки на сайте — без слеша (`trailingSlash: 'never'`). Каждый переход на подстраницу
+сейчас стоит лишнего запроса. Варианты: `build.format: 'file'` или правило в `.htaccess`.
 
 Проверки:
 - [авто] Lighthouse CI mobile для главной и страницы города: Performance ≥ 85,
