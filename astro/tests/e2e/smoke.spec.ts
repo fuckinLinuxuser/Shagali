@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { watch } from './helpers';
 
 for (const path of ['/', '/collaboration']) {

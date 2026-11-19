@@ -7,11 +7,8 @@ import { fileURLToPath } from 'node:url';
 // Живёт только на сервере (CLAUDE.md: images/, videos/ не в репозитории) — в dist их нет.
 export const SERVER_ONLY_PREFIXES = ['/images/', '/videos/', '/posts.json'];
 
-// Осознанные исключения: файл (относительно dist) → причина. Пустой href="#" — шаблон поповера,
-// JS подставляет ссылку. TODO(1.4): заменить на данные cbiletom и убрать исключение.
-export const ALLOW_EMPTY_HASH = {
-  'index.html': 'шаблон #tour-popover (ссылку ставит JS), убрать в задаче 1.4',
-};
+// Осознанные исключения: файл (относительно dist) → причина. Сейчас их нет: href="#" не допускается нигде.
+export const ALLOW_EMPTY_HASH = {};
 
 function* walk(dir) {
   for (const name of readdirSync(dir)) {

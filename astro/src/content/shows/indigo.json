@@ -5,5 +5,6 @@
   "quote": "Мы так ждали поколение волшебников...",
   "cover": "/images/projects/indigo.jpg",
   "gallery": [],
-  "soon": true
+  "soon": true,
+  "order": 4
 }
