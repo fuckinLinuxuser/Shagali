@@ -345,10 +345,11 @@ window.openWaitlistModal = function() {
 </script>
 
 <style>
+  /* Высота задана явно: aspect-ratio вместе с max-height в Safari (WebKit) растягивал слайд до 16:9 от ширины,
+     а блок обрезался по max-height — кнопки уезжали за нижний край. 56.25vw = 16:9. */
   .hero-slider {
     width: 100%;
-    aspect-ratio: 16 / 9;
-    max-height: 90vh;
+    height: min(56.25vw, 90vh);
     margin: 0 auto;
     overflow: hidden;
     position: relative;
@@ -542,11 +543,20 @@ window.openWaitlistModal = function() {
 
   .custom-btn:hover { background: rgba(255,255,255,0.25); transform: scale(1.12); }
 
+  /* Невысокие окна ноутбуков: слайд ниже 600–700px, длинное описание иначе выталкивает заголовок за верхний край */
+  @media (min-width: 769px) and (max-height: 780px) {
+    .slide-content { padding: 3.5rem 2rem 3.5rem 2rem; }
+    .info-block { margin-bottom: 1rem; }
+    h2 { font-size: clamp(1.6rem, 3vw, 2.6rem); margin-bottom: 0.4rem; }
+    .quote { font-size: clamp(0.95rem, 1.6vw, 1.2rem); }
+    .description { font-size: clamp(0.95rem, 1.5vw, 1.2rem); line-height: 1.45; margin-bottom: 1rem; }
+    .buttons-row { margin-top: 0.6rem; }
+  }
+
   /* ─── Мобильные стили ────────────────────────────────────── */
   @media (max-width: 768px) {
     .hero-slider {
-      aspect-ratio: 4 / 5;
-      max-height: 85vh;
+      height: min(125vw, 85vh); /* 125vw = 4:5 */
       min-height: 500px;
     }
 
