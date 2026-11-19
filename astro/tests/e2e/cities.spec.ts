@@ -3,7 +3,8 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { expect, test, type Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { watch } from './helpers';
 
 const CONTENT = fileURLToPath(new URL('../../src/content', import.meta.url));

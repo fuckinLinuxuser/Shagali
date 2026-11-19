@@ -1,55 +1,25 @@
 ---
-const slides = [
-  {
-    img: "/images/projects/kukushonok.JPG",
-    images: [
-      "/images/projects/kukushonok/IMG_3111.JPG",
-      "/images/projects/kukushonok/IMG_3052.JPG",
-      "/images/projects/kukushonok/IMG_3076.JPG"
-    ],
-    title: "Родной мой Кукушонок",
-    text: "Драму проживает каждый Ребенок, разочаровавший своих родителей. Трагедию носит в себе каждая Мать, оттолкнувшая своего ребенка. Просто разные. Еще пару лет назад была семья, где все друг друга любили. А сегодня – уже чужие взрослые люди. Как вернуться к самим себе? Как опять увидеть друг друга?",
-    quote: "\"...Спектакль о том, как взрослеют родители...\"",
-    soon: false,
-    eventId: 14088,
-    eventName: "Родной мой Кукушонок",
-    eventDate: "Тюмень, 1 августа"
-  },
-  {
-    img: "/images/projects/doggy.jpeg",
-    images: [
+// Слайды — коллекция shows; кнопка зависит от ближайшего будущего показа (src/lib/home.ts).
+import { loadCatalog } from '../lib/catalog';
+import { slideAction } from '../lib/home';
 
-    ],
-    title: "Мамочка, купи собаку!",
-    text: "Милая пушистая игрушка, в которой отражается всё счастье твоего детства. Смешной товарищ по играм и соучастник мелких шалостей. И крупных семейных разборок заодно! Когда у Ребёнка из друзей только цифровая колонка, то собака становится заветной мечтой… А родители видят в собаке источник дополнительных проблем. Однажды собака может надоесть. Впрочем, не только родителям… ",
-    quote: "Сказка про то, как собака учит быть взрослыми. Причем учит не только детей. ",
-    soon: true,
-    eventId: null
-  },
-  {
-    img: "/images/projects/papa_karlo.jpg",
-    images: [
-
-    ],
-    title: "Откуда взялся папа Карло?",
-    text: "Детям всё прекрасно известно про Буратино. Он весёлый, забавный, симпатичный. Но когда ты взрослеешь, то начинаешь догадываться, что за этой сказкой стоит реальность итальянского Средневековья... И сквозь знакомые с детского сада яркие картинки проступает настоящая жизнь - такая же, какую живешь ты. Понятная - просто в старинных декорациях. Правдивая - просто случившаяся 400 лет назад. Дети до 15 лет на этот спектакль не приглашаются.",
-    quote: "Готическая сказка, которую рассказывают только взрослым",
-    soon: true,
-    eventId: null,
-    eventName: "Откуда взялся папа Карло"
-  },
-  {
-    img: "/images/projects/indigo.jpg",
-    images: [
-
-    ],
-    title: "Растворимый Индиго",
-    text: "Они родились в начале нового тысячелетия. Тогда человечество только открывало для себя новый мир - тот самый мир, где появились слова 'экологичность', 'ментальное здоровье', 'интеграция', 'энергия вселенной'... Мы впервые читали книги про то, что такое безусловная любовь. У нас рождались удивительные дети, которые знали про этику больше нас самих... А потом случилась жизнь. Дети Индиго выросли. А мир для них мы не вырастили. И наши маленькие волшебники пошли работать менеджерами продаж и автослесарями. Что-то внутри меняется, когда не сбывается хорошее будущее твоего ребенка. Как будто именно ты пообещал - и обманул...Философский детектив про то, как мы позвали волшебных детей в обычную жизнь.",
-    quote: "Мы так ждали поколение волшебников...",
-    soon: true,
-    eventId: null
-  }
-];
+const catalog = await loadCatalog();
+const slides = [...catalog.shows]
+  .sort((a, b) => a.order - b.order)
+  .map((show) => {
+    const action = slideAction(catalog.byShow(show.id).upcoming);
+    return {
+      img: show.cover,
+      images: show.gallery,
+      title: show.title,
+      text: show.text,
+      quote: show.quote,
+      soon: show.soon,
+      eventId: action.kind === 'buy' ? action.cbiletomId : null,
+      eventName: show.title,
+      eventDate: action.kind === 'buy' ? action.eventDate : '',
+    };
+  });
 ---
 
 
@@ -65,7 +35,7 @@ const slides = [
             fetchpriority={i === 0 ? 'high' : 'auto'}
           />
           <div class="slide-content">
-            {slide.soon && (
+            {slide.soon && !slide.eventId && (
               <div class="soon-badge mobile-only">Скоро...</div>
             )}
             {slide.eventDate && (
@@ -89,15 +59,7 @@ const slides = [
                 Подробнее
               </button>
               
-              {slide.soon ? (
-                <button
-                  type="button"
-                  class="tickets-btn waitlist-btn"
-                  onclick="openWaitlistModal()"
-                >
-                  Заявка
-                </button>
-              ) : slide.eventId ? (
+              {slide.eventId ? (
                 <button
                   type="button"
                   class="tickets-btn buy-btn"
@@ -108,7 +70,7 @@ const slides = [
               ) : (
                 <button
                   type="button"
-                  class="tickets-btn"
+                  class="tickets-btn waitlist-btn"
                   onclick="openWaitlistModal()"
                 >
                   Заявка

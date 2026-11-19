@@ -3,7 +3,12 @@
   "name": "Санкт-Петербург",
   "map": {
     "x": 75,
-    "y": 577
+    "y": 577,
+    "label": {
+      "dx": 13,
+      "dy": 4,
+      "anchor": "start"
+    }
   },
   "visited": true
 }

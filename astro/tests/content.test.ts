@@ -70,6 +70,11 @@ describe('целостность', () => {
     }
   });
 
+  it('order у спектаклей не повторяется', () => {
+    const orders = shows.map((s) => s.order);
+    expect(new Set(orders).size).toBe(orders.length);
+  });
+
   it('cbiletomId не повторяется между показами', () => {
     const ids = performances.map((p) => p.cbiletomId).filter((x) => x !== null);
     expect(new Set(ids).size).toBe(ids.length);

@@ -26,13 +26,22 @@ export const showSchema = z.object({
   cover: z.string().startsWith('/'),
   gallery: z.array(z.string().startsWith('/')).default([]),
   soon: z.boolean(),
+  // порядок слайдов на главной (по возрастанию, без повторов)
+  order: z.number().int().nonnegative(),
 });
 
 export const citySchema = z.object({
   id: idSlug,
   name: z.string().min(1),
   // координаты точки на SVG-карте; у города без точки на карте не заполняются
-  map: z.object({ x: z.number(), y: z.number() }).optional(),
+  map: z
+    .object({
+      x: z.number(),
+      y: z.number(),
+      // подпись по умолчанию — под точкой по центру; своя задаётся смещением от точки
+      label: z.object({ dx: z.number(), dy: z.number(), anchor: z.enum(['start', 'middle', 'end']) }).optional(),
+    })
+    .optional(),
   visited: z.boolean().default(false),
   // «Спасибо, город!» для городов, где уже были
   thanks: z
