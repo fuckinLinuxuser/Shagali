@@ -1,0 +1,326 @@
+/* Страницы городов и спектаклей. Палитра — как на главной: тёмный фон, золото #d4af37, Playfair в заголовках. */
+
+.page {
+  background: #121212;
+  min-height: 70vh;
+  padding: 32px 20px 72px;
+}
+
+.page__inner {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.crumbs {
+  font-size: 0.9rem;
+  color: #9a9a9a;
+  margin-bottom: 20px;
+}
+
+.crumbs a {
+  color: #c9c9c9;
+  text-decoration: none;
+}
+
+.crumbs a:hover {
+  color: #d4af37;
+}
+
+.page h1.page__title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem, 6vw, 3.6rem);
+  line-height: 1.15;
+  color: #d4af37;
+  margin: 0 0 12px;
+  overflow-wrap: anywhere;
+}
+
+.page__lead {
+  color: #c9c9c9;
+  font-size: 1.1rem;
+  margin: 0 0 40px;
+}
+
+.page h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  color: #f0f0f0;
+  margin: 48px 0 16px;
+}
+
+/* ── Показы ── */
+
+.perfs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.perf {
+  display: grid;
+  grid-template-columns: 200px 1fr auto;
+  gap: 16px 24px;
+  align-items: center;
+  padding: 18px 20px;
+  background: #1c1c1c;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+}
+
+.perf__when {
+  display: flex;
+  flex-direction: column;
+}
+
+.perf__date {
+  color: #f0f0f0;
+  font-weight: 600;
+}
+
+/* «Чт, 15 января»: с большой буквы только день недели (capitalize испортил бы месяц) */
+.perf__date::first-letter {
+  text-transform: uppercase;
+}
+
+.perf__time {
+  color: #d4af37;
+}
+
+.perf__what {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.perf__title {
+  color: #f0f0f0;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  text-decoration: none;
+}
+
+.perf__title:hover {
+  color: #d4af37;
+}
+
+.perf__place,
+.perf__note {
+  color: #9a9a9a;
+  font-size: 0.95rem;
+}
+
+.perf__action {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  justify-content: flex-end;
+}
+
+.perf__price {
+  color: #f0f0f0;
+  white-space: nowrap;
+}
+
+.perf[data-status='past'] {
+  grid-template-columns: 200px 1fr;
+  opacity: 0.7;
+}
+
+/* ── Кнопки ── */
+
+.pbtn {
+  display: inline-block;
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: 1px solid #d4af37;
+  background: #d4af37;
+  color: #121212;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.pbtn:hover {
+  background: #e8c97c;
+}
+
+.pbtn--ghost {
+  background: transparent;
+  color: #d4af37;
+}
+
+.pbtn--ghost:hover {
+  background: rgba(212, 175, 55, 0.12);
+}
+
+.pbtn--off,
+.pbtn--off:hover {
+  background: transparent;
+  border-color: #444;
+  color: #8a8a8a;
+  cursor: default;
+}
+
+/* ── Пустое состояние, «Спасибо» ── */
+
+.empty {
+  padding: 28px;
+  border: 1px dashed #444;
+  border-radius: 12px;
+  background: #171717;
+}
+
+.empty p {
+  margin: 0 0 8px;
+  color: #c9c9c9;
+}
+
+.empty p:first-child {
+  color: #f0f0f0;
+  font-size: 1.25rem;
+}
+
+.empty .pbtn {
+  margin-top: 12px;
+}
+
+.thanks {
+  margin-top: 48px;
+  padding: 24px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.12), rgba(212, 175, 55, 0.03));
+  border: 1px solid rgba(212, 175, 55, 0.35);
+}
+
+.thanks h2 {
+  margin-top: 0;
+  color: #d4af37;
+}
+
+.thanks p {
+  margin: 0;
+  color: #e0e0e0;
+}
+
+/* ── Список городов ── */
+
+.cities {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.cities a {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 18px;
+  border-radius: 10px;
+  background: #1c1c1c;
+  border: 1px solid #2a2a2a;
+  color: #f0f0f0;
+  text-decoration: none;
+  transition: border-color 0.2s;
+}
+
+.cities a:hover {
+  border-color: #d4af37;
+}
+
+.cities__name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+}
+
+.cities__meta {
+  color: #9a9a9a;
+  font-size: 0.9rem;
+}
+
+.cities--active a {
+  border-color: rgba(212, 175, 55, 0.5);
+}
+
+.cities--active .cities__meta {
+  color: #d4af37;
+}
+
+/* ── Спектакль ── */
+
+.show__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 32px;
+  align-items: start;
+}
+
+.show__cover {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 12px;
+  background: #1c1c1c;
+}
+
+.show__quote {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: #d4af37;
+  font-size: 1.15rem;
+  margin: 0 0 16px;
+}
+
+.show__text {
+  color: #e0e0e0;
+  margin: 0;
+}
+
+.show__gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.show__gallery img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #1c1c1c;
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 20px 16px 56px;
+  }
+
+  .perf,
+  .perf[data-status='past'] {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 16px;
+  }
+
+  .perf__action {
+    justify-content: space-between;
+    margin-top: 6px;
+  }
+
+  .perf__action .pbtn {
+    flex: 1;
+    text-align: center;
+  }
+
+  .show__head {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}

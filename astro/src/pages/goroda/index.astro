@@ -1,0 +1,70 @@
+---
+// /goroda — все города из коллекции. Сначала города с будущими показами (по ближайшей дате), потом остальные по алфавиту.
+import MainLayout from '../../layouts/MainLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import { loadCatalog } from '../../lib/catalog';
+import { formatDateRu } from '../../lib/performances';
+import '../../styles/pages.css';
+
+const catalog = await loadCatalog();
+const rows = catalog.cities.map((city) => ({ city, next: catalog.byCity(city.id).upcoming[0] ?? null }));
+const active = rows
+  .filter((r) => r.next)
+  .sort((a, b) => a.next!.date.localeCompare(b.next!.date));
+const rest = rows
+  .filter((r) => !r.next)
+  .sort((a, b) => a.city.name.localeCompare(b.city.name, 'ru'));
+---
+
+<MainLayout
+  title="Гастроли по городам — Мир За Сценой"
+  description="Города гастролей продюсерского центра Елены Шагали: ближайшие спектакли, даты, площадки и билеты."
+>
+  <Nav />
+  <main class="page">
+    <div class="page__inner">
+      <nav class="crumbs" aria-label="Навигация"><a href="/">Главная</a> / Города</nav>
+      <h1 class="page__title">Города гастролей</h1>
+      <p class="page__lead">Выберите свой город — покажем ближайшие спектакли и билеты.</p>
+
+      <div data-city-list>
+        {
+          active.length > 0 && (
+            <section>
+              <h2>Скоро спектакли</h2>
+              <ul class="cities cities--active">
+                {active.map(({ city, next }) => (
+                  <li>
+                    <a href={`/goroda/${city.id}`}>
+                      <span class="cities__name">{city.name}</span>
+                      <span class="cities__meta">ближайший: {formatDateRu(next!.date)}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+        {
+          rest.length > 0 && (
+            <section>
+              <h2>{active.length > 0 ? 'Другие города' : 'Где мы бываем'}</h2>
+              <ul class="cities">
+                {rest.map(({ city }) => (
+                  <li>
+                    <a href={`/goroda/${city.id}`}>
+                      <span class="cities__name">{city.name}</span>
+                      <span class="cities__meta">{city.visited ? 'уже были, ждём новых дат' : 'пока без дат'}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+      </div>
+    </div>
+  </main>
+  <Footer />
+</MainLayout>

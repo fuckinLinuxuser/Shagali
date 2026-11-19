@@ -1,5 +1,6 @@
 # Локальный стенд: статика из astro/dist + PHP 8.3 (как на reg.ru) + MySQL 8.
-# Запуск: (cd astro && npm run build) && sh docker/init-config.sh && docker compose up -d  → http://localhost:8080
+# Запуск: (cd astro && npm run build:stand) && sh docker/init-config.sh && docker compose up -d  → http://localhost:8080
+# Стенд отдаёт astro/dist-stand — сборку с фикстурами (tests/fixtures/content). Другая папка — STAND_DIST=dist.
 # dist копируется в контейнер при старте, поэтому запись api.php (posts.json, загрузки) не портит astro/dist.
 services:
   web:
@@ -9,7 +10,7 @@ services:
     environment:
       SHAGALI_CONFIG: /run/shagali/config.php
     volumes:
-      - ./astro/dist:/dist-src:ro
+      - ./astro/${STAND_DIST:-dist-stand}:/dist-src:ro
       - ./docker/config.local.php:/run/shagali/config.php:ro
     command: >
       bash -c "cp -a /dist-src/. /var/www/html/ && chown -R www-data:www-data /var/www/html && apache2-foreground"

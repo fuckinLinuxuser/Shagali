@@ -2,6 +2,10 @@
 // src/pages/waitlist.astro  или src/pages/лист-ожидания.astro
 
 import Layout from '../layouts/MainLayout.astro'; // если у вас есть общий layout
+import { getCollection } from 'astro:content';
+
+// /waitlist?city=<id> — со страницы города: подставляем его название в поле «Желаемый город».
+const cityNames = Object.fromEntries((await getCollection('cities')).map((c) => [c.id, c.data.name]));
 
 const title = "Лист ожидания — Гастроли и выступления";
 const description = "Запишитесь в лист ожидания, чтобы первыми узнать о точных датах, городах и купить билеты на выступления.";
@@ -264,6 +268,14 @@ const description = "Запишитесь в лист ожидания, чтоб
     }
   }
 </style>
+
+<script is:inline define:vars={{ cityNames }}>
+  (() => {
+    const id = new URLSearchParams(location.search).get('city');
+    const input = document.getElementById('city');
+    if (id && input && !input.value && Object.hasOwn(cityNames, id)) input.value = cityNames[id];
+  })();
+</script>
 
 <script>
   // Простой пример отправки формы (замените на реальный backend / API)

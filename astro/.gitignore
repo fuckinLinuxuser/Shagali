@@ -1,4 +1,5 @@
 # build output
+dist-stand/
 
 # generated types
 .astro/

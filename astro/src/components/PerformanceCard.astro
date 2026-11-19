@@ -1,0 +1,64 @@
+---
+// Карточка показа. Кнопка — по статусу, который видит посетитель (effectiveStatus):
+// on_sale → «Купить» (cbiletom в новой вкладке, модалка — задача 1.4),
+// sold_out → лист ожидания, soon → неактивная «Скоро в продаже», past → без кнопки.
+import { formatDateRu, formatPrice, ticketUrl, type Status } from '../lib/performances';
+
+interface Props {
+  id: string;
+  date: string;
+  time: string | null;
+  venue: string | null;
+  address: string | null;
+  priceFrom: number | null;
+  cbiletomId: number | null;
+  status: Status;
+  show: { id: string; title: string };
+  city: { id: string; name: string };
+  // на странице города подписываем спектакль, на странице спектакля — город
+  context: 'city' | 'show';
+}
+
+const { id, date, time, venue, address, priceFrom, cbiletomId, status, show, city, context } = Astro.props;
+const place = [venue, address].filter(Boolean).join(', ');
+---
+
+<li class="perf" data-performance={id} data-status={status}>
+  <div class="perf__when">
+    <span class="perf__date">{formatDateRu(date)}</span>
+    {time && <span class="perf__time">{time}</span>}
+  </div>
+
+  <div class="perf__what">
+    {
+      context === 'city' ? (
+        <a class="perf__title" href={`/spektakli/${show.id}`}>{show.title}</a>
+      ) : (
+        <a class="perf__title" href={`/goroda/${city.id}`}>{city.name}</a>
+      )
+    }
+    {place && <span class="perf__place">{place}</span>}
+  </div>
+
+  {
+    status !== 'past' && (
+      <div class="perf__action">
+        {status === 'on_sale' && cbiletomId !== null && (
+          <>
+            {priceFrom !== null && <span class="perf__price">{formatPrice(priceFrom)}</span>}
+            <a class="pbtn" href={ticketUrl(cbiletomId)} target="_blank" rel="noopener">Купить</a>
+          </>
+        )}
+        {status === 'sold_out' && (
+          <>
+            <span class="perf__note">Билеты распроданы</span>
+            <a class="pbtn pbtn--ghost" href={`/waitlist?city=${city.id}`}>Встать в лист ожидания</a>
+          </>
+        )}
+        {status === 'soon' && (
+          <button class="pbtn pbtn--off" type="button" disabled>Скоро в продаже</button>
+        )}
+      </div>
+    )
+  }
+</li>

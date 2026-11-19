@@ -5,13 +5,16 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:stand": "SHAGALI_FIXTURES=1 astro build --outDir dist-stand",
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest run",
     "lint:php": "find public/api.php public/api -name '*.php' -print0 2>/dev/null | xargs -0 -n1 php -l",
     "check:links": "node scripts/check-links.mjs",
     "check:content": "node scripts/check-content.mjs",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:visual": "sh scripts/visual.sh",
+    "test:visual:update": "sh scripts/visual.sh --update-snapshots"
   },
   "dependencies": {
     "@astrojs/node": "^10.1.1",

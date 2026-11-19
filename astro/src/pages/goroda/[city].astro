@@ -1,0 +1,70 @@
+---
+// /goroda/<id> — страница каждого города из коллекции, в том числе без показов.
+import MainLayout from '../../layouts/MainLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import PerformanceCard from '../../components/PerformanceCard.astro';
+import { loadCatalog } from '../../lib/catalog';
+import '../../styles/pages.css';
+
+export async function getStaticPaths() {
+  const catalog = await loadCatalog();
+  return catalog.cities.map((city) => ({ params: { city: city.id }, props: { city, ...catalog.byCity(city.id) } }));
+}
+
+const { city, upcoming, past } = Astro.props;
+const shows = [...new Set(upcoming.map((p) => p.show.title))];
+const description = upcoming.length
+  ? `${city.name}: ${shows.join(', ')} — даты, площадки и билеты. Продюсерский центр Елены Шагали.`
+  : `${city.name}: гастроли продюсерского центра Елены Шагали. Запишитесь в лист ожидания — сообщим о датах первыми.`;
+---
+
+<MainLayout title={`${city.name} — спектакли и билеты | Мир За Сценой`} description={description}>
+  <Nav />
+  <main class="page">
+    <div class="page__inner">
+      <nav class="crumbs" aria-label="Навигация">
+        <a href="/">Главная</a> / <a href="/goroda">Города</a> / {city.name}
+      </nav>
+      <h1 class="page__title">{city.name}</h1>
+
+      {
+        upcoming.length > 0 ? (
+          <section data-upcoming>
+            <h2>Ближайшие показы</h2>
+            <ul class="perfs">
+              {upcoming.map((p) => <PerformanceCard {...p} context="city" />)}
+            </ul>
+          </section>
+        ) : (
+          <section class="empty" data-no-performances>
+            <p>{city.name}: пока нет показов.</p>
+            <p>Запишитесь — сообщим первыми, как только появятся даты.</p>
+            <a class="pbtn" href={`/waitlist?city=${city.id}`}>Записаться в лист ожидания</a>
+          </section>
+        )
+      }
+
+      {
+        city.thanks && (
+          <section class="thanks">
+            <h2>{city.thanks.title}</h2>
+            <p>{city.thanks.comment}</p>
+          </section>
+        )
+      }
+
+      {
+        past.length > 0 && (
+          <section data-past>
+            <h2>Прошедшие показы</h2>
+            <ul class="perfs">
+              {past.map((p) => <PerformanceCard {...p} context="city" />)}
+            </ul>
+          </section>
+        )
+      }
+    </div>
+  </main>
+  <Footer />
+</MainLayout>
