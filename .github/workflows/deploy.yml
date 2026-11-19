@@ -60,7 +60,7 @@ jobs:
           echo "::error::Стенд не поднялся"
           exit 1
 
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium webkit
       - run: npm run test:e2e
 
       # Скриншоты сверяются в контейнере Playwright (linux/amd64), где сняты базовые снимки.
