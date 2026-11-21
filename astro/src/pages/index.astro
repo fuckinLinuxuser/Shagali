@@ -4,15 +4,14 @@ import MainLayout from '../layouts/MainLayout.astro';
 import Header from '../components/Header.astro';
 import Nav from '../components/Nav.astro';
 import PeopleSection from '../components/PeopleSection.astro';
-// import Castings from '../components/Castings.astro';
 import ToursSection from '../components/ToursSection.astro';
-import Collaboration from "../components/Collab.astro";
-import Opportunities from "../components/Oppotrunities.astro";
-import Castings from '../components/Castings.astro';
 import Footer from '../components/Footer.astro';
 import ProjectSlider from '../components/ProjectSlider.astro';
 import Modal from '../components/Modal.astro';
-import Done from '../components/Done.astro';
+
+// Скрыто по просьбе заказчика (код и данные на месте): «Пройденные спектакли» (Done.astro),
+// «Блог» (Castings.astro), «Условия сотрудничества» (Collab.astro). Чтобы вернуть блок — импортировать
+// компонент и поставить в <main>; для блога и сотрудничества вернуть пункты в Nav.astro.
 ---
 
 
@@ -31,11 +30,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
   <main>
     <ProjectSlider />
-    <PeopleSection />
-    <Done />
-    <Castings />
     <ToursSection />
-    <Collaboration />
+    <PeopleSection />
   </main>
 
   <Modal />
