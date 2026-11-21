@@ -1,6 +1,10 @@
+/* Шапка занимает экран, но не меньше своего содержимого: при height: 100vh в невысоком окне
+   (ноутбук, Safari с панелями) заголовок и подпись уходили за края и обрезались overflow: hidden. */
 .header {
     position: relative;
-    height: 100vh;
+    min-height: 100vh;
+    padding: 1.5rem 0;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: center;
