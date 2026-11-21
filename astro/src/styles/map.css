@@ -1,14 +1,8 @@
 .map-container {
   position: relative;
   width: 100%;
-  max-width: 1100px;
-  margin: 3.5rem auto;
-  background: #11100b;
-  border-radius: 16px;
+  background: #0e0e0e;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6),
-              inset 0 0 40px rgba(212, 175, 87, 0.08);
-  border: 1px solid rgba(212, 175, 87, 0.12);
 }
 
 .russia-map {
@@ -21,9 +15,9 @@
 }
 
 .city-dot {
-  fill: #ffd700;
-  stroke: #0f0f0a;
-  stroke-width: 3.5;
+  fill: #e3c35a;
+  stroke: #0e0e0e;
+  stroke-width: 2;
   opacity: 0;
   animation: appearDot 1.2s ease-out forwards;
   cursor: pointer;
@@ -32,20 +26,20 @@
 }
 
 .city-dot:hover {
-  fill: #ffeb3b;
-  r: 15;
-  stroke-width: 5;
-  filter: drop-shadow(0 0 12px #ffd700aa);
+  fill: #f1d36e;
+  r: 11;
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 8px rgba(227, 195, 90, 0.7));
 }
 
 /* Города, где спектакль уже был показан */
 .city-dot.visited {
-  fill: #8b1a3a;
+  fill: #c1272f;
 }
 
 .city-dot.visited:hover {
-  fill: #b0294f;
-  filter: drop-shadow(0 0 12px #8b1a3aaa);
+  fill: #d8323a;
+  filter: drop-shadow(0 0 8px rgba(193, 39, 47, 0.7));
 }
 
 @keyframes appearDot {
@@ -53,22 +47,29 @@
 }
 
 .city-label {
-  font-family: 'Roboto', system-ui, sans-serif;
+  font-family: var(--font-sans, 'Montserrat', system-ui, sans-serif);
   font-size: 20px;
-  font-weight: 600;
-  fill: #ffeb3b;
-  stroke: #000000;
-  stroke-width: 1;
+  font-weight: 700;
+  fill: #f4ebd3;
+  stroke: #0e0e0e;
+  stroke-width: 4;
   paint-order: stroke fill;
-  opacity: 0.92;
   pointer-events: none;
   user-select: none;
-  letter-spacing: 0.4px;
 }
 
-@media (max-width: 768px) {
+/* Телефон: карта целиком мелкая, поэтому метки и подписи крупнее (карту можно увеличить щипком) */
+@media (max-width: 767px) {
   .city-label {
-    font-size: 24px;
+    font-size: 34px;
+    stroke-width: 7;
+  }
+  .city-dot {
+    r: 13;
+    stroke-width: 3.5;
+  }
+  .city-dot:hover {
+    r: 16;
   }
 }
 
@@ -78,6 +79,6 @@
 }
 
 .city-link:focus-visible .city-dot {
-  stroke: #ffd700;
+  stroke: #f4ebd3;
   stroke-width: 3;
 }

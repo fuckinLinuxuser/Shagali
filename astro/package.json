@@ -23,8 +23,7 @@
     "astro": "^6.3.7",
     "dotenv": "^17.2.4",
     "keen-slider": "^6.8.6",
-    "leaflet": "^1.9.4",
-    "swiper": "^12.1.0"
+    "leaflet": "^1.9.4"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.0",

@@ -1,19 +1,19 @@
 ---
-// src/pages/index.astro   ← это и есть новая «главная»
+// src/pages/index.astro — главная в новом дизайне: шапка, слайдер спектаклей и афиша,
+// «Антракт», гастроли, люди, подвал.
 import MainLayout from '../layouts/MainLayout.astro';
-import Header from '../components/Header.astro';
-import Nav from '../components/Nav.astro';
-import PeopleSection from '../components/PeopleSection.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import ShowStage from '../components/ShowStage.astro';
+import Afisha from '../components/Afisha.astro';
 import ToursSection from '../components/ToursSection.astro';
-import Footer from '../components/Footer.astro';
-import ProjectSlider from '../components/ProjectSlider.astro';
+import PeopleSection from '../components/PeopleSection.astro';
 import Modal from '../components/Modal.astro';
+import Footer from '../components/Footer.astro';
 
-// Скрыто по просьбе заказчика (код и данные на месте): «Пройденные спектакли» (Done.astro),
-// «Блог» (Castings.astro), «Условия сотрудничества» (Collab.astro). Чтобы вернуть блок — импортировать
-// компонент и поставить в <main>; для блога и сотрудничества вернуть пункты в Nav.astro.
+// Скрыто по просьбе заказчика (код и данные на месте): «Пройденные спектакли» (Done.astro), «Блог» (Castings.astro),
+// «Условия сотрудничества» (Collab.astro), список месяцев в плане гастролей. Чтобы вернуть блок — импортировать
+// компонент и поставить в <main>, а для блога и сотрудничества добавить пункты в SiteHeader.astro.
 ---
-
 
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -23,18 +23,70 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-W4K95GQZ');</script>
 <!-- End Google Tag Manager -->
 
-<MainLayout title="Мир За Сценой">
-
-  <Header />
-  <Nav />
+<MainLayout title="Мир За Сценой" theme="light">
+  <SiteHeader />
 
   <main>
-    <ProjectSlider />
+    <div class="act">
+      <div class="act__inner">
+        <ShowStage />
+        <Afisha />
+      </div>
+    </div>
+
+    <div class="intermission" role="separator"><span>Антракт</span></div>
+
     <ToursSection />
     <PeopleSection />
   </main>
 
   <Modal />
   <Footer />
-
 </MainLayout>
+
+<style>
+  .act {
+    position: relative;
+    padding-bottom: 80px;
+  }
+  .act__inner {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 4px;
+    box-sizing: border-box;
+  }
+  .intermission {
+    position: relative;
+    z-index: 6;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #17120d;
+    background-image: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.07) 0px, rgba(255, 255, 255, 0.07) 1px, transparent 1px, transparent 160px);
+    border-top: 4px solid #cfae4a;
+  }
+  .intermission span {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: #d8cfae;
+  }
+
+  @media (max-width: 767px) {
+    .act {
+      padding-bottom: 48px;
+    }
+    .act__inner {
+      padding: 0 16px;
+    }
+    .intermission {
+      height: 40px;
+    }
+    .intermission span {
+      font-size: 10px;
+    }
+  }
+</style>

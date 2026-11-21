@@ -31,7 +31,7 @@ test('/goroda: все города, город с показами — перв�
   await expect(first).toHaveAttribute('href', '/goroda/test-gorod');
 });
 
-test('путь «Города → город → Купить» — 2 тапа, открывается модалка с событием cbiletom', async ({ page, context }) => {
+test('путь «Города → город → Билеты» — 2 тапа, открывается модалка с событием cbiletom', async ({ page, context }) => {
   // Сам cbiletom в тесте не нужен: проверяем, что открывается нужное событие.
   await context.route('https://cbiletom.ru/**', (r) => r.fulfill({ status: 200, body: 'cbiletom' }));
   const taps = { n: 0 };
@@ -46,7 +46,7 @@ test('путь «Города → город → Купить» — 2 тапа, 
   await expect(card).toContainText('Тестовый драмтеатр');
   await expect(card).toContainText('от 1 200 ₽');
 
-  await tap(page, card.getByRole('button', { name: 'Купить' }), taps);
+  await tap(page, card.getByRole('button', { name: 'Билеты', exact: true }), taps);
   await expect(page.getByRole('dialog').locator('iframe')).toHaveAttribute(
     'src',
     'https://cbiletom.ru/widget/1/frame.php?id=2717&mode=1',
@@ -61,18 +61,18 @@ test('кнопки по статусу: распродано → лист ожи
     'href',
     '/waitlist?city=test-gorod',
   );
-  await expect(soldOut.getByRole('button', { name: 'Купить' })).toHaveCount(0);
+  await expect(soldOut.getByRole('button', { name: 'Билеты', exact: true })).toHaveCount(0);
 
   const soon = page.locator('[data-performance="test-gorod-2099-03-01-indigo"]');
   await expect(soon.getByRole('button', { name: 'Скоро в продаже' })).toBeDisabled();
-  await expect(soon.getByRole('button', { name: 'Купить' })).toHaveCount(0);
+  await expect(soon.getByRole('button', { name: 'Билеты', exact: true })).toHaveCount(0);
 });
 
-test('показ с прошедшей датой уходит в «Прошедшие» без кнопки «Купить», хотя в данных on_sale', async ({ page }) => {
+test('показ с прошедшей датой уходит в «Прошедшие» без кнопки «Билеты», хотя в данных on_sale', async ({ page }) => {
   await page.goto('/goroda/test-gorod');
   const past = page.locator('[data-past] [data-performance="test-gorod-2020-01-10-papa-karlo"]');
   await expect(past).toHaveCount(1);
-  await expect(past.getByRole('button', { name: 'Купить' })).toHaveCount(0);
+  await expect(past.getByRole('button', { name: 'Билеты', exact: true })).toHaveCount(0);
   await expect(page.locator('[data-upcoming] [data-performance="test-gorod-2020-01-10-papa-karlo"]')).toHaveCount(0);
 });
 
@@ -122,7 +122,7 @@ for (const path of PAGES) {
     await expect(page).toHaveTitle(/\S/);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflow).toBeLessThanOrEqual(0);
-    await expect(page.locator('nav a[href="/#projects"]')).toHaveCount(1);
+    await expect(page.locator('header a[href="/#afisha"]').first()).toBeAttached();
     expect(errors).toEqual([]);
   });
 }

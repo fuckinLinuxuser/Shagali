@@ -6,5 +6,6 @@
   "cover": "/images/projects/indigo.jpg",
   "gallery": [],
   "soon": true,
-  "order": 4
+  "order": 4,
+  "ghost": "Индиго"
 }

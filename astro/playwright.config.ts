@@ -14,7 +14,7 @@ export default defineConfig({
   projects: [
     { name: 'mobile', use: { ...devices['iPhone 13'], defaultBrowserType: 'chromium' } },
     { name: 'desktop', use: { browserName: 'chromium', viewport: { width: 1440, height: 900 } } },
-    // Safari (WebKit) рендерит иначе: на Mac им открывают сайт чаще всего. Гоняем только проверки вёрстки (слайдер, шапка).
-    { name: 'safari', testMatch: /(slider-fit|header-fit)\.spec\.ts/, use: { ...devices['Desktop Safari'] } },
+    // Safari (WebKit) рендерит иначе: на Mac им открывают сайт чаще всего. Гоняем только проверки вёрстки (слайдер спектаклей).
+    { name: 'safari', testMatch: /stage-fit\.spec\.ts/, use: { ...devices['Desktop Safari'] } },
   ],
 });

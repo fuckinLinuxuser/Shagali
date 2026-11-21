@@ -87,6 +87,22 @@ describe('целостность', () => {
   });
 });
 
+describe('поля спектакля для главной: ghost и ageRating необязательны', () => {
+  const base = {
+    id: 'x', title: 'Т', text: 'т', quote: 'ц', cover: '/images/x.jpg', gallery: [], soon: false, order: 1,
+  };
+  it('без них спектакль валиден — заглушек в данных нет', () => {
+    expect(showSchema.safeParse(base).success).toBe(true);
+  });
+  it('возраст только в формате «12+»', () => {
+    expect(showSchema.safeParse({ ...base, ageRating: '12+' }).success).toBe(true);
+    expect(showSchema.safeParse({ ...base, ageRating: '00+' }).success).toBe(true);
+    for (const bad of ['12', 'двенадцать+', '12 +', '+']) {
+      expect(showSchema.safeParse({ ...base, ageRating: bad }).success, bad).toBe(false);
+    }
+  });
+});
+
 describe('правила схемы показа', () => {
   const base = {
     id: 'x',
