@@ -6,7 +6,6 @@ import {
   formatDateRu,
   formatPrice,
   splitByDate,
-  ticketUrl,
   todayInMoscow,
 } from '../src/lib/performances';
 
@@ -81,9 +80,5 @@ describe('форматирование', () => {
   it('цена «от» с неразрывными пробелами', () => {
     expect(formatPrice(1200)).toBe('от 1 200 ₽');
     expect(formatPrice(900)).toBe('от 900 ₽');
-  });
-
-  it('ссылка на покупку в cbiletom', () => {
-    expect(ticketUrl(14088)).toBe('https://cbiletom.ru/widget/1/frame.php?id=14088&mode=1');
   });
 });

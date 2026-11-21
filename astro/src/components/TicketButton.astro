@@ -1,0 +1,22 @@
+---
+// Кнопка «Купить»: сама ничего не грузит, только несёт данные для модалки (TicketModal.astro).
+// Адрес виджета собирается на клике — до клика на странице нет ни iframe, ни скриптов cbiletom.
+interface Props {
+  cbiletomId: number;
+  title: string; // заголовок модалки: спектакль и город
+  subtitle?: string; // дата, время, площадка
+  class?: string;
+}
+
+const { cbiletomId, title, subtitle = '', class: className = 'pbtn' } = Astro.props;
+---
+
+<button
+  type="button"
+  class={className}
+  data-ticket-id={cbiletomId}
+  data-ticket-title={title}
+  data-ticket-subtitle={subtitle}
+>
+  <slot>Купить</slot>
+</button>

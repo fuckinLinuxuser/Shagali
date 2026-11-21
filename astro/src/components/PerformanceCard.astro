@@ -1,8 +1,9 @@
 ---
 // Карточка показа. Кнопка — по статусу, который видит посетитель (effectiveStatus):
-// on_sale → «Купить» (cbiletom в новой вкладке, модалка — задача 1.4),
+// on_sale → «Купить» (модалка cbiletom, TicketModal.astro),
 // sold_out → лист ожидания, soon → неактивная «Скоро в продаже», past → без кнопки.
-import { formatDateRu, formatPrice, ticketUrl, type Status } from '../lib/performances';
+import TicketButton from './TicketButton.astro';
+import { formatDateRu, formatPrice, type Status } from '../lib/performances';
 
 interface Props {
   id: string;
@@ -46,7 +47,11 @@ const place = [venue, address].filter(Boolean).join(', ');
         {status === 'on_sale' && cbiletomId !== null && (
           <>
             {priceFrom !== null && <span class="perf__price">{formatPrice(priceFrom)}</span>}
-            <a class="pbtn" href={ticketUrl(cbiletomId)} target="_blank" rel="noopener">Купить</a>
+            <TicketButton
+              cbiletomId={cbiletomId}
+              title={`${show.title} — ${city.name}`}
+              subtitle={[formatDateRu(date), time, place].filter(Boolean).join(' · ')}
+            />
           </>
         )}
         {status === 'sold_out' && (

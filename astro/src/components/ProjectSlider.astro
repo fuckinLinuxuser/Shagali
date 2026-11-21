@@ -1,5 +1,6 @@
 ---
 // Слайды — коллекция shows; кнопка зависит от ближайшего будущего показа (src/lib/home.ts).
+import TicketButton from './TicketButton.astro';
 import { loadCatalog } from '../lib/catalog';
 import { slideAction } from '../lib/home';
 
@@ -60,13 +61,14 @@ const slides = [...catalog.shows]
               </button>
               
               {slide.eventId ? (
-                <button
-                  type="button"
+                <TicketButton
                   class="tickets-btn buy-btn"
-                  onclick={`openTicketModal(${slide.eventId}, '${slide.eventName.replace(/'/g, "\\'")}', '${(slide.eventDate || '').replace(/'/g, "\\'")}')`}
+                  cbiletomId={slide.eventId}
+                  title={slide.title}
+                  subtitle={slide.eventDate}
                 >
                   Купить билет
-                </button>
+                </TicketButton>
               ) : (
                 <button
                   type="button"
@@ -113,78 +115,15 @@ const slides = [...catalog.shows]
   </div>
 </div>
 
-<!-- Модальное окно для билетов CBiletom -->
-<div id="ticket-modal" class="modal ticket-modal">
-  <div class="modal-content ticket-modal-content">
-    <span class="close-modal close-ticket-modal">×</span>
-    <h3 id="ticket-modal-title">Выбор билетов</h3>
-    <p id="ticket-modal-date"></p>
-    <iframe id="ticket-iframe" src="" style="width: 100%; height: 500px; border: none; border-radius: 8px;"></iframe>
-  </div>
-</div>
-
-<!-- CBiletom widget script и глобальные функции -->
+<!-- Заявка -->
 <script>
-// Глобальные функции для работы с билетами (ДО загрузки DOM)
-window.openTicketModal = function(eventId, eventName, eventDate) {
-  if (!eventId) {
-    window.openWaitlistModal();
-    return;
-  }
-
-  const modal = document.getElementById('ticket-modal');
-  const iframe = document.getElementById('ticket-iframe');
-  const titleEl = document.getElementById('ticket-modal-title');
-  const dateEl = document.getElementById('ticket-modal-date');
-
-  if (modal && iframe) {
-    iframe.src = `https://cbiletom.ru/widget/1/frame.php?id=${eventId}&mode=1`;
-    titleEl.textContent = `Билеты: ${eventName}`;
-    if (dateEl) {
-      dateEl.textContent = eventDate || '';
-      dateEl.style.display = eventDate ? 'block' : 'none';
-    }
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-  } else {
-    console.error('Модалка билетов не найдена');
-    // fallback - открываем в новой вкладке
-    window.open(`https://cbiletom.ru/widget/1/frame.php?id=${eventId}&mode=1`, '_blank');
-  }
-};
-
-window.closeTicketModal = function() {
-  const modal = document.getElementById('ticket-modal');
-  const iframe = document.getElementById('ticket-iframe');
-  if (modal) {
-    modal.style.display = 'none';
-    if (iframe) iframe.src = '';
-    document.body.style.overflow = '';
-  }
-};
-
+// Покупка билетов — TicketModal.astro (кнопки с data-ticket-id). Здесь осталась только заявка.
 window.openWaitlistModal = function() {
   // Здесь можно сделать красивую модалку, пока просто alert
   alert('Скоро билеты появятся! Оставьте заявку, и мы сообщим.');
   // Если есть форма заявки - раскомментировать:
   // document.getElementById('waitlist-modal').style.display = 'flex';
 };
-
-// Подключаем CBiletom
-(function(d){
-  if (typeof d.CB == 'object') return;
-  var s = d.createElement('script');
-  s.type = 'text/javascript'; 
-  s.id = 'cb-controller';
-  s.async = 1;
-  s.src = 'https://cbiletom.ru/widget/1/assets/controller.js?itok=' + Math.round(1* new Date() / 3600000);
-  s.onload = function() {
-    if (typeof CB !== 'undefined') {
-      new CB(d, {id:14088, view:2});
-    }
-  };
-  d.querySelector('head').append(s);
-})(document);
 </script>
 
 <script>
@@ -323,24 +262,8 @@ window.openWaitlistModal = function() {
             modalSwiper = null;
           }
         }
-        if (document.getElementById('ticket-modal').style.display === 'flex') {
-          window.closeTicketModal();
-        }
       }
     });
-
-    // Модалка билетов — закрытие
-    const ticketModal = document.getElementById('ticket-modal');
-    const closeTicketBtn = document.querySelector('.close-ticket-modal');
-    
-    if (closeTicketBtn) {
-      closeTicketBtn.addEventListener('click', window.closeTicketModal);
-    }
-    if (ticketModal) {
-      ticketModal.addEventListener('click', e => {
-        if (e.target === ticketModal) window.closeTicketModal();
-      });
-    }
   });
 </script>
 
@@ -397,7 +320,7 @@ window.openWaitlistModal = function() {
   }
 
   .more-btn,
-  .tickets-btn {
+  .hero-slider :global(.tickets-btn) {
     background: #d4af37;
     color: #1a1a1a;
     font-weight: 700;
@@ -418,14 +341,14 @@ window.openWaitlistModal = function() {
   }
 
   .more-btn:hover,
-  .tickets-btn:hover {
+  .hero-slider :global(.tickets-btn):hover {
     transform: translateY(-4px) scale(1.04);
     box-shadow: 0 12px 32px rgba(0,0,0,0.55);
   }
 
-  .tickets-btn:hover { background: #e6c24a; }
+  .hero-slider :global(.tickets-btn):hover { background: #e6c24a; }
 
-  .buy-btn {
+  .hero-slider :global(.buy-btn) {
     position: relative;
     overflow: hidden;
     display: inline-flex;
@@ -436,13 +359,13 @@ window.openWaitlistModal = function() {
     animation: buyBtnPulse 2.6s ease-in-out infinite;
   }
 
-  .buy-btn::before {
+  .hero-slider :global(.buy-btn)::before {
     content: '🎟️';
     font-size: 1.05em;
     line-height: 1;
   }
 
-  .buy-btn::after {
+  .hero-slider :global(.buy-btn)::after {
     content: '';
     position: absolute;
     inset: 0;
@@ -454,13 +377,13 @@ window.openWaitlistModal = function() {
     pointer-events: none;
   }
 
-  .buy-btn:hover {
+  .hero-slider :global(.buy-btn):hover {
     background: linear-gradient(135deg, #f8e6ae 0%, #e6c24a 45%, #c9a02e 100%);
     box-shadow: 0 14px 38px rgba(212, 175, 55, 0.65), 0 4px 14px rgba(0, 0, 0, 0.5);
     animation-play-state: paused;
   }
 
-  .buy-btn:hover::after {
+  .hero-slider :global(.buy-btn):hover::after {
     left: 130%;
   }
 
@@ -597,7 +520,7 @@ window.openWaitlistModal = function() {
     }
 
     .more-btn,
-    .tickets-btn {
+    .hero-slider :global(.tickets-btn) {
       flex: 1 1 45% !important;
       min-width: 0 !important;
       max-width: 48% !important;
@@ -626,7 +549,7 @@ window.openWaitlistModal = function() {
     }
 
     .more-btn,
-    .tickets-btn {
+    .hero-slider :global(.tickets-btn) {
       min-width: 100px;
       padding: 0.7rem 1.4rem;
       font-size: clamp(0.95rem, 4.3vw, 1.15rem);
@@ -758,41 +681,6 @@ window.openWaitlistModal = function() {
       width: 96%;
       max-width: 96%;
       padding: 1.5rem 1rem;
-    }
-  }
-
-  /* Модалка билетов */
-  .ticket-modal .ticket-modal-content {
-    max-width: 900px;
-    width: 90%;
-    padding: 1.5rem;
-  }
-  
-  .ticket-modal-content h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.3rem, 4vw, 1.8rem);
-    margin-bottom: 0.3rem;
-    text-align: center;
-  }
-
-  #ticket-modal-date {
-    text-align: center;
-    color: #d4af37;
-    font-weight: 600;
-    margin: 0 0 1.2rem;
-  }
-
-  #ticket-iframe {
-    min-height: 500px;
-  }
-  
-  @media (max-width: 768px) {
-    #ticket-iframe {
-      min-height: 450px;
-    }
-    .ticket-modal .ticket-modal-content {
-      width: 95%;
-      padding: 1rem;
     }
   }
 
