@@ -15,9 +15,6 @@ const load = <T,>(dir: string) =>
 
 const SHOWS = load<{ id: string; title: string; order: number }>('shows').sort((a, b) => a.order - b.order);
 const CITIES = load<{ id: string; name: string; visited?: boolean; map?: { x: number; y: number } }>('cities');
-const PLAN = load<{ period: string; month: string; places: string[] }>('tour-plan').sort((a, b) =>
-  a.period.localeCompare(b.period),
-);
 // Точка — у города с координатами, где были (visited) или есть показ в src/content (фикстуры стенда в src/content не лежат).
 const PERFORMED = new Set(load<{ city: string }>('performances').map((p) => p.city));
 const DOTS = CITIES.filter((c) => c.map && (c.visited || PERFORMED.has(c.id)));
@@ -80,10 +77,45 @@ test('карта: клик по точке открывает страницу �
   await expect(page.locator('h1')).toContainText('Тюмень');
 });
 
-test('таймлайн: пункты идут из tour-plan по порядку', async ({ page }) => {
+test('блоки главной: слайдер → гастроли → драйверы проекта', async ({ page }) => {
   await page.goto('/');
-  const dates = await page.locator('.timeline-tours .timeline-date').allTextContents();
-  expect(dates.map((d) => d.trim())).toEqual(PLAN.map((p) => p.month));
-  const first = page.locator('.timeline-tours .timeline-item').first();
-  await expect(first).toContainText(PLAN[0].places[0]);
+  const order = await page.evaluate(() =>
+    ['#projects', '#tours', '#people'].map((sel) => {
+      const el = document.querySelector(sel);
+      return el ? el.getBoundingClientRect().top + window.scrollY : null;
+    }),
+  );
+  expect(order.every((y) => y !== null)).toBe(true);
+  expect(order[0]!).toBeLessThan(order[1]!);
+  expect(order[1]!).toBeLessThan(order[2]!);
+  // «Драйверы проекта» — последний блок страницы, за ним только футер
+  await expect(page.locator('#people h1')).toContainText('Драйверы проекта');
+});
+
+test('скрытые блоки не выводятся: пройденные спектакли, блог, условия сотрудничества, список месяцев', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#blog')).toHaveCount(0);
+  await expect(page.locator('#collaboration-teaser')).toHaveCount(0);
+  await expect(page.locator('.timeline-tours')).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Пройденные спектакли' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Условия сотрудничества' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Блог', exact: true })).toHaveCount(0);
+  // карта и лист ожидания в «Гастролях» остались
+  await expect(page.locator('#tours .map-container svg')).toHaveCount(1);
+  await expect(page.locator('#tours #openForm')).toHaveCount(1);
+});
+
+test('меню: Проекты, Гастроли, Люди — без «Блога» и «Сотрудничества»', async ({ page }) => {
+  await page.goto('/');
+  const hrefs = await page.locator('nav .nav-list a').evaluateAll((els) => els.map((e) => e.getAttribute('href')));
+  expect(hrefs).toEqual(['/#projects', '/#tours', '/#people']);
+});
+
+test('/collaboration скрыта от поисковиков: noindex и нет в карте сайта', async ({ page, request }) => {
+  const res = await page.goto('/collaboration');
+  expect(res?.status()).toBe(200); // адрес по-прежнему открывается
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+  const sitemap = await (await request.get('/sitemap-0.xml')).text();
+  expect(sitemap).not.toContain('/collaboration');
+  expect(sitemap).toContain('/goroda'); // а остальные страницы в карте на месте
 });
