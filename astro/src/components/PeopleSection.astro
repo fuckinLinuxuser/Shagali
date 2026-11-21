@@ -3,39 +3,44 @@
 ---
 
 <style>
-  body {
-    font-family: 'Arial', sans-serif;
-    background-color: #1e1e17ec;
-    color: #000000;
-    margin: 0;
-    padding: 0;
-  }
-
+  /* «Драйверы проекта» в новом дизайне: светлый блок после тёмных «Гастролей», заголовок Playfair */
   .our-people {
-    max-width: 1400px;
-    margin: 60px auto;
-    padding: 0 20px;
+    margin: 0;
+    padding: 96px 20px 80px;
+    background: #faf7ef;
+    color: var(--ink);
+    font-family: var(--font-sans);
     text-align: center;
   }
 
   .our-people h1 {
-    font-size: 2.8em;
-    margin-bottom: 50px;
-    color: #222;
-    text-transform: uppercase;
-    letter-spacing: 3px;
     position: relative;
+    margin: 0 0 50px;
+    font-family: var(--font-serif);
+    font-weight: 900;
+    font-size: 52px;
+    line-height: 1.05;
+    color: var(--ink);
   }
 
   .our-people h1::after {
     content: '';
     width: 120px;
     height: 3px;
-    background: #d4af37;
+    background: var(--gold);
     position: absolute;
     bottom: -15px;
     left: 50%;
     transform: translateX(-50%);
+  }
+
+  @media (max-width: 767px) {
+    .our-people {
+      padding: 56px 12px 48px;
+    }
+    .our-people h1 {
+      font-size: 30px;
+    }
   }
 
   .people-grid {
@@ -248,7 +253,7 @@
   .close:hover { color: #d4af37; }
 </style>
 
-<section id="people" class="our-people">
+<section id="lyudi" class="our-people">
   <h1>Драйверы проекта</h1>
 
   <div class="people-grid">

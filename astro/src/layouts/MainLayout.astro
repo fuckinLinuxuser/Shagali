@@ -1,11 +1,12 @@
 ---
 // src/layouts/MainLayout.astro
 const DEFAULT_DESCRIPTION = "Театральный продюсер и режиссер Елена Шагали: спектакли, гастроли, кастинги и проекты в Санкт-Петербурге и по всей России. Узнавайте о новых постановках и сотрудничестве.";
-const { title = "Мир За Сценой", description = DEFAULT_DESCRIPTION } = Astro.props;
+const { title = "Мир За Сценой", description = DEFAULT_DESCRIPTION, theme = 'dark' } = Astro.props;
 import '../styles/base.css';
 import '../styles/components.css';
 import '../styles/layout.css';
 import '../styles/map.css';
+import '../styles/theme.css';
 import TicketModal from '../components/TicketModal.astro';
 
 ---
@@ -58,10 +59,10 @@ _tmr.push({id: "3745960", type: "pageView", start: (new Date()).getTime()});
   <meta name="yandex-verification" content="ce6cf319c85b86a6" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Roboto:wght@300;400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body class={theme === 'light' ? 'theme-light' : undefined}>
   <slot />                  <!-- здесь будет весь контент страницы -->
   <TicketModal />
   <!-- глобальный скрипт карты -->

@@ -1,0 +1,215 @@
+---
+// Шапка сайта: бургер и «Проекты» слева, логотип по центру, «Гастроли», «Люди», «Связаться» справа.
+// На телефоне — бургер и логотип; все ссылки в меню по бургеру. Одна шапка на всём сайте.
+const LINKS = [
+  { href: '/#afisha', label: 'Проекты' },
+  { href: '/#gastroli', label: 'Гастроли' },
+  { href: '/#lyudi', label: 'Люди' },
+  { href: '/#contacts', label: 'Связаться' },
+];
+const [left, ...right] = LINKS;
+---
+
+<header class="bar">
+  <div class="bar__side bar__side--left">
+    <button type="button" class="burger" aria-label="Меню" aria-expanded="false" aria-controls="menu-drawer" data-menu-open>
+      <svg width="40" height="28" viewBox="0 0 40 28" aria-hidden="true"><path d="M0 2h40M0 14h40M0 26h40" stroke="currentColor" stroke-width="3"></path></svg>
+    </button>
+    <a class="bar__link bar__link--wide" href={left.href}>{left.label}</a>
+  </div>
+
+  <a class="logo" href="/">Мир за<br />Сценой</a>
+
+  <nav class="bar__side bar__side--right" aria-label="Основное">
+    {right.map((l) => <a class="bar__link" href={l.href}>{l.label}</a>)}
+  </nav>
+</header>
+
+<div class="drawer" id="menu-drawer" data-menu-drawer hidden>
+  <div class="drawer__panel" role="dialog" aria-modal="true" aria-label="Меню">
+    <button type="button" class="drawer__close" data-menu-close>Закрыть меню</button>
+    <ul class="drawer__list">
+      {LINKS.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+    </ul>
+  </div>
+</div>
+
+<script>
+  const drawer = document.querySelector<HTMLElement>('[data-menu-drawer]');
+  const opener = document.querySelector<HTMLButtonElement>('[data-menu-open]');
+  const closer = document.querySelector<HTMLButtonElement>('[data-menu-close]');
+
+  if (drawer && opener && closer) {
+    const setOpen = (open: boolean) => {
+      drawer.hidden = !open;
+      opener.setAttribute('aria-expanded', String(open));
+      document.documentElement.style.overflow = open ? 'hidden' : '';
+      if (open) closer.focus({ preventScroll: true });
+      else opener.focus({ preventScroll: true });
+    };
+
+    opener.addEventListener('click', () => setOpen(true));
+    closer.addEventListener('click', () => setOpen(false));
+    drawer.addEventListener('click', (e) => {
+      const target = e.target as Element;
+      if (target === drawer || target.closest('a')) setOpen(false); // затемнение или пункт меню
+    });
+    document.addEventListener('keydown', (e) => {
+      if (drawer.hidden) return;
+      if (e.key === 'Escape') setOpen(false);
+      if (e.key === 'Tab') {
+        // фокус по кругу внутри меню
+        const items = [closer, ...drawer.querySelectorAll<HTMLElement>('a')];
+        const i = items.indexOf(document.activeElement as HTMLElement);
+        if (!e.shiftKey && i === items.length - 1) {
+          e.preventDefault();
+          items[0].focus();
+        } else if (e.shiftKey && i <= 0) {
+          e.preventDefault();
+          items[items.length - 1].focus();
+        }
+      }
+    });
+  }
+</script>
+
+<style>
+  .bar {
+    position: relative;
+    z-index: 6;
+    max-width: 1240px;
+    height: 120px;
+    margin: 0 auto;
+    padding: 0 4px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-sans);
+    background: #fff;
+    color: var(--ink);
+  }
+  .bar__side {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    flex: 1 1 0;
+  }
+  .bar__side--right {
+    justify-content: flex-end;
+  }
+  .bar__link {
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .bar__link:hover {
+    color: var(--gold-ink);
+  }
+  .burger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 8px;
+    background: none;
+    border: 0;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .logo {
+    flex: 0 0 auto;
+    font-family: var(--font-serif);
+    font-weight: 900;
+    font-size: 36px;
+    line-height: 0.92;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--gold-ink);
+    text-decoration: none;
+  }
+
+  /* Меню по бургеру */
+  .drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 10001;
+    background: rgba(0, 0, 0, 0.6);
+    font-family: var(--font-sans);
+  }
+  .drawer[hidden] {
+    display: none;
+  }
+  .drawer__panel {
+    width: min(380px, 100%);
+    height: 100%;
+    box-sizing: border-box;
+    padding: 28px 32px;
+    background: #111;
+    color: var(--ivory);
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+  .drawer__close {
+    align-self: flex-start;
+    min-height: 44px;
+    padding: 0 18px;
+    background: transparent;
+    border: 1.5px solid rgba(244, 235, 211, 0.55);
+    color: var(--ivory);
+    font: 600 14px var(--font-sans);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .drawer__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .drawer__list a {
+    display: block;
+    padding: 14px 0;
+    font-family: var(--font-serif);
+    font-weight: 900;
+    font-size: 32px;
+    color: #fff;
+    text-decoration: none;
+    border-bottom: 1px solid #2a2a2a;
+  }
+  .drawer__list a:hover {
+    color: var(--gold);
+  }
+
+  @media (max-width: 767px) {
+    .bar {
+      height: 72px;
+      padding: 0 12px;
+      display: grid;
+      grid-template-columns: 48px 1fr 48px;
+    }
+    .bar__side--right,
+    .bar__link--wide {
+      display: none;
+    }
+    .bar__side--left {
+      gap: 0;
+    }
+    .logo {
+      font-size: 20px;
+    }
+    .burger svg {
+      width: 26px;
+      height: 18px;
+    }
+  }
+</style>

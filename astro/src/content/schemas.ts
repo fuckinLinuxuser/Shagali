@@ -28,6 +28,10 @@ export const showSchema = z.object({
   soon: z.boolean(),
   // порядок слайдов на главной (по возрастанию, без повторов)
   order: z.number().int().nonnegative(),
+  // «призрачное» слово на слайде и карточке афиши (по умолчанию — самое длинное слово названия)
+  ghost: z.string().min(1).optional(),
+  // возрастной знак («6+»): выводится только если задан — выдумывать значение нельзя
+  ageRating: z.string().regex(/^\d{1,2}\+$/, 'возраст в формате «12+»').optional(),
 });
 
 export const citySchema = z.object({

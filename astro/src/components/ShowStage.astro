@@ -1,0 +1,310 @@
+---
+// Слайдер спектаклей главной: тёмная панель с «призрачным» словом, город и дата ближайшего показа, под ней —
+// название, цитата и кнопки. Данные — коллекция shows и ближайшие показы (src/lib/afisha.ts). Без Swiper.
+import TicketButton from './TicketButton.astro';
+import { loadCatalog } from '../lib/catalog';
+import { stageSlide } from '../lib/afisha';
+
+const catalog = await loadCatalog();
+const slides = [...catalog.shows]
+  .sort((a, b) => a.order - b.order)
+  .map((show) => ({ ...stageSlide(show, catalog.byShow(show.id).upcoming), cover: show.cover }));
+const total = slides.length;
+---
+
+<section id="stage" class="stage" aria-label="Спектакли" data-stage>
+  {
+    slides.map((s, i) => (
+      <article class="slide" data-stage-slide data-slide-id={s.id} hidden={i > 0}>
+        <div class="slide__panel">
+          <img class="slide__photo" src={s.cover} alt="" loading={i === 0 ? 'eager' : 'lazy'} decoding="async" onerror="this.hidden=true" />
+          <div class="ghost" aria-hidden="true">{s.ghost}</div>
+          <div class="slide__meta">
+            <div class="kicker" data-stage-kicker>{s.kicker}</div>
+            {s.dateLabel && <div class="date" data-stage-date>{s.dateLabel}</div>}
+          </div>
+          {s.age && <div class="age" data-age>{s.age}</div>}
+        </div>
+        <div class="slide__bar">
+          <div class="info">
+            <h2>{s.title}</h2>
+            {s.quote && <p class="quote">{s.quote}</p>}
+          </div>
+          <div class="actions">
+            {s.buy && (
+              <TicketButton class="btn btn--gold" cbiletomId={s.buy.cbiletomId} title={s.title} subtitle={s.buy.subtitle}>
+                Купить билет
+              </TicketButton>
+            )}
+            <a class="btn btn--line" href={s.href}>Подробнее</a>
+          </div>
+        </div>
+      </article>
+    ))
+  }
+
+  <div class="controls">
+    <span class="counter" data-stage-counter>1 / {total}</span>
+    <button type="button" class="arrow" aria-label="Предыдущий спектакль" data-stage-prev>
+      <svg width="14" height="26" viewBox="0 0 14 26" aria-hidden="true"><path d="M12 2L2 13l10 11" fill="none" stroke="currentColor" stroke-width="3"></path></svg>
+    </button>
+    <button type="button" class="arrow" aria-label="Следующий спектакль" data-stage-next>
+      <svg width="14" height="26" viewBox="0 0 14 26" aria-hidden="true"><path d="M2 2l10 11L2 24" fill="none" stroke="currentColor" stroke-width="3"></path></svg>
+    </button>
+  </div>
+
+  <button type="button" class="replay" data-curtain-replay aria-label="Показать занавес ещё раз">Занавес</button>
+</section>
+
+<script>
+  const stage = document.querySelector<HTMLElement>('[data-stage]');
+  if (stage) {
+    const slides = [...stage.querySelectorAll<HTMLElement>('[data-stage-slide]')];
+    const counter = stage.querySelector<HTMLElement>('[data-stage-counter]')!;
+    let current = 0;
+
+    const show = (index: number) => {
+      current = (index + slides.length) % slides.length;
+      slides.forEach((slide, i) => (slide.hidden = i !== current));
+      counter.textContent = `${current + 1} / ${slides.length}`;
+    };
+
+    stage.querySelector('[data-stage-prev]')?.addEventListener('click', () => show(current - 1));
+    stage.querySelector('[data-stage-next]')?.addEventListener('click', () => show(current + 1));
+  }
+</script>
+
+<style>
+  .stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-sans);
+    color: var(--ivory);
+    background: var(--ink);
+  }
+  .slide[hidden] {
+    display: none;
+  }
+
+  .slide__panel {
+    position: relative;
+    height: 380px;
+    overflow: hidden;
+    background: #16120d;
+  }
+  .slide:nth-of-type(even) .slide__panel {
+    background: #101714;
+  }
+  .slide__photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.4;
+  }
+  .ghost {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    font-family: var(--font-serif);
+    font-weight: 900;
+    font-size: 300px;
+    line-height: 1;
+    color: rgba(244, 235, 211, 0.07);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .slide__meta {
+    position: absolute;
+    left: 36px;
+    top: 30px;
+  }
+  .kicker {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .date {
+    margin-top: 8px;
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--gold);
+  }
+  .age {
+    position: absolute;
+    right: 36px;
+    bottom: 28px;
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .slide__bar {
+    min-height: 120px;
+    box-sizing: border-box;
+    padding: 24px 336px 24px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px 28px;
+    background: var(--ink);
+  }
+  .info {
+    flex: 1 1 320px;
+    min-width: 0;
+  }
+  h2 {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 40px;
+    line-height: 1.1;
+    color: #fff;
+  }
+  .quote {
+    margin: 10px 0 0;
+    font-size: 16px;
+    line-height: 1.4;
+    color: var(--muted);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .controls {
+    position: absolute;
+    right: 0;
+    top: 380px;
+    bottom: 0;
+    width: 300px;
+    display: flex;
+    align-items: stretch;
+    background: var(--ink);
+    color: #fff;
+  }
+  .counter {
+    flex: 0 0 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    letter-spacing: 0.1em;
+    color: #bdb8aa;
+    border-left: 1px solid #333;
+  }
+  .arrow {
+    flex: 0 0 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ink);
+    color: #fff;
+    border: 0;
+    border-left: 1px solid #333;
+    cursor: pointer;
+  }
+  .arrow:hover {
+    background: #1d1d1d;
+  }
+
+  .replay {
+    position: absolute;
+    right: 36px;
+    top: 30px;
+    min-height: 44px;
+    padding: 8px 16px;
+    background: none;
+    border: 1.5px solid rgba(244, 235, 211, 0.5);
+    color: var(--ivory);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  @media (max-width: 767px) {
+    .stage {
+      background: #fff;
+    }
+    .slide__panel {
+      height: 300px;
+    }
+    .ghost {
+      font-size: 130px;
+    }
+    .slide__meta {
+      left: 18px;
+      top: 16px;
+    }
+    .kicker {
+      font-size: 12px;
+      letter-spacing: 0.16em;
+    }
+    .date {
+      margin-top: 4px;
+      font-size: 34px;
+    }
+    .age {
+      right: 18px;
+      bottom: 16px;
+      font-size: 28px;
+    }
+    .slide__bar {
+      padding: 20px 18px;
+      gap: 16px;
+    }
+    h2 {
+      font-size: 24px;
+      line-height: 1.2;
+    }
+    .quote {
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    .controls {
+      position: static;
+      width: auto;
+      padding: 0 18px 20px;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .counter,
+    .arrow {
+      flex: 0 0 auto;
+      border-left: 0;
+    }
+    .counter {
+      margin-right: auto;
+      font-size: 13px;
+    }
+    .arrow {
+      width: 56px;
+      height: 48px;
+      border: 1px solid #444;
+    }
+    .arrow + .arrow {
+      border-left: 0;
+    }
+    .replay {
+      position: static;
+      align-self: flex-end;
+      margin-top: 10px;
+      padding: 8px 14px;
+      color: #444;
+      border-color: #cfcfcf;
+      font-size: 12px;
+    }
+  }
+</style>

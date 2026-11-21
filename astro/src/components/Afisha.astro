@@ -1,0 +1,328 @@
+---
+// «Афиша»: карточки будущих показов (дата, город, спектакль, цитата, «Купить»). Пока будущих показов нет —
+// карточки спектаклей «Скоро» без даты и города. Фильтр по городу — когда городов два и больше.
+// Данные — src/lib/afisha.ts; заглушек («ДД.ММ», «00+») нет.
+import TicketButton from './TicketButton.astro';
+import { loadCatalog } from '../lib/catalog';
+import { buildAfisha, cityTabs } from '../lib/afisha';
+import { formatDateRu, formatPrice } from '../lib/performances';
+
+const catalog = await loadCatalog();
+const upcoming = catalog.shows.flatMap((s) => catalog.byShow(s.id).upcoming);
+const cards = buildAfisha(catalog.shows, upcoming);
+const tabs = cityTabs(cards);
+---
+
+<section id="afisha" class="afisha" aria-label="Афиша">
+  <div class="head">
+    <h1 class="title">Афиша</h1>
+    {
+      tabs.length > 0 && (
+        <div class="tabs" role="group" aria-label="Фильтр по городу">
+          <button type="button" class="tab" aria-pressed="true" data-city-filter="all">Все</button>
+          {tabs.map((t) => (
+            <button type="button" class="tab" aria-pressed="false" data-city-filter={t.id}>{t.name}</button>
+          ))}
+        </div>
+      )
+    }
+  </div>
+
+  <div class="grid">
+    {
+      cards.map((c) => (
+        <article class="card" data-afisha-card data-city={c.city?.id ?? ''} data-status={c.status} data-kind={c.kind}>
+          <div class="card__ghost" aria-hidden="true"><span class="ghost">{c.ghost}</span></div>
+
+          <div class="card__top">
+            {c.dateLabel ? <div class="date" data-card-date>{c.dateLabel}</div> : <div class="kicker">Скоро</div>}
+            {c.city && <div class="city" data-card-city>{c.city.name}</div>}
+          </div>
+
+          <div class="card__bottom">
+            <div class="text">
+              <h3><a class="link" href={c.href} data-card-link>{c.title}</a></h3>
+              {c.quote && <p class="quote">{c.quote}</p>}
+            </div>
+            {c.age && <div class="age" data-age>{c.age}</div>}
+          </div>
+
+          {
+            c.kind === 'performance' && c.city && (
+              <div class="actions">
+                {c.status === 'on_sale' && c.canBuy && c.cbiletomId !== null && (
+                  <>
+                    {c.priceFrom !== null && <span class="price">{formatPrice(c.priceFrom)}</span>}
+                    <TicketButton
+                      class="btn btn--gold"
+                      cbiletomId={c.cbiletomId}
+                      title={`${c.title} — ${c.city.name}`}
+                      subtitle={formatDateRu(c.date as string)}
+                    >
+                      Купить
+                    </TicketButton>
+                  </>
+                )}
+                {c.status === 'sold_out' && (
+                  <>
+                    <span class="note">Билеты распроданы</span>
+                    <a class="btn btn--line" href={`/waitlist?city=${c.city.id}`}>Встать в лист ожидания</a>
+                  </>
+                )}
+                {c.status === 'soon' && <button type="button" class="btn btn--off" disabled>Скоро в продаже</button>}
+              </div>
+            )
+          }
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('#afisha');
+  if (root) {
+    const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-city-filter]')];
+    const cards = [...root.querySelectorAll<HTMLElement>('[data-afisha-card]')];
+    buttons.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        const city = btn.dataset.cityFilter;
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        cards.forEach((card) => (card.hidden = city !== 'all' && card.dataset.city !== city));
+      }),
+    );
+  }
+</script>
+
+<style>
+  .afisha {
+    padding-top: 88px;
+    font-family: var(--font-sans);
+    color: var(--ink);
+  }
+  .head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px 32px;
+    border-bottom: 1px solid #d0d0d0;
+  }
+  .title {
+    margin: 0 0 -6px;
+    font-family: var(--font-serif);
+    font-size: 76px;
+    line-height: 1;
+    font-weight: 900;
+    color: var(--ink);
+  }
+  .tabs {
+    display: flex;
+    gap: 32px;
+    overflow-x: auto;
+  }
+  .tab {
+    flex: 0 0 auto;
+    min-height: 44px;
+    padding: 12px 2px 14px;
+    background: none;
+    border: 0;
+    border-bottom: 3px solid transparent;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6b6b6b;
+    cursor: pointer;
+  }
+  .tab[aria-pressed='true'] {
+    color: var(--gold-ink);
+    border-bottom-color: var(--gold);
+  }
+
+  .grid {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .card {
+    position: relative;
+    box-sizing: border-box;
+    min-height: 300px;
+    aspect-ratio: 16 / 9;
+    padding: 24px 28px 26px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 14px;
+    background: #16120d;
+    color: var(--ivory);
+  }
+  .card:nth-child(even) {
+    background: #101714;
+  }
+  .card[hidden] {
+    display: none;
+  }
+  .card__ghost {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .ghost {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    font-family: var(--font-serif);
+    font-weight: 900;
+    font-size: 190px;
+    line-height: 1;
+    color: rgba(244, 235, 211, 0.06);
+    white-space: nowrap;
+  }
+  .card__top,
+  .card__bottom,
+  .actions {
+    position: relative;
+  }
+  .card__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .date {
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--gold);
+  }
+  .kicker {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .city {
+    margin-top: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-align: right;
+  }
+  .card__bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .text {
+    min-width: 0;
+  }
+  h3 {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-weight: 900;
+    font-size: 32px;
+    line-height: 1.1;
+  }
+  .link {
+    color: #fff;
+    text-decoration: none;
+  }
+  .link::after {
+    content: '';
+    position: absolute;
+    inset: 0; /* вся карточка — ссылка; кнопки лежат выше */
+    z-index: 1;
+  }
+  .link:hover {
+    color: var(--gold);
+  }
+  .quote {
+    margin: 8px 0 0;
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--muted);
+  }
+  .age {
+    flex: none;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .actions {
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+  .price {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ivory);
+  }
+  .note {
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .btn--off {
+    background: transparent;
+    color: #8a8a8a;
+    border: 1.5px solid #444;
+    cursor: default;
+  }
+
+  @media (max-width: 767px) {
+    .afisha {
+      padding-top: 32px;
+    }
+    .title {
+      font-size: 48px;
+    }
+    .head {
+      display: block;
+    }
+    .tabs {
+      margin-top: 16px;
+      gap: 22px;
+    }
+    .tab {
+      padding: 12px 2px;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+    }
+    .grid {
+      margin-top: 20px;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .card {
+      min-height: 220px;
+      padding: 14px 14px 16px;
+    }
+    .ghost {
+      font-size: 100px;
+    }
+    .date {
+      font-size: 26px;
+    }
+    .city {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+    }
+    h3 {
+      font-size: 20px;
+    }
+    .age {
+      font-size: 14px;
+    }
+  }
+</style>

@@ -1,119 +1,81 @@
 ---
-// src/components/Footer.astro
-
+// Подвал сайта (одинаковый на всех страницах). Контакты — ссылки на ВК и Telegram.
 const currentYear = new Date().getFullYear();
-const producer = "Мир За Сценой";
-const owner = "Елена Шагали";
-const ownerEmail = "414680@mail.ru";
-const dev = "Август Вишневский";
-const devEmail = "samotuga621@gmail.com";      
+const producer = 'Мир За Сценой';
+const owner = 'Елена Шагали';
+const dev = 'Август Вишневский';
 ---
 
-<footer class="footer">
-  <div class="container">
-    <div class="footer-inner">
+<footer class="footer" id="contacts">
+  <p class="copyright">© {currentYear} {producer} • Все права защищены</p>
 
-      <p class="copyright">
-        © {currentYear} {producer} • Все права защищены
-      </p>
+  <p class="credits">
+    Продюсер: <a href="https://vk.com/shagali">{owner}</a> • Сайт: <a href="https://t.me/GaiusAugust">{dev}</a>
+  </p>
 
-      <p class="credits">
-        Продюсер: 
-        <a href="https://vk.com/shagali" class="person-link">{owner}</a>
-        •
-        Сайт: 
-        <a href="https://t.me/GaiusAugust" class="person-link">{dev}</a>
-      </p>
-
-      <div class="footer-links">
-        <a href="https://vk.com/shagali" class="footer-link">Связаться</a>
-        <span class="sep">•</span>
-        <a href="/#projects" class="footer-link">Проекты</a>
-        <span class="sep">•</span>
-        <a href="/#tours" class="footer-link">Гастроли</a>
-      </div>
-
-    </div>
-  </div>
+  <nav class="links" aria-label="Подвал">
+    <a href="https://vk.com/shagali">Связаться</a>
+    <a href="/#afisha">Проекты</a>
+    <a href="/#gastroli">Гастроли</a>
+  </nav>
 </footer>
 
 <style>
   .footer {
-    background: #1a1a1a;
-    color: #aaa;
-    font-size: 0.9rem;
-    padding: 32px 0 24px;
+    box-sizing: border-box;
+    padding: 56px 24px;
+    background: var(--ink-deep);
+    border-top: 1px solid #2a2a2a;
+    color: #f1ece0;
     text-align: center;
-    border-top: 1px solid #333;
+    font-family: var(--font-sans);
   }
-
-  .container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 20px;
-  }
-
-  .footer-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-
   .copyright {
     margin: 0;
-    color: #ccc;
-    font-weight: 500;
+    font-size: 16px;
   }
-
   .credits {
-    margin: 4px 0 0;
-    color: #888;
+    margin: 16px 0 0;
+    font-size: 15px;
+    color: #bdb8aa;
   }
-
-  .person-link {
-    color: #d4af37;
+  .credits a {
+    color: #e0bf5a;
     text-decoration: none;
-    transition: color 0.15s ease;
   }
-
-  .person-link:hover,
-  .person-link:focus {
-    color: #ecc96b;
+  .credits a:hover {
     text-decoration: underline;
   }
-
-  .footer-links {
+  .links {
+    margin-top: 20px;
     display: flex;
-    align-items: center;
     justify-content: center;
-    gap: 12px;
-    margin-top: 4px;
+    flex-wrap: wrap;
+    gap: 12px 28px;
+    font-size: 16px;
   }
-
-  .footer-link {
-    color: #bbb;
+  .links a {
+    color: #f1ece0;
     text-decoration: none;
-    transition: color 0.2s;
+  }
+  .links a:hover {
+    color: var(--gold);
   }
 
-  .footer-link:hover {
-    color: #d4af37;
-  }
-
-  .sep {
-    color: #555;
-    user-select: none;
-  }
-
-  @media (max-width: 480px) {
+  @media (max-width: 767px) {
     .footer {
-      padding: 28px 0 20px;
-      font-size: 0.85rem;
+      padding: 40px 20px;
     }
-    .footer-links {
-      flex-wrap: wrap;
-      gap: 8px 14px;
+    .copyright {
+      font-size: 14px;
+    }
+    .credits {
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .links {
+      font-size: 14px;
+      gap: 12px 22px;
     }
   }
 </style>

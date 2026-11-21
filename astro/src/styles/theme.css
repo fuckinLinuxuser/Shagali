@@ -1,0 +1,62 @@
+/* Редизайн: общие переменные и кнопки. Тема «светлая» включается только на главной (body.theme-light):
+   внутренние страницы пока остаются в тёмном стиле, у них новые только шапка и подвал. */
+:root {
+  --gold: #cfae4a;
+  --gold-hover: #e3c35a;
+  --gold-ink: #86691b; /* тёмное золото для текста на белом: контраст 5:1 */
+  --ink: #111;
+  --ink-deep: #0a0a0a;
+  --ivory: #f4ebd3;
+  --muted: #d8d2c2;
+  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Montserrat', system-ui, sans-serif;
+}
+
+body.theme-light {
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  line-height: normal;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 28px;
+  border: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn--gold {
+  background: var(--gold);
+  color: var(--ink);
+}
+.btn--gold:hover {
+  background: var(--gold-hover);
+  color: var(--ink);
+}
+
+.btn--line {
+  background: transparent;
+  color: var(--ivory);
+  border: 1.5px solid rgba(244, 235, 211, 0.55);
+}
+.btn--line:hover {
+  border-color: var(--ivory);
+  color: #fff;
+}
+
+.btn:focus-visible,
+.theme-light a:focus-visible,
+.theme-light button:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}

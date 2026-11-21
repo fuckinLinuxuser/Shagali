@@ -1,7 +1,7 @@
 ---
 // /goroda — все города из коллекции. Сначала города с будущими показами (по ближайшей дате), потом остальные по алфавиту.
 import MainLayout from '../../layouts/MainLayout.astro';
-import Nav from '../../components/Nav.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
 import Footer from '../../components/Footer.astro';
 import { loadCatalog } from '../../lib/catalog';
 import { formatDateRu } from '../../lib/performances';
@@ -21,7 +21,7 @@ const rest = rows
   title="Гастроли по городам — Мир За Сценой"
   description="Города гастролей продюсерского центра Елены Шагали: ближайшие спектакли, даты, площадки и билеты."
 >
-  <Nav />
+  <SiteHeader />
   <main class="page">
     <div class="page__inner">
       <nav class="crumbs" aria-label="Навигация"><a href="/">Главная</a> / Города</nav>

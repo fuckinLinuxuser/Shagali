@@ -122,7 +122,7 @@ for (const path of PAGES) {
     await expect(page).toHaveTitle(/\S/);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflow).toBeLessThanOrEqual(0);
-    await expect(page.locator('nav a[href="/#projects"]')).toHaveCount(1);
+    await expect(page.locator('header a[href="/#afisha"]').first()).toBeAttached();
     expect(errors).toEqual([]);
   });
 }

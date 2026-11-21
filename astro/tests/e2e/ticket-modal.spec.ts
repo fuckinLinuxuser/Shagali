@@ -53,7 +53,7 @@ test('виджет растянут на всю модалку, а не стан
 test('«Купить билет» на слайде главной открывает ту же модалку', async ({ page, context }) => {
   await mockCbiletom(context);
   await page.goto('/');
-  await page.locator('#projects .swiper-slide', { hasText: 'Родной мой Кукушонок' }).locator('[data-ticket-id]').first().click({ force: true });
+  await page.locator('[data-stage-slide][data-slide-id="kukushonok"] [data-ticket-id]').click();
   await expect(page.getByRole('dialog').locator('iframe')).toHaveAttribute('src', FRAME);
 });
 

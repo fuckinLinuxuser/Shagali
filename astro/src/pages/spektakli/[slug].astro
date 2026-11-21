@@ -1,7 +1,7 @@
 ---
 // /spektakli/<id> — спектакль и все его показы. Разделы без данных (галерея, отзывы) не выводятся.
 import MainLayout from '../../layouts/MainLayout.astro';
-import Nav from '../../components/Nav.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
 import Footer from '../../components/Footer.astro';
 import PerformanceCard from '../../components/PerformanceCard.astro';
 import { loadCatalog } from '../../lib/catalog';
@@ -17,7 +17,7 @@ const quote = show.quote.trim().replace(/^["«]+|["»]+$/g, '');
 ---
 
 <MainLayout title={`${show.title} — спектакль | Мир За Сценой`} description={show.text.slice(0, 160)}>
-  <Nav />
+  <SiteHeader />
   <main class="page">
     <div class="page__inner">
       <nav class="crumbs" aria-label="Навигация"><a href="/">Главная</a> / Спектакли / {show.title}</nav>
