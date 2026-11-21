@@ -1,0 +1,152 @@
+---
+// Плашка про файлы cookie. Скрыта, пока скрипт не проверит выбор: у вернувшегося посетителя не мигает.
+// Две равнозначные кнопки; выбор запоминается на год (src/lib/consent.ts); изменить можно ссылкой
+// «Настройки cookie» в подвале. Счётчики грузятся только после «Принять» (src/lib/counters.ts).
+---
+
+<section class="cookie" role="region" aria-label="Файлы cookie" data-cookie-banner hidden>
+  <p class="cookie__text">
+    Сайт использует файлы cookie. Необходимые нужны для его работы, а аналитические (счётчик Top.Mail.Ru)
+    включаются только с вашего согласия.
+    <a class="cookie__more" href="/cookies">Подробнее</a>
+  </p>
+  <div class="cookie__actions">
+    <button type="button" class="cookie__btn cookie__btn--accept" data-cookie-accept>Принять</button>
+    <button type="button" class="cookie__btn cookie__btn--decline" data-cookie-decline>Отклонить</button>
+  </div>
+</section>
+
+<script>
+  import { parseConsent, serializeConsent, type ConsentChoice } from '../lib/consent';
+  import { loadCounters, purgeCounterCookies } from '../lib/counters';
+
+  const banner = document.querySelector<HTMLElement>('[data-cookie-banner]');
+  if (banner) {
+    const accept = banner.querySelector<HTMLButtonElement>('[data-cookie-accept]')!;
+    const decline = banner.querySelector<HTMLButtonElement>('[data-cookie-decline]')!;
+    const secure = location.protocol === 'https:';
+
+    const save = (choice: ConsentChoice) => {
+      document.cookie = serializeConsent(choice, secure);
+    };
+    const show = () => {
+      banner.hidden = false;
+      accept.focus({ preventScroll: true });
+    };
+
+    const current = parseConsent(document.cookie);
+    if (current === 'accepted') loadCounters();
+    if (current === null) banner.hidden = false;
+
+    accept.addEventListener('click', () => {
+      save('accepted');
+      banner.hidden = true;
+      loadCounters();
+    });
+
+    decline.addEventListener('click', () => {
+      const wasAccepted = parseConsent(document.cookie) === 'accepted' || window.__countersLoaded;
+      save('declined');
+      banner.hidden = true;
+      purgeCounterCookies();
+      // уже загруженный счётчик из страницы не выгрузить — перезагружаем, чтобы он остановился
+      if (wasAccepted) location.reload();
+    });
+
+    // «Настройки cookie» в подвале
+    document.addEventListener('click', (e) => {
+      if ((e.target as Element | null)?.closest('[data-cookie-settings]')) show();
+    });
+  }
+</script>
+
+<style>
+  .cookie {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    z-index: 9000; /* ниже модалки билетов (10000) и меню (10001) */
+    box-sizing: border-box;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 24px;
+    background: var(--ink, #111);
+    color: var(--ivory, #f4ebd3);
+    border-top: 3px solid var(--gold, #cfae4a);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    font-family: var(--font-sans, 'Montserrat', system-ui, sans-serif);
+  }
+  .cookie[hidden] {
+    display: none;
+  }
+  .cookie__text {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .cookie__more {
+    color: var(--gold, #cfae4a);
+    white-space: nowrap;
+  }
+  .cookie__actions {
+    display: flex;
+    flex: none;
+    gap: 12px;
+  }
+  .cookie__btn {
+    min-height: 44px;
+    padding: 0 24px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    border: 1.5px solid var(--gold, #cfae4a);
+  }
+  .cookie__btn--accept {
+    background: var(--gold, #cfae4a);
+    color: var(--ink, #111);
+  }
+  .cookie__btn--accept:hover {
+    background: var(--gold-hover, #e3c35a);
+  }
+  .cookie__btn--decline {
+    background: transparent;
+    color: var(--ivory, #f4ebd3);
+    border-color: rgba(244, 235, 211, 0.55);
+  }
+  .cookie__btn--decline:hover {
+    border-color: var(--ivory, #f4ebd3);
+  }
+  .cookie__btn:focus-visible,
+  .cookie__more:focus-visible {
+    outline: 3px solid var(--gold, #cfae4a);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 767px) {
+    .cookie {
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
+      padding: 14px 16px;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .cookie__text {
+      font-size: 13px;
+    }
+    .cookie__actions {
+      flex-direction: row;
+    }
+    .cookie__btn {
+      flex: 1;
+      padding: 0 12px;
+    }
+  }
+</style>

@@ -1,0 +1,163 @@
+---
+// /cookies — какие файлы cookie использует сайт и зачем. Только факты из кода: юридические тексты
+// (политика, согласие, реквизиты оператора) — задача 2.3, их присылает заказчик.
+import MainLayout from '../layouts/MainLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Footer from '../components/Footer.astro';
+import { CONSENT_COOKIE } from '../lib/consent';
+---
+
+<MainLayout
+  title="Файлы cookie | Мир За Сценой"
+  description="Какие файлы cookie использует сайт «Мир За Сценой» и как изменить выбор."
+  theme="light"
+>
+  <SiteHeader />
+
+  <main class="doc">
+    <h1>Файлы cookie</h1>
+    <p class="lead">
+      Здесь описано, какие файлы cookie использует сайт и зачем. Выбор можно изменить в любой момент:
+      <button type="button" class="linkbtn" data-cookie-settings>Настройки cookie</button> внизу страницы.
+    </p>
+
+    <h2>Необходимые: работают всегда</h2>
+    <table>
+      <thead><tr><th scope="col">Cookie</th><th scope="col">Зачем</th><th scope="col">Срок</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>{CONSENT_COOKIE}</code></td>
+          <td>Запоминает ваш выбор в плашке про cookie, чтобы не спрашивать снова.</td>
+          <td>1 год</td>
+        </tr>
+        <tr>
+          <td><code>PHPSESSID</code></td>
+          <td>Сессия панели управления сайтом. Появляется только на странице входа администратора, у обычных посетителей её нет.</td>
+          <td>До закрытия браузера</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Аналитические: только после «Принять»</h2>
+    <p>
+      Счётчик посещаемости <strong>Top.Mail.Ru</strong> ставит собственные файлы cookie и собирает статистику посещений.
+      Он загружается только после того, как вы нажмёте «Принять». Если нажать «Отклонить» (или изменить выбор позже),
+      счётчик не загружается, а его cookie удаляются. Подробнее о том, как он работает, — на сайте самого сервиса.
+    </p>
+
+    <h2>Другие сервисы</h2>
+    <ul>
+      <li>
+        <strong>Шрифты Google Fonts.</strong> Шрифты сайта (Montserrat и Playfair Display) загружаются с серверов Google:
+        браузер обращается к ним напрямую при открытии страницы.
+      </li>
+      <li>
+        <strong>Покупка билетов (cbiletom.ru).</strong> Окно покупки открывается из сервиса cbiletom.ru только после
+        нажатия «Билеты»; до этого страница к нему не обращается. Сам сервис может использовать собственные файлы cookie.
+      </li>
+    </ul>
+
+    <p class="back"><a href="/">← На главную</a></p>
+  </main>
+
+  <Footer />
+</MainLayout>
+
+<style>
+  .doc {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 20px 96px;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--ink);
+  }
+  h1 {
+    margin: 0 0 16px;
+    font-family: var(--font-serif);
+    font-weight: 900;
+    font-size: 48px;
+    line-height: 1.05;
+    color: var(--ink); /* глобальный h1 старой темы золотой */
+  }
+  h2 {
+    margin: 40px 0 12px;
+    font-family: var(--font-serif);
+    font-weight: 900;
+    font-size: 26px;
+    color: var(--ink);
+  }
+  .lead {
+    font-size: 18px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+  }
+  th,
+  td {
+    padding: 12px 14px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid #d0d0d0;
+  }
+  th {
+    font-weight: 600;
+    background: #f6f1e0;
+  }
+  code {
+    font-size: 14px;
+    word-break: break-all;
+  }
+  ul {
+    padding-left: 20px;
+  }
+  li + li {
+    margin-top: 10px;
+  }
+  .linkbtn {
+    padding: 0;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid currentColor;
+    color: var(--gold-ink);
+    font: inherit;
+    cursor: pointer;
+  }
+  .back {
+    margin-top: 40px;
+  }
+  .back a {
+    color: var(--gold-ink);
+  }
+
+  @media (max-width: 767px) {
+    .doc {
+      padding: 28px 16px 72px;
+    }
+    h1 {
+      font-size: 34px;
+    }
+    table,
+    thead,
+    tbody,
+    tr,
+    th,
+    td {
+      display: block;
+    }
+    thead {
+      display: none;
+    }
+    tr {
+      padding: 10px 0;
+      border-bottom: 1px solid #d0d0d0;
+    }
+    td {
+      padding: 2px 0;
+      border: 0;
+    }
+  }
+</style>
