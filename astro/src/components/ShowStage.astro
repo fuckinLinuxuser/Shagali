@@ -30,14 +30,11 @@ const total = slides.length;
             <h2>{s.title}</h2>
             {s.quote && <p class="quote">{s.quote}</p>}
           </div>
-          <div class="actions">
-            {s.buy && (
-              <TicketButton class="btn btn--gold" cbiletomId={s.buy.cbiletomId} title={s.title} subtitle={s.buy.subtitle}>
-                Купить билет
-              </TicketButton>
-            )}
-            <a class="btn btn--line" href={s.href}>Подробнее</a>
-          </div>
+          {s.buy && (
+            <div class="actions">
+              <TicketButton cbiletomId={s.buy.cbiletomId} title={s.title} subtitle={s.buy.subtitle} />
+            </div>
+          )}
         </div>
       </article>
     ))
@@ -52,8 +49,6 @@ const total = slides.length;
       <svg width="14" height="26" viewBox="0 0 14 26" aria-hidden="true"><path d="M2 2l10 11L2 24" fill="none" stroke="currentColor" stroke-width="3"></path></svg>
     </button>
   </div>
-
-  <button type="button" class="replay" data-curtain-replay aria-label="Показать занавес ещё раз">Занавес</button>
 </section>
 
 <script>
@@ -217,23 +212,6 @@ const total = slides.length;
     background: #1d1d1d;
   }
 
-  .replay {
-    position: absolute;
-    right: 36px;
-    top: 30px;
-    min-height: 44px;
-    padding: 8px 16px;
-    background: none;
-    border: 1.5px solid rgba(244, 235, 211, 0.5);
-    color: var(--ivory);
-    font-family: var(--font-sans);
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    cursor: pointer;
-  }
-
   @media (max-width: 767px) {
     .stage {
       background: #fff;
@@ -296,15 +274,6 @@ const total = slides.length;
     }
     .arrow + .arrow {
       border-left: 0;
-    }
-    .replay {
-      position: static;
-      align-self: flex-end;
-      margin-top: 10px;
-      padding: 8px 14px;
-      color: #444;
-      border-color: #cfcfcf;
-      font-size: 12px;
     }
   }
 </style>

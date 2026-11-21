@@ -56,7 +56,7 @@ export function mapDots(cities: readonly City[], citiesWithPerformances: Readonl
         y,
         visited: c.visited,
         href: `/goroda/${c.id}`,
-        label: label ? { x: x + label.dx, y: y + label.dy, anchor: label.anchor } : { x, y: y + 30, anchor: 'middle' },
+        label: label ? { x: x + label.dx, y: y + label.dy, anchor: label.anchor } : { x: x + 14, y: y + 6, anchor: 'start' },
       },
     ];
   });

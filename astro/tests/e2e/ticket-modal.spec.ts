@@ -1,5 +1,5 @@
 // Задача 1.4: модалка покупки билетов cbiletom. Стенд — сборка с фикстурами: тестовый показ Кукушонка
-// в Тестограде (on_sale, событие 2717), на главной у слайда Кукушонка тоже «Купить билет».
+// в Тестограде (on_sale, событие 2717), на главной у слайда Кукушонка тоже «Билеты».
 // Сам cbiletom не нужен: подменяем ответ и проверяем, что открывается нужное событие.
 import { expect, test } from './fixtures';
 
@@ -27,10 +27,10 @@ test('до клика на странице нет ни iframe cbiletom, ни е
   expect(requests).toEqual([]);
 });
 
-test('«Купить» на странице города открывает модалку с нужным событием', async ({ page, context }) => {
+test('«Билеты» на странице города открывает модалку с нужным событием', async ({ page, context }) => {
   await mockCbiletom(context);
   await page.goto('/goroda/test-gorod');
-  await page.locator(CARD).getByRole('button', { name: 'Купить' }).click();
+  await page.locator(CARD).getByRole('button', { name: 'Билеты', exact: true }).click();
 
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
@@ -42,7 +42,7 @@ test('«Купить» на странице города открывает м�
 test('виджет растянут на всю модалку, а не стандартные 300×150', async ({ page, context }) => {
   await mockCbiletom(context);
   await page.goto('/goroda/test-gorod');
-  await page.locator(CARD).getByRole('button', { name: 'Купить' }).click();
+  await page.locator(CARD).getByRole('button', { name: 'Билеты', exact: true }).click();
   const panel = (await page.locator('[data-ticket-panel]').boundingBox())!;
   const frame = (await page.locator('[data-ticket-panel] iframe').boundingBox())!;
   expect(frame.width).toBeGreaterThanOrEqual(panel.width - 2);
@@ -50,7 +50,7 @@ test('виджет растянут на всю модалку, а не стан
   expect(frame.height).toBeGreaterThanOrEqual(panel.height * 0.6);
 });
 
-test('«Купить билет» на слайде главной открывает ту же модалку', async ({ page, context }) => {
+test('«Билеты» на слайде главной открывает ту же модалку', async ({ page, context }) => {
   await mockCbiletom(context);
   await page.goto('/');
   await page.locator('[data-stage-slide][data-slide-id="kukushonok"] [data-ticket-id]').click();
@@ -60,7 +60,7 @@ test('«Купить билет» на слайде главной открыв�
 test('при открытой модалке страница не прокручивается; закрытие возвращает позицию и фокус', async ({ page, context }) => {
   await mockCbiletom(context);
   await page.goto('/goroda/test-gorod');
-  const buy = page.locator(CARD).getByRole('button', { name: 'Купить' });
+  const buy = page.locator(CARD).getByRole('button', { name: 'Билеты', exact: true });
   await buy.scrollIntoViewIfNeeded();
   await page.evaluate(() => window.scrollTo(0, 120));
   const before = await page.evaluate(() => window.scrollY);
@@ -84,7 +84,7 @@ test('Esc закрывает модалку, фокус возвращается
   test.skip(isMobile, 'Esc — клавиатура');
   await mockCbiletom(context);
   await page.goto('/goroda/test-gorod');
-  const buy = page.locator(CARD).getByRole('button', { name: 'Купить' });
+  const buy = page.locator(CARD).getByRole('button', { name: 'Билеты', exact: true });
   await buy.click();
   await expect(page.getByRole('dialog')).toBeVisible();
   await page.keyboard.press('Escape');
@@ -97,7 +97,7 @@ test('если cbiletom не отвечает — через 7 секунд сс
   // cbiletom.ru отрезан фикстюром (route abort) — так же выглядит блокировка у посетителя
   await page.clock.install();
   await page.goto('/goroda/test-gorod');
-  await page.locator(CARD).getByRole('button', { name: 'Купить' }).click();
+  await page.locator(CARD).getByRole('button', { name: 'Билеты', exact: true }).click();
   const link = page.getByRole('link', { name: 'Открыть покупку на сайте cbiletom' });
 
   await page.clock.runFor(6500);
@@ -112,7 +112,7 @@ test('на телефоне модалка занимает весь экран 
   test.skip(!isMobile, 'только телефон');
   await mockCbiletom(context);
   await page.goto('/goroda/test-gorod');
-  await page.locator(CARD).getByRole('button', { name: 'Купить' }).click();
+  await page.locator(CARD).getByRole('button', { name: 'Билеты', exact: true }).click();
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
 
@@ -129,7 +129,7 @@ test('на десктопе модалка не на весь экран', async
   test.skip(!!isMobile);
   await mockCbiletom(context);
   await page.goto('/goroda/test-gorod');
-  await page.locator(CARD).getByRole('button', { name: 'Купить' }).click();
+  await page.locator(CARD).getByRole('button', { name: 'Билеты', exact: true }).click();
   const box = (await page.locator('[data-ticket-panel]').boundingBox())!;
   expect(box.width).toBeLessThan(page.viewportSize()!.width);
 });

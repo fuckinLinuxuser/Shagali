@@ -65,9 +65,9 @@ describe('mapDots', () => {
     expect(mapDots(cities as never, new Set(['vladivostok'])).map((d) => d.id)).not.toContain('vladivostok');
   });
 
-  it('подпись по умолчанию — под точкой по центру, свою можно задать в данных', () => {
+  it('подпись по умолчанию — справа от точки (как в дизайне), свою можно задать в данных', () => {
     const [tyumen, spb] = mapDots(cities as never, new Set(['tyumen']));
-    expect(tyumen.label).toEqual({ x: 336, y: 637, anchor: 'middle' });
+    expect(tyumen.label).toEqual({ x: 350, y: 613, anchor: 'start' });
     expect(spb.label).toEqual({ x: 88, y: 581, anchor: 'start' });
     expect(spb.visited).toBe(true);
   });

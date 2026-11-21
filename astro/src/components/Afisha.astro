@@ -54,13 +54,10 @@ const tabs = cityTabs(cards);
                   <>
                     {c.priceFrom !== null && <span class="price">{formatPrice(c.priceFrom)}</span>}
                     <TicketButton
-                      class="btn btn--gold"
                       cbiletomId={c.cbiletomId}
                       title={`${c.title} — ${c.city.name}`}
                       subtitle={formatDateRu(c.date as string)}
-                    >
-                      Купить
-                    </TicketButton>
+                    />
                   </>
                 )}
                 {c.status === 'sold_out' && (

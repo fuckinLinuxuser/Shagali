@@ -1,9 +1,8 @@
 ---
-// src/pages/index.astro — главная в новом дизайне: шапка, слайдер спектаклей и афиша под кулисами,
+// src/pages/index.astro — главная в новом дизайне: шапка, слайдер спектаклей и афиша,
 // «Антракт», гастроли, люди, подвал.
 import MainLayout from '../layouts/MainLayout.astro';
 import SiteHeader from '../components/SiteHeader.astro';
-import Curtains from '../components/Curtains.astro';
 import ShowStage from '../components/ShowStage.astro';
 import Afisha from '../components/Afisha.astro';
 import ToursSection from '../components/ToursSection.astro';
@@ -28,8 +27,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <SiteHeader />
 
   <main>
-    <div class="act" data-curtain-root data-curtain-state="open">
-      <Curtains />
+    <div class="act">
       <div class="act__inner">
         <ShowStage />
         <Afisha />

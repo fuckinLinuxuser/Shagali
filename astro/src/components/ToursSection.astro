@@ -22,20 +22,21 @@ const dots = mapDots(
 
       <div class="map-container">
         <svg
-          viewBox="20 455 650 300"
+          viewBox="0 32 1224 760"
           preserveAspectRatio="xMidYMid meet"
           class="russia-map"
         >
           <defs>
           <style type="text/css">
             .land {
-              fill: #0d7a5f;
-              stroke: #e0e0e0;
-              stroke-width: 0.6;
+              fill: #1e1a13;
+              stroke: #cfae4a;
+              stroke-opacity: 0.55;
+              stroke-width: 0.8;
               transition: fill 0.4s ease;
             }
             .land:hover {
-              fill: #1a9a7e;
+              fill: #2b2417;
             }
           </style>
         </defs>
@@ -129,7 +130,7 @@ const dots = mapDots(
         {
           dots.map((d) => (
             <a href={d.href} class="city-link" aria-label={`${d.name}: показы и билеты`}>
-              <circle class={d.visited ? 'city-dot visited' : 'city-dot'} cx={d.x} cy={d.y} r={7} data-city={d.id} />
+              <circle class={d.visited ? 'city-dot visited' : 'city-dot'} cx={d.x} cy={d.y} r={8} data-city={d.id} />
               <text x={d.label.x} y={d.label.y} class="city-label" text-anchor={d.label.anchor}>{d.name}</text>
             </a>
           ))
@@ -266,10 +267,6 @@ const dots = mapDots(
   .map-container {
     margin-top: 48px;
     border: 1px solid #3a3223;
-  }
-
-  .city-label {
-    font-size: 0.9rem;
   }
 
   .cta-wrapper {

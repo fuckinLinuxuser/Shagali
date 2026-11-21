@@ -59,6 +59,34 @@ test('гастроли: карта и кнопка листа ожидания �
   await expect(page.locator('#gastroli #openForm')).toHaveCount(1);
 });
 
+test('карта: вся Россия целиком (от Калининграда до Чукотки) и цвета дизайна', async ({ page }) => {
+  await page.goto('/');
+  const m = await page.evaluate(() => {
+    const svg = document.querySelector('.russia-map') as unknown as SVGSVGElement;
+    const vb = svg.viewBox.baseVal;
+    const box = (svg.querySelector('g') as SVGGElement).getBBox();
+    const land = getComputedStyle(svg.querySelector('.land')!);
+    const dot = getComputedStyle(svg.querySelector('.city-dot:not(.visited)') ?? svg.querySelector('.city-dot')!);
+    const label = getComputedStyle(svg.querySelector('.city-label')!);
+    return {
+      vb: { x: vb.x, y: vb.y, w: vb.width, h: vb.height },
+      box: { x: box.x, y: box.y, r: box.x + box.width, b: box.y + box.height },
+      land: land.fill, stroke: land.stroke, dot: dot.fill, label: label.fill,
+    };
+  });
+  // границы всех регионов внутри окна карты: ничего не обрезано
+  expect(m.box.x).toBeGreaterThanOrEqual(m.vb.x - 2);
+  expect(m.box.y).toBeGreaterThanOrEqual(m.vb.y - 2);
+  expect(m.box.r).toBeLessThanOrEqual(m.vb.x + m.vb.w + 2);
+  expect(m.box.b).toBeLessThanOrEqual(m.vb.y + m.vb.h + 2);
+  expect(m.vb.w).toBeGreaterThan(1100); // раньше показывалась только западная часть (650)
+  // цвета как в дизайне: тёмная земля, золотая обводка, золотые метки, подписи цвета слоновой кости
+  expect(m.land).toBe('rgb(30, 26, 19)');
+  expect(m.stroke).toMatch(/^rgba?\(207, 174, 74/);
+  expect(m.dot).toBe('rgb(227, 195, 90)');
+  expect(m.label).toBe('rgb(244, 235, 211)');
+});
+
 test('карта: ровно одна точка на город, где были или есть показы', async ({ page }) => {
   await page.goto('/');
   const links = page.locator('.map-container svg a[href^="/goroda/"]');
@@ -147,41 +175,11 @@ test('пункт меню ведёт к блоку и закрывает мен�
   await expect(page).toHaveURL(/#gastroli$/);
 });
 
-test('кулисы: открываются при загрузке, не перекрывают шапку, «Занавес» проигрывает заново', async ({ page }) => {
+test('кулис и кнопки «Занавес» нет', async ({ page }) => {
   await page.goto('/');
-  const root = page.locator('[data-curtain-root]');
-  await expect(root).toHaveAttribute('data-curtain-state', 'open', { timeout: 6000 });
-
-  const vw = page.viewportSize()!.width;
-  // сложены у края, а не закрывают экран (ждём конец анимации раскрытия, около 2,8 с)
-  await expect
-    .poll(async () => (await page.locator('[data-curtain="left"]').boundingBox())!.width, { timeout: 6000 })
-    .toBeLessThanOrEqual(vw * 0.25);
-  await expect(page.locator('[data-curtain="left"]')).toHaveCSS('pointer-events', 'none');
-
-  await page.getByRole('button', { name: 'Показать занавес ещё раз' }).click();
-  await expect(root).toHaveAttribute('data-curtain-state', 'closed');
-  await expect(root).toHaveAttribute('data-curtain-state', 'open', { timeout: 6000 });
-});
-
-test('кулисы: при prefers-reduced-motion без анимации, сразу сложены', async ({ browser, baseURL }) => {
-  const context = await browser.newContext({ reducedMotion: 'reduce', baseURL });
-  const page = await context.newPage();
-  await page.goto('/');
-  await expect(page.locator('[data-curtain-root]')).toHaveAttribute('data-curtain-state', 'open');
-  const dur = await page.locator('[data-curtain="left"]').evaluate((el) => getComputedStyle(el).transitionDuration);
-  expect(['0s', '0.01ms', '1e-05s']).toContain(dur);
-  await context.close();
-});
-
-test('без JS кулисы сложены, а контент доступен', async ({ browser, baseURL }) => {
-  const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
-  const page = await context.newPage();
-  await page.goto('/');
-  const left = await page.locator('[data-curtain="left"]').boundingBox();
-  expect(left!.width).toBeLessThanOrEqual(page.viewportSize()!.width * 0.25);
-  await expect(page.locator('[data-stage-slide]').first()).toBeVisible();
-  await context.close();
+  await expect(page.locator('[data-curtain], [data-curtain-root], .curtain')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /занавес/i })).toHaveCount(0);
+  expect(await page.locator('body').innerText()).not.toMatch(/занавес/i);
 });
 
 // ───────────────────────── Слайдер спектаклей ─────────────────────────
@@ -215,7 +213,7 @@ test('слайдер: стрелки листают по кругу, счётч�
   expect((await visibleTitle())!.trim()).toBe(SHOWS[0].title);
 });
 
-test('слайдер: Кукушонок — город и дата ближайшего показа и «Купить»; остальные без покупки', async ({ page }) => {
+test('слайдер: Кукушонок — город и дата ближайшего показа и «Билеты»; Мамочка и Индиго без покупки', async ({ page }) => {
   await page.goto('/');
   const kuk = page.locator('[data-stage-slide][data-slide-id="kukushonok"]');
   await expect(kuk.locator('[data-stage-kicker]')).toHaveText('Тестоград');
@@ -226,8 +224,30 @@ test('слайдер: Кукушонок — город и дата ближай
   for (const id of ['doggy', 'indigo']) {
     await expect(page.locator(`[data-stage-slide][data-slide-id="${id}"] [data-ticket-id]`)).toHaveCount(0);
   }
+  // кнопки «Подробнее» нет ни на одном слайде
+  await expect(page.locator('[data-stage-slide]').getByText('Подробнее')).toHaveCount(0);
   // возрастного знака в данных нет — значит, нет и в разметке
   await expect(page.locator('[data-stage-slide] [data-age]')).toHaveCount(0);
+});
+
+// ───────────────────────── Кнопка «Билеты» ─────────────────────────
+
+test('кнопка «Билеты»: красный билет, текст «Билеты», а не «Купить билет»', async ({ page }) => {
+  await page.goto('/');
+  const buttons = page.locator('[data-ticket-id]:visible'); // скрытые слайды не в счёт
+  expect(await buttons.count()).toBeGreaterThan(0);
+  for (const btn of await buttons.all()) {
+    await expect(btn).toHaveAccessibleName('Билеты');
+    await expect(btn).toHaveClass(/ticket-btn/);
+  }
+  expect(await page.locator('body').innerText()).not.toMatch(/купить билет/i);
+
+  const kuk = page.locator('[data-stage-slide][data-slide-id="kukushonok"] [data-ticket-id]');
+  // красный силуэт с зубчатым краем и корешком с масками
+  await expect(kuk.locator('.ticket-btn__shape')).toHaveCSS('fill', 'rgb(193, 39, 47)');
+  const box = (await kuk.boundingBox())!;
+  expect(box.height).toBeGreaterThanOrEqual(44);
+  expect(await kuk.locator('.ticket-btn__shape').getAttribute('d')).toContain('A7,7'); // выемки по углам
 });
 
 // ───────────────────────── Афиша ─────────────────────────
@@ -241,7 +261,7 @@ test('афиша: карточки будущих показов по дате, 
   await expect(page.locator('#afisha h1')).toHaveText('Афиша');
 });
 
-test('афиша: «Купить» только у показа в продаже и открывает модалку', async ({ page, context }) => {
+test('афиша: «Билеты» только у показа в продаже и открывает модалку', async ({ page, context }) => {
   await context.route('https://cbiletom.ru/**', (r) => r.fulfill({ status: 200, contentType: 'text/html', body: '<p>cbiletom</p>' }));
   await page.goto('/');
   const buy = page.locator('#afisha [data-afisha-card] [data-ticket-id]');
