@@ -54,8 +54,3 @@ export function formatPrice(rub: number): string {
   const grouped = String(rub).replace(/\B(?=(\d{3})+(?!\d))/g, NBSP);
   return `от${' '}${grouped}${NBSP}₽`;
 }
-
-// Пока модалку не сделала задача 1.4 — покупка в новой вкладке, тот же адрес, что у виджета.
-export function ticketUrl(cbiletomId: number): string {
-  return `https://cbiletom.ru/widget/1/frame.php?id=${cbiletomId}&mode=1`;
-}
