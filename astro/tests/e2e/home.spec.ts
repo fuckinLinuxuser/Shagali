@@ -1,5 +1,5 @@
 // Задача 1.2: слайдер, карта и таймлайн главной построены из данных.
-// Стенд — сборка с фикстурами: у Кукушонка показ в продаже (14088, 2099), у «Мамочка, купи собаку» — sold_out,
+// Стенд — сборка с фикстурами: у Кукушонка показ в продаже (событие 2717, 2099), у «Мамочка, купи собаку» — sold_out,
 // у «Растворимого Индиго» — soon, у «Откуда взялся папа Карло?» прошедший показ.
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -31,10 +31,10 @@ test('слайдер: кнопка зависит от ближайшего по
   await page.goto('/');
   const slide = (title: string) => page.locator('#projects .swiper-slide', { hasText: title });
 
-  // в продаже (фикстура 14088) → «Купить билет» и подпись города и даты
+  // в продаже (фикстура, событие 2717) → «Купить билет» и подпись города и даты
   const kuk = slide('Родной мой Кукушонок');
   await expect(kuk.locator('.buy-btn')).toHaveCount(1);
-  await expect(kuk.locator('.buy-btn')).toHaveAttribute('onclick', /openTicketModal\(14088/);
+  await expect(kuk.locator('.buy-btn')).toHaveAttribute('data-ticket-id', '2717');
   await expect(kuk.locator('.event-date-badge')).toContainText('15 января');
 
   // sold_out, soon и только прошедший показ → «Заявка», без покупки
