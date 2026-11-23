@@ -21,6 +21,8 @@ test.describe('визуальная база', () => {
   test.skip(process.env.PW_VISUAL !== '1', 'скриншоты сверяются только в контейнере: npm run test:visual');
 
   test('главная', async ({ page, baseURL }) => {
+    // плашка cookie в эталон не попадает: выбор уже сделан
+    await page.context().addCookies([{ name: 'shagali_cookie_consent', value: 'v1:declined', url: baseURL! }]);
     await page.route('**/*', (route) => {
       const url = new URL(route.request().url());
       return OWN_ORIGIN_ONLY(url, baseURL!) ? route.continue() : route.abort();
