@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;600&display=swap" rel="stylesheet" />
   </head>
-  <body>
+  <body class="gate-body">
     <main data-gate>
       <p class="brand">Мир за сценой</p>
       <h1>Сайт в разработке</h1>
@@ -88,14 +88,13 @@
   </body>
 </html>
 
-<style is:global>
-  :root {
+<style>
+  /* Стили только этого компонента (scoped): index.astro импортирует его и при открытом сайте — глобальные правила
+     ушли бы в CSS настоящей главной. Поэтому и переменные, и фон — на body.gate-body, который есть только у заглушки. */
+  :global(body.gate-body) {
     --ink: #0f0d0a;
     --gold: #d4af57;
     --ivory: #f5f0e6;
-  }
-  html,
-  body {
     margin: 0;
     min-height: 100%;
     background: var(--ink);
