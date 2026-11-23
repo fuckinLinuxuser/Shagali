@@ -43,6 +43,7 @@ test('полный путь: регистрация → письмо → под�
   await expect(page).toHaveURL(/\/lk\/?$/);
   await expect(page.locator('[data-p="name"]')).toHaveText('Борис Тестов');
   await expect(page.locator('[data-p="phone"]')).toHaveText('79001234567');
+  await expect(page.locator('[data-promo-text]')).toHaveText('Ваш промокод: STAND12');
 
   await page.getByRole('button', { name: 'Выйти' }).click();
   await expect(page).toHaveURL(/\/lk\/login/);
@@ -134,4 +135,22 @@ test('профиль: «Удалить аккаунт» с паролем уда
   await page.getByRole('button', { name: 'Удалить аккаунт навсегда' }).click();
   await expect(page).toHaveURL(/\/lk\/register/);
   expect(sql('SELECT COUNT(*) FROM users')).toBe('0');
+});
+
+test('профиль: не хватает данных — промокод скрыт, подсказка называет поле; после сохранения код виден', async ({ page }) => {
+  await fillRegister(page);
+  await page.goto(`/lk/verify?token=${tokenFrom((await waitForMail(EMAIL)).text)}`);
+  await expect(page.locator('[data-verify-status]')).toContainText('Почта подтверждена');
+  sql("UPDATE users SET city = ''");
+  await page.goto('/lk/login');
+  await page.getByLabel('Email').fill(EMAIL);
+  await page.getByLabel('Пароль').fill(PASS);
+  await page.getByRole('button', { name: 'Войти' }).click();
+  await expect(page.locator('[data-promo-text]')).toContainText('укажите город');
+  await expect(page.locator('[data-promo-text]')).not.toContainText('STAND12');
+
+  await page.getByLabel('Город').fill('Тюмень');
+  await page.getByRole('button', { name: 'Сохранить' }).click();
+  await expect(page.locator('[data-promo-text]')).toHaveText('Ваш промокод: STAND12');
+  await expect(page.locator('[data-p="city"]')).toHaveText('Тюмень');
 });

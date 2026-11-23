@@ -63,3 +63,29 @@ function auth_site_url(): string {
 function auth_policy_version(): string {
     return (string)(shagali_config()['policy_version'] ?? POLICY_VERSION_DEFAULT);
 }
+
+const BACKSTAGE_MIN_USES = 10; // с стольких использований агентского кода открывается закулисье
+
+// Какие обязательные поля профиля пусты (ключи полей). Пока что-то пусто — промокод не показываем.
+function auth_profile_missing(array $user): array {
+    return array_values(array_filter(['last_name', 'first_name', 'city', 'phone'], static fn($k) => trim((string)($user[$k] ?? '')) === ''));
+}
+
+// Агентский код пользователя (или null): код, число использований, открыто ли закулисье.
+function auth_agent(PDO $pdo, int $userId): ?array {
+    $q = $pdo->prepare('SELECT code, uses FROM agent_codes WHERE user_id = ?');
+    $q->execute([$userId]);
+    $row = $q->fetch();
+    if (!$row) return null;
+    return ['code' => $row['code'], 'uses' => (int)$row['uses'], 'backstage' => (int)$row['uses'] >= BACKSTAGE_MIN_USES];
+}
+
+// Вошедший пользователь (id) с подтверждённой почтой или 0.
+function auth_current_user_id(PDO $pdo): int {
+    auth_session();
+    $id = (int)($_SESSION['uid'] ?? 0);
+    if ($id < 1) return 0;
+    $q = $pdo->prepare('SELECT 1 FROM users WHERE id = ? AND email_verified_at IS NOT NULL');
+    $q->execute([$id]);
+    return $q->fetchColumn() ? $id : 0;
+}
