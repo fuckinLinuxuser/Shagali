@@ -1,7 +1,7 @@
 <?php
 // /api/auth.php?action=… — личный кабинет: регистрация, подтверждение почты, вход, выход, сброс пароля.
-//   GET : csrf, me
-//   POST: register, verify, login, logout, reset_request, reset_confirm   (все — с заголовком X-CSRF-Token)
+//   GET : csrf, me (всегда 200: user = null, если не вошёл)
+//   POST: register, verify, login, logout, reset_request, reset_confirm, delete_account   (все — с заголовком X-CSRF-Token)
 // Ответы: JSON. 201/200 успех · 400 неверный токен · 401 не вошёл/неверные данные · 403 нет CSRF или почта не подтверждена ·
 // 405/404 · 422 ошибки полей · 429 лимит. Пароль — только password_hash; токены писем — в БД только SHA-256.
 require_once __DIR__ . '/_auth.php';
@@ -21,7 +21,7 @@ header('Cache-Control: no-store');
 $action = (string)($_GET['action'] ?? '');
 $method = $_SERVER['REQUEST_METHOD'] ?? '';
 $GET_ACTIONS = ['csrf', 'me'];
-$POST_ACTIONS = ['register', 'verify', 'login', 'logout', 'reset_request', 'reset_confirm'];
+$POST_ACTIONS = ['register', 'verify', 'login', 'logout', 'reset_request', 'reset_confirm', 'delete_account'];
 if (!in_array($action, array_merge($GET_ACTIONS, $POST_ACTIONS), true)) auth_json(404, ['error' => 'Unknown action']);
 $expected = in_array($action, $GET_ACTIONS, true) ? 'GET' : 'POST';
 if ($method !== $expected) {
@@ -45,6 +45,7 @@ try {
         'logout' => auth_logout(),
         'reset_request' => auth_reset_request($pdo, $in, $ip),
         'reset_confirm' => auth_reset_confirm($pdo, $in),
+        'delete_account' => auth_delete_account($pdo, $in),
     };
 } catch (Throwable $e) {
     error_log('auth.php: ' . get_class($e)); // без текста: в нём бывают данные запроса
@@ -82,7 +83,8 @@ function auth_me(PDO $pdo): never {
         $q->execute([$id]);
         if ($u = $q->fetch()) auth_json(200, ['user' => auth_user_public($u), 'csrf' => auth_csrf_token()]);
     }
-    auth_json(401, ['error' => 'Не выполнен вход']);
+    // 200, а не 401: страницы проверяют сессию на каждой загрузке, и 401 шумел бы в консоли браузера (как /api.php?action=status)
+    auth_json(200, ['user' => null, 'csrf' => auth_csrf_token()]);
 }
 
 function auth_register(PDO $pdo, array $in, string $ip): never {
@@ -204,4 +206,24 @@ function auth_reset_confirm(PDO $pdo, array $in): never {
     $u->execute([password_hash($password, PASSWORD_DEFAULT), hash('sha256', $token)]);
     if ($u->rowCount() !== 1) auth_json(400, ['error' => 'Ссылка недействительна или устарела']);
     auth_json(200, ['ok' => true]);
+}
+
+// Удаление аккаунта (152-ФЗ): нужен вход и текущий пароль. Вместе с пользователем удаляются заявки с его почты
+// (лист ожидания и обратная связь), сессия закрывается.
+function auth_delete_account(PDO $pdo, array $in): never {
+    auth_session();
+    $id = (int)($_SESSION['uid'] ?? 0);
+    if ($id < 1) auth_json(401, ['error' => 'Не выполнен вход']);
+    $q = $pdo->prepare('SELECT email, password_hash FROM users WHERE id = ?');
+    $q->execute([$id]);
+    $u = $q->fetch();
+    $password = is_string($in['password'] ?? null) ? $in['password'] : '';
+    if (!$u || !password_verify($password, $u['password_hash'])) auth_json(401, ['error' => 'Неверный пароль']);
+
+    $pdo->beginTransaction();
+    $pdo->prepare('DELETE FROM waitlist WHERE email = ?')->execute([$u['email']]);
+    $pdo->prepare('DELETE FROM feedback WHERE email = ?')->execute([$u['email']]);
+    $pdo->prepare('DELETE FROM users WHERE id = ?')->execute([$id]);
+    $pdo->commit();
+    auth_logout();
 }

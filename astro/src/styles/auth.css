@@ -82,3 +82,13 @@
     margin-bottom: 0.7rem;
   }
 }
+
+.auth__danger {
+  margin-top: 2.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(212, 175, 87, 0.2);
+}
+.auth__danger summary {
+  cursor: pointer;
+  color: #f3c9c2;
+}

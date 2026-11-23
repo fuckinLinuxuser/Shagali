@@ -85,7 +85,7 @@ test('подтверждение почты → вход → me → выход; 
   expect(me.user).not.toHaveProperty('password_hash');
 
   expect((await post(request, 'logout', {})).status()).toBe(200);
-  expect((await request.get(`${API}?action=me`, { headers: HTTPS })).status()).toBe(401);
+  expect((await (await request.get(`${API}?action=me`, { headers: HTTPS })).json()).user).toBeNull();
 });
 
 test('неверный пароль → 401 без подсказки, какой именно логин существует', async ({ request }) => {
@@ -163,4 +163,24 @@ test('SQL-инъекция в почте и имени сохраняется к
 test('GET на действия записи → 405; неизвестное действие → 404', async ({ request }) => {
   expect((await request.get(`${API}?action=login`, { headers: HTTPS })).status()).toBe(405);
   expect((await request.get(`${API}?action=nothing`, { headers: HTTPS })).status()).toBe(404);
+});
+
+test('удаление аккаунта: нужен вход и пароль; удаляет пользователя и его заявки, вход потом невозможен', async ({ request }) => {
+  await registerAndVerify(request);
+  sql("TRUNCATE waitlist; TRUNCATE feedback");
+  sql("INSERT INTO waitlist (name, email, consent_at, consent_version) VALUES ('Анна', 'anna@example.com', NOW(), 'v'), ('Чужая', 'other@example.com', NOW(), 'v')");
+  sql("INSERT INTO feedback (name, email, message, consent_at, consent_version) VALUES ('Анна', 'anna@example.com', 'привет', NOW(), 'v')");
+
+  expect((await post(request, 'delete_account', { password: PASS })).status()).toBe(401); // не вошла
+  expect((await post(request, 'login', { email: 'anna@example.com', password: PASS })).status()).toBe(200);
+  expect((await post(request, 'delete_account', { password: 'wrong-pass-9' })).status()).toBe(401);
+  expect(count('users')).toBe(1);
+
+  expect((await post(request, 'delete_account', { password: PASS })).status()).toBe(200);
+  expect(count('users')).toBe(0);
+  expect(sql("SELECT COUNT(*) FROM waitlist WHERE email = 'anna@example.com'")).toBe('0');
+  expect(sql("SELECT COUNT(*) FROM feedback WHERE email = 'anna@example.com'")).toBe('0');
+  expect(sql("SELECT COUNT(*) FROM waitlist WHERE email = 'other@example.com'")).toBe('1'); // чужое не тронуто
+  expect((await (await request.get(`${API}?action=me`, { headers: HTTPS })).json()).user).toBeNull();
+  expect((await post(request, 'login', { email: 'anna@example.com', password: PASS })).status()).toBe(401);
 });
