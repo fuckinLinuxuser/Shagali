@@ -13,6 +13,7 @@
     "lint:php": "find public/api.php public/api ../sql -name '*.php' -print0 2>/dev/null | xargs -0 -n1 php -l",
     "check:links": "node scripts/check-links.mjs",
     "check:images": "node scripts/check-images.mjs",
+    "smoke": "node scripts/smoke.mjs",
     "check:content": "node scripts/check-content.mjs",
     "test:e2e": "playwright test",
     "test:visual": "sh scripts/visual.sh",

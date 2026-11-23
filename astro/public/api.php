@@ -6,6 +6,8 @@
 define('ALLOWED_ORIGIN', 'https://shagali.ru');
 
 header("Content-Type: application/json; charset=utf-8");
+header("X-Content-Type-Options: nosniff");
+header("Referrer-Policy: strict-origin-when-cross-origin");
 header("Vary: Origin");
 // CORS: только свой домен, никакого "*" на методах записи.
 if (($_SERVER['HTTP_ORIGIN'] ?? '') === ALLOWED_ORIGIN) {

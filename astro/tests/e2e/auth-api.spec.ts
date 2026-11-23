@@ -184,3 +184,12 @@ test('удаление аккаунта: нужен вход и пароль; у
   expect((await (await request.get(`${API}?action=me`, { headers: HTTPS })).json()).user).toBeNull();
   expect((await post(request, 'login', { email: 'anna@example.com', password: PASS })).status()).toBe(401);
 });
+
+test('фиксация сессии: чужой заранее выбранный id сессии сервер не принимает', async ({ playwright, baseURL }) => {
+  const attacker = 'a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6';
+  const ctx = await playwright.request.newContext({ baseURL, extraHTTPHeaders: { Cookie: `shagali_sid=${attacker}`, ...HTTPS } });
+  const res = await ctx.get(`${API}?action=csrf`);
+  const setCookie = res.headers()['set-cookie'] ?? '';
+  expect(setCookie).toContain('shagali_sid=');
+  expect(setCookie).not.toContain(attacker);
+});

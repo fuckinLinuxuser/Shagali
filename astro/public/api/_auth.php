@@ -17,6 +17,7 @@ function auth_is_https(): bool {
 // Сессия кабинета: cookie HttpOnly, Secure (на https), SameSite=Lax. Отдельное имя — не пересекается с сессией админки.
 function auth_session(): void {
     if (session_status() === PHP_SESSION_ACTIVE) return;
+    ini_set('session.use_strict_mode', '1'); // не принимать id сессии, которого сервер не выдавал (фиксация сессии)
     session_name('shagali_sid');
     session_set_cookie_params([
         'lifetime' => 0,
