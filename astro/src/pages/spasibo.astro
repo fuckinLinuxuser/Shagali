@@ -1,0 +1,53 @@
+---
+// /spasibo — страница благодарности: сюда cbiletom возвращает покупателя после оплаты (настраивается в кабинете cbiletom).
+// Закрыта от индексации и не входит в sitemap. Визит на неё — цель «purchase» в Метрике (задача 2.4).
+import MainLayout from '../layouts/MainLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/pages.css';
+---
+
+<MainLayout
+  title="Спасибо за покупку — Мир За Сценой"
+  description="Спасибо за покупку билетов. Что дальше и где найти другие спектакли."
+  noindex
+>
+  <SiteHeader />
+  <main class="page">
+    <div class="page__inner thanks">
+      <h1 class="page__title">Спасибо за покупку!</h1>
+      <p class="page__lead">
+        Билеты придут на электронную почту, которую вы указали при оплате. Если письма нет, загляните в папку «Спам».
+      </p>
+
+      <p>Хотите пойти ещё раз или позвать друзей — посмотрите, где ещё идут наши спектакли.</p>
+
+      <p class="thanks__links">
+        <a class="thanks__btn" href="/goroda">Афиша по городам</a>
+        <a class="thanks__link" href="/">Вернуться на главную</a>
+      </p>
+    </div>
+  </main>
+  <Footer />
+</MainLayout>
+
+<style>
+  .thanks__links {
+    margin-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 28px;
+  }
+  .thanks__btn {
+    display: inline-block;
+    padding: 14px 28px;
+    background: var(--gold);
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .thanks__link {
+    color: inherit;
+  }
+</style>
