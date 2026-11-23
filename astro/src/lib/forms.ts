@@ -1,5 +1,7 @@
 // Клиент форм сайта (лист ожидания, обратная связь): отправка в /api/forms.php и показ результата.
 // Разметка — FormFooter.astro (согласие, honeypot, блоки результата). «Спасибо» показываем только после ответа 201.
+import { reachGoal } from './counters';
+
 const ENDPOINT = '/api/forms.php';
 
 const MESSAGES = {
@@ -41,6 +43,7 @@ export function bindForm(form: HTMLFormElement) {
         body: JSON.stringify(payload),
       });
       if (res.status === 201) {
+        reachGoal(payload.type === 'feedback' ? 'feedback_submit' : 'waitlist_submit');
         form.reset();
         form.dataset.done = '';
         if (success) success.hidden = false;

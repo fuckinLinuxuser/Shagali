@@ -30,7 +30,7 @@ export function serializeConsent(choice: ConsentChoice, secure: boolean): string
 }
 
 // Cookie счётчиков: при отказе после согласия их удаляем. Необходимые cookie сайта сюда не попадают.
-export const COUNTER_COOKIE_PREFIXES = ['tmr_', '_tmr'];
+export const COUNTER_COOKIE_PREFIXES = ['tmr_', '_tmr', '_ym_'];
 
 export function isCounterCookie(name: string): boolean {
   return COUNTER_COOKIE_PREFIXES.some((prefix) => name.startsWith(prefix));
