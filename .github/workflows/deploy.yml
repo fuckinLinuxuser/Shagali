@@ -36,6 +36,7 @@ jobs:
       - run: npm run build
       - run: npm run check:links
       - run: npm run check:content
+      - run: npm run check:images
 
       - name: В dist нет секретов админки
         run: |
@@ -62,6 +63,10 @@ jobs:
 
       - run: npx playwright install --with-deps chromium webkit
       - run: npm run test:e2e
+
+      # Lighthouse по ключевым страницам стенда: Performance ≥ 85, Accessibility ≥ 90, LCP < 2,5 с (lighthouserc.json).
+      - name: Lighthouse CI
+        run: npm run lhci
 
       # Скриншоты сверяются в контейнере Playwright (linux/amd64), где сняты базовые снимки.
       - name: Скриншот-тесты

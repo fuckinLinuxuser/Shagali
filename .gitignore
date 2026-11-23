@@ -6,3 +6,5 @@ docker/config.local.php
 
 # бинарники расширений редактора
 *.vsix
+
+.lighthouseci/

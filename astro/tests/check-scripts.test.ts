@@ -5,6 +5,8 @@ import { afterEach, describe, expect, it } from 'vitest';
 // @ts-expect-error — .mjs без типов
 import { checkLinks } from '../scripts/check-links.mjs';
 // @ts-expect-error — .mjs без типов
+import { checkImages } from '../scripts/check-images.mjs';
+// @ts-expect-error — .mjs без типов
 import { checkContent } from '../scripts/check-content.mjs';
 
 let dirs: string[] = [];
@@ -67,5 +69,12 @@ describe('check:content', () => {
   });
   it('чистый dist проходит', () => {
     expect(checkContent(site({ 'index.html': '<p>текст</p>' }))).toEqual([]);
+  });
+});
+
+describe('check:images', () => {
+  it('картинка тяжелее лимита — проблема с именем файла, лёгкая и не-картинка — нет', () => {
+    const d = site({ 'a/light.png': 'x'.repeat(100), 'a/heavy.jpg': 'x'.repeat(2048), 'a/big.txt': 'x'.repeat(9999) });
+    expect(checkImages(d, 1024)).toEqual([expect.stringContaining('a/heavy.jpg')]);
   });
 });
