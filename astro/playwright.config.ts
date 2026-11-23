@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const DB_SPECS = /forms-(api|ui)\.spec\.ts/;
+const DB_SPECS = /(forms-(api|ui)|auth-(api|ui))\.spec\.ts/;
 
 // Против docker-стенда (docker compose up -d → :8080). Другой адрес — STAND_URL.
 export default defineConfig({
@@ -22,6 +22,14 @@ export default defineConfig({
       name: 'forms-ui',
       testMatch: /forms-ui\.spec\.ts/,
       dependencies: ['forms-api'],
+      use: { ...devices['iPhone 13'], defaultBrowserType: 'chromium' },
+    },
+    // Вход и регистрация (БД, письма, лимиты): по очереди после форм.
+    { name: 'auth-api', testMatch: /auth-api\.spec\.ts/, dependencies: ['forms-ui'], use: { browserName: 'chromium' } },
+    {
+      name: 'auth-ui',
+      testMatch: /auth-ui\.spec\.ts/,
+      dependencies: ['auth-api'],
       use: { ...devices['iPhone 13'], defaultBrowserType: 'chromium' },
     },
     // Safari (WebKit) рендерит иначе: на Mac им открывают сайт чаще всего. Гоняем только проверки вёрстки (слайдер спектаклей).

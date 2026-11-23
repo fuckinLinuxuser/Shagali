@@ -1,0 +1,33 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import Footer from '../../components/Footer.astro';
+import '../../styles/pages.css';
+import '../../styles/auth.css';
+---
+
+<MainLayout title="Подтверждение почты — Мир За Сценой" description="Подтверждение почты в личном кабинете." noindex>
+  <SiteHeader />
+  <main class="page">
+    <div class="page__inner">
+      <nav class="crumbs" aria-label="Навигация"><a href="/">Главная</a> / Подтверждение почты</nav>
+      <h1 class="page__title">Подтверждение почты</h1>
+      <p class="page__lead" data-verify-status role="status">Подтверждаем почту…</p>
+      <p class="auth__links" data-verify-next hidden><a href="/lk/login">Войти</a></p>
+    </div>
+  </main>
+  <Footer />
+</MainLayout>
+
+<script>
+  import { authPost, errorText } from '../../lib/auth';
+  const status = document.querySelector<HTMLElement>('[data-verify-status]')!;
+  const next = document.querySelector<HTMLElement>('[data-verify-next]')!;
+  const token = new URLSearchParams(location.search).get('token') ?? '';
+  authPost('verify', { token })
+    .then((r) => {
+      status.textContent = r.status === 200 ? 'Почта подтверждена. Теперь можно войти.' : errorText(r);
+      if (r.status === 200) next.hidden = false;
+    })
+    .catch(() => (status.textContent = 'Не удалось подтвердить почту. Попробуйте ещё раз позже.'));
+</script>

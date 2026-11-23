@@ -19,6 +19,13 @@ services:
       bash -c "cp -a /dist-src/. /var/www/html/ && chown -R www-data:www-data /var/www/html && php /migrations/migrate.php /var/www/html/api && apache2-foreground"
     depends_on:
       - db
+      - mailpit
+
+  # Почта стенда: ловит все письма (регистрация, сброс пароля). Интерфейс и API — http://localhost:8025
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025"
 
   db:
     image: mysql:8

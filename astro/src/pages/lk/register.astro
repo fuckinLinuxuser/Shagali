@@ -1,0 +1,76 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import Footer from '../../components/Footer.astro';
+import '../../styles/pages.css';
+import '../../styles/auth.css';
+---
+
+<MainLayout title="Регистрация — Мир За Сценой" description="Регистрация в личном кабинете продюсерского центра Елены Шагали." noindex>
+  <SiteHeader />
+  <main class="page">
+    <div class="page__inner">
+      <nav class="crumbs" aria-label="Навигация"><a href="/">Главная</a> / Регистрация</nav>
+      <h1 class="page__title">Регистрация</h1>
+      <form class="auth" id="register-form" novalidate>
+        <div class="auth__group">
+          <label for="f-email">Email</label>
+          <input type="email" id="f-email" name="email" autocomplete="email" maxlength="254" required />
+        </div>
+        <div class="auth__group">
+          <label for="f-password">Пароль (от 8 символов)</label>
+          <input type="password" id="f-password" name="password" autocomplete="new-password" minlength="8" maxlength="200" required />
+        </div>
+        <div class="auth__group">
+          <label for="f-last_name">Фамилия</label>
+          <input type="text" id="f-last_name" name="last_name" autocomplete="family-name" maxlength="100" required />
+        </div>
+        <div class="auth__group">
+          <label for="f-first_name">Имя</label>
+          <input type="text" id="f-first_name" name="first_name" autocomplete="given-name" maxlength="100" required />
+        </div>
+        <div class="auth__group">
+          <label for="f-city">Город</label>
+          <input type="text" id="f-city" name="city" autocomplete="address-level2" maxlength="120" required />
+        </div>
+        <div class="auth__group">
+          <label for="f-phone">Телефон</label>
+          <input type="tel" id="f-phone" name="phone" autocomplete="tel" maxlength="30" required />
+        </div>
+        <div class="hp" aria-hidden="true"><label>Не заполняйте <input type="text" name="website" tabindex="-1" autocomplete="off" /></label></div>
+        <label class="form-consent">
+          <input type="checkbox" name="consent" required />
+          <span>
+            Я согласен на обработку персональных данных
+            (<a href="/consent" target="_blank" rel="noopener">согласие</a>,
+            <a href="/privacy" target="_blank" rel="noopener">политика конфиденциальности</a>)
+          </span>
+        </label>
+        <p class="form-error" data-form-error role="alert" hidden></p>
+        <p class="form-success" data-form-success role="status" tabindex="-1" hidden>
+          Готово! Мы отправили письмо со ссылкой — подтвердите почту, и можно войти.
+        </p>
+        <button type="submit" class="auth__btn">Зарегистрироваться</button>
+      </form>
+      <p class="auth__links"><a href="/lk/login">Уже есть аккаунт? Войти</a></p>
+    </div>
+  </main>
+  <Footer />
+</MainLayout>
+
+<script>
+  import '../../styles/forms.css';
+  import { bindAuthForm } from '../../lib/auth';
+  const form = document.getElementById('register-form') as HTMLFormElement;
+  bindAuthForm(form, {
+    action: 'register',
+    ok: [201],
+    onOk: () => {
+      form.reset();
+      form.dataset.done = '';
+      const ok = form.querySelector<HTMLElement>('[data-form-success]')!;
+      ok.hidden = false;
+      ok.focus();
+    },
+  });
+</script>

@@ -7,7 +7,7 @@ import contentIntegrity from './scripts/content-integrity.mjs';
 export default defineConfig({
   site: 'https://shagali.ru',
   // /collaboration и /spasibo скрыты: страницы открываются по адресу, но в карту сайта не попадают
-  integrations: [sitemap({ filter: (page) => !/\/(collaboration|spasibo)\/?$/.test(page) }), contentIntegrity()],
+  integrations: [sitemap({ filter: (page) => !/\/(collaboration|spasibo)\/?$|\/lk(\/|$)/.test(page) }), contentIntegrity()],
 
   // Переключаем Astro в полностью статический режим
   output: 'static',

@@ -1,0 +1,54 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import Footer from '../../components/Footer.astro';
+import '../../styles/pages.css';
+import '../../styles/auth.css';
+---
+
+<MainLayout title="Личный кабинет — Мир За Сценой" description="Личный кабинет продюсерского центра Елены Шагали." noindex>
+  <SiteHeader />
+  <main class="page">
+    <div class="page__inner">
+      <nav class="crumbs" aria-label="Навигация"><a href="/">Главная</a> / Личный кабинет</nav>
+      <h1 class="page__title">Личный кабинет</h1>
+      <p class="page__lead" data-profile-status role="status">Загружаем…</p>
+      <div data-profile hidden>
+        <p>Здравствуйте, <strong data-p="name"></strong>!</p>
+        <dl class="profile">
+          <dt>Email</dt><dd data-p="email"></dd>
+          <dt>Город</dt><dd data-p="city"></dd>
+          <dt>Телефон</dt><dd data-p="phone"></dd>
+        </dl>
+        <button type="button" class="auth__btn" data-logout>Выйти</button>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</MainLayout>
+
+<script>
+  import { authMe, authPost } from '../../lib/auth';
+  const status = document.querySelector<HTMLElement>('[data-profile-status]')!;
+  const box = document.querySelector<HTMLElement>('[data-profile]')!;
+  const set = (key: string, value: string) => (document.querySelector(`[data-p="${key}"]`)!.textContent = value);
+  authMe()
+    .then((r) => {
+      if (r.status !== 200 || !r.body.user) {
+        location.replace('/lk/login');
+        return;
+      }
+      const u = r.body.user;
+      set('name', `${u.first_name} ${u.last_name}`);
+      set('email', u.email);
+      set('city', u.city);
+      set('phone', u.phone);
+      status.hidden = true;
+      box.hidden = false;
+    })
+    .catch(() => (status.textContent = 'Не удалось загрузить профиль. Обновите страницу.'));
+  document.querySelector('[data-logout]')!.addEventListener('click', async () => {
+    await authPost('logout', {}).catch(() => null);
+    location.assign('/lk/login');
+  });
+</script>

@@ -1,0 +1,42 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import Footer from '../../components/Footer.astro';
+import '../../styles/pages.css';
+import '../../styles/auth.css';
+---
+
+<MainLayout title="Вход — Мир За Сценой" description="Вход в личный кабинет продюсерского центра Елены Шагали." noindex>
+  <SiteHeader />
+  <main class="page">
+    <div class="page__inner">
+      <nav class="crumbs" aria-label="Навигация"><a href="/">Главная</a> / Вход</nav>
+      <h1 class="page__title">Вход</h1>
+      <form class="auth" id="login-form" novalidate>
+        <div class="auth__group">
+          <label for="f-email">Email</label>
+          <input type="email" id="f-email" name="email" autocomplete="email" maxlength="254" required />
+        </div>
+        <div class="auth__group">
+          <label for="f-password">Пароль</label>
+          <input type="password" id="f-password" name="password" autocomplete="current-password" maxlength="200" required />
+        </div>
+        <p class="form-error" data-form-error role="alert" hidden></p>
+        <button type="submit" class="auth__btn">Войти</button>
+      </form>
+      <p class="auth__links"><a href="/lk/reset">Забыли пароль?</a> <a href="/lk/register">Регистрация</a></p>
+    </div>
+  </main>
+  <Footer />
+</MainLayout>
+
+<script>
+  import '../../styles/forms.css';
+  import { bindAuthForm } from '../../lib/auth';
+  bindAuthForm(document.getElementById('login-form') as HTMLFormElement, {
+    action: 'login',
+    payload: (d) => ({ email: d.get('email'), password: d.get('password') }),
+    ok: [200],
+    onOk: () => location.assign('/lk'),
+  });
+</script>
