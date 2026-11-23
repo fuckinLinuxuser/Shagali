@@ -1,0 +1,50 @@
+/* Общее для форм сайта (лист ожидания, обратная связь): согласие, honeypot, результат отправки. */
+.hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.form-consent {
+  display: flex;
+  gap: 0.8rem;
+  align-items: flex-start;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: #d9d2c3;
+  font-weight: 400;
+}
+.form-consent input {
+  flex: 0 0 auto;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-top: 0.15rem;
+  padding: 0;
+  accent-color: #d4af57;
+}
+.form-consent a {
+  color: #d4af57;
+}
+.form-error {
+  margin: 0;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid #b5483a;
+  border-radius: 10px;
+  background: rgba(181, 72, 58, 0.15);
+  color: #f3c9c2;
+}
+.form-success {
+  margin: 0;
+  padding: 1.2rem 1.4rem;
+  border: 1px solid rgba(212, 175, 87, 0.5);
+  border-radius: 10px;
+  background: rgba(212, 175, 87, 0.12);
+  color: #f5f0e6;
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+/* после успешной отправки остаётся только «Спасибо» */
+form[data-done] > :not([data-form-success]) {
+  display: none;
+}

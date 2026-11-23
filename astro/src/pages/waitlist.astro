@@ -3,6 +3,7 @@
 
 import Layout from '../layouts/MainLayout.astro'; // если у вас есть общий layout
 import { getCollection } from 'astro:content';
+import FormFooter from '../components/FormFooter.astro';
 
 // /waitlist?city=<id> — со страницы города: подставляем его название в поле «Желаемый город».
 const cityNames = Object.fromEntries((await getCollection('cities')).map((c) => [c.id, c.data.name]));
@@ -25,10 +26,11 @@ const description = "Запишитесь в лист ожидания, чтоб
         <div class="counter">
         </div>
 
-        <form class="waitlist-form" id="waitlist-form">
+        <form class="waitlist-form" id="waitlist-form" novalidate>
+          <input type="hidden" name="type" value="waitlist" />
           <div class="form-group">
             <label for="name">Имя</label>
-            <input type="text" id="name" name="name" placeholder="Как к вам обращаться?" required />
+            <input type="text" id="name" name="name" placeholder="Как к вам обращаться?" maxlength="120" required />
           </div>
 
           <div class="form-group">
@@ -45,6 +47,8 @@ const description = "Запишитесь в лист ожидания, чтоб
             <label for="project">Интересующий проект / спектакль</label>
             <textarea id="project" name="project" rows="2" placeholder="Можно указать несколько или оставить пустым"></textarea>
           </div>
+
+          <FormFooter success="Спасибо! Вы успешно записаны в лист ожидания. Скоро свяжемся ❤️" />
 
           <button type="submit" class="btn-primary">Записаться в лист ожидания</button>
         </form>
@@ -269,24 +273,16 @@ const description = "Запишитесь в лист ожидания, чтоб
   }
 </style>
 
+<script>
+  import { bindForm } from '../lib/forms';
+  const form = document.getElementById('waitlist-form') as HTMLFormElement | null;
+  if (form) bindForm(form);
+</script>
+
 <script is:inline define:vars={{ cityNames }}>
   (() => {
     const id = new URLSearchParams(location.search).get('city');
     const input = document.getElementById('city');
     if (id && input && !input.value && Object.hasOwn(cityNames, id)) input.value = cityNames[id];
   })();
-</script>
-
-<script>
-  // Простой пример отправки формы (замените на реальный backend / API)
-  document.getElementById('waitlist-form')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const data = new FormData(form);
-
-    // Здесь можно отправить на сервер (например fetch('/api/waitlist', {method: 'POST', body: data}))
-    alert('Спасибо! Вы успешно записаны в лист ожидания. Скоро свяжемся ❤️');
-
-    form.reset();
-  });
 </script>

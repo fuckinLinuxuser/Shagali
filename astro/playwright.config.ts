@@ -1,5 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const DB_SPECS = /(forms-(api|ui)|site-password)\.spec\.ts/;
+
 // Против docker-стенда (docker compose up -d → :8080). Другой адрес — STAND_URL.
 export default defineConfig({
   testDir: './tests/e2e',
@@ -12,8 +14,23 @@ export default defineConfig({
     trace: 'retain-on-failure',
   },
   projects: [
-    { name: 'mobile', use: { ...devices['iPhone 13'], defaultBrowserType: 'chromium' } },
-    { name: 'desktop', use: { browserName: 'chromium', viewport: { width: 1440, height: 900 } } },
+    { name: 'mobile', testIgnore: DB_SPECS, use: { ...devices['iPhone 13'], defaultBrowserType: 'chromium' } },
+    { name: 'desktop', testIgnore: DB_SPECS, use: { browserName: 'chromium', viewport: { width: 1440, height: 900 } } },
+    // Тесты форм пишут в общую БД и лимит по IP — гоняем по очереди: сначала API, потом формы на телефоне (375px).
+    { name: 'forms-api', testMatch: /forms-api\.spec\.ts/, use: { browserName: 'chromium' } },
+    {
+      name: 'forms-ui',
+      testMatch: /forms-ui\.spec\.ts/,
+      dependencies: ['forms-api'],
+      use: { ...devices['iPhone 13'], defaultBrowserType: 'chromium' },
+    },
+    // Проверка пароля на весь домен: на время теста стенд закрывается, поэтому он идёт после всех остальных проектов.
+    {
+      name: 'site-password',
+      testMatch: /site-password\.spec\.ts/,
+      dependencies: ['mobile', 'desktop', 'forms-ui', 'safari'],
+      use: { browserName: 'chromium' },
+    },
     // Safari (WebKit) рендерит иначе: на Mac им открывают сайт чаще всего. Гоняем только проверки вёрстки (слайдер спектаклей).
     { name: 'safari', testMatch: /stage-fit\.spec\.ts/, use: { ...devices['Desktop Safari'] } },
   ],
