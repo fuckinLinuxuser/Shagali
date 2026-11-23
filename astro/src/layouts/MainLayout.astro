@@ -1,7 +1,7 @@
 ---
 // src/layouts/MainLayout.astro
 const DEFAULT_DESCRIPTION = "Театральный продюсер и режиссер Елена Шагали: спектакли, гастроли, кастинги и проекты в Санкт-Петербурге и по всей России. Узнавайте о новых постановках и сотрудничестве.";
-const { title = "Мир За Сценой", description = DEFAULT_DESCRIPTION, theme = 'dark' } = Astro.props;
+const { title = "Мир За Сценой", description = DEFAULT_DESCRIPTION, theme = 'dark', noindex = false } = Astro.props;
 import '../styles/base.css';
 import '../styles/components.css';
 import '../styles/layout.css';
@@ -28,6 +28,7 @@ import CookieBanner from '../components/CookieBanner.astro';
   <meta name="keywords" content="театр, спектакли, гастроли, кастиги, проекты, Санкт-Петербург, Россия, Елена Шагали, продюсер, режиссер">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=10.0, user-scalable=yes">
   <title>{title}</title>
+  {noindex && <meta name="robots" content="noindex, nofollow" />}
 
   <!-- Счётчики (Top.Mail.Ru) грузятся только после согласия в cookie-плашке: src/lib/counters.ts -->
  
