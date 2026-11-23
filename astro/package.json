@@ -3,9 +3,9 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "SHAGALI_CLOSED=0 astro dev",
     "build": "astro build",
-    "build:stand": "SHAGALI_FIXTURES=1 astro build --outDir dist-stand",
+    "build:stand": "SHAGALI_FIXTURES=1 SHAGALI_CLOSED=0 astro build --outDir dist-stand",
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest run",

@@ -1,21 +1,3 @@
-# ===== Сайт закрыт паролем на весь домен (HTTP Basic Auth) =====
-# Хеш пароля лежит в файле ВНЕ корня сайта: /var/www/u3413841/data/.htpasswd (в репозитории его нет; создать — docs/SITE-PASSWORD.md).
-# Файл есть → пускаем только по паролю. Файла нет → сайт закрыт для всех (403), чтобы случайно не открыться.
-# Исключение: стенд (docker, SHAGALI_STAND=1) открыт без пароля — иначе не работают тесты.
-# К запуску витрины этот блок удаляют целиком (отдельный PR).
-<If "-f '/var/www/u3413841/data/.htpasswd'">
-  AuthType Basic
-  AuthName "Closed preview"
-  AuthUserFile /var/www/u3413841/data/.htpasswd
-  Require valid-user
-</If>
-<ElseIf "env('SHAGALI_STAND') == '1'">
-  # стенд: без пароля
-</ElseIf>
-<Else>
-  Require all denied
-</Else>
-
 # Кэширование статики в браузере/прокси — снижает нагрузку и ускоряет повторные визиты
 <IfModule mod_expires.c>
   ExpiresActive On

@@ -11,7 +11,6 @@ services:
       - "8080:80"
     environment:
       SHAGALI_CONFIG: /run/shagali/config.php
-      SHAGALI_STAND: "1" # стенд открыт без пароля (см. astro/public/.htaccess)
     volumes:
       - ./astro/${STAND_DIST:-dist-stand}:/dist-src:ro
       - ./docker/config.local.php:/run/shagali/config.php:ro
