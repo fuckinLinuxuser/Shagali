@@ -54,6 +54,15 @@ describe('check:links', () => {
     expect(checkLinks(d)).toEqual([]);
   });
 
+  it('закрытый режим: якорь на / ищется на /preview, если / — заглушка', () => {
+    const d = site({
+      'index.html': '<main data-gate></main>',
+      'preview/index.html': '<section id="afisha"></section>',
+      'goroda/index.html': '<a href="/#afisha">афиша</a><a href="/#net">нет</a>',
+    });
+    expect(checkLinks(d)).toEqual(['goroda/index.html: якорь #net не найден в /']);
+  });
+
   it('server-only пути (images/videos) не считаются битыми', () => {
     const d = site({ 'index.html': '<img src="/images/a.jpg"><video src="/videos/v.mp4"></video>' });
     expect(checkLinks(d)).toEqual([]);

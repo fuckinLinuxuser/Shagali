@@ -65,7 +65,12 @@ export function checkLinks(dist, { allowEmptyHash = ALLOW_EMPTY_HASH, pending = 
       }
       if (fragment) {
         const target = resolve(dist, abs.replace(/^\/+/, ''), existsSync(join(dist, abs, 'index.html')) ? 'index.html' : '');
-        const targetFile = existsSync(target) && statSync(target).isFile() ? target : `${join(dist, abs)}.html`;
+        let targetFile = existsSync(target) && statSync(target).isFile() ? target : `${join(dist, abs)}.html`;
+        // Закрытый режим (src/lib/site.ts): на / заглушка, а якоря главной живут на /preview — туда заглушка перекидывает вошедших.
+        const gate = join(dist, 'index.html');
+        if (abs === '/' && existsSync(gate) && readFileSync(gate, 'utf8').includes('data-gate') && existsSync(join(dist, 'preview/index.html'))) {
+          targetFile = join(dist, 'preview/index.html');
+        }
         if (existsSync(targetFile) && !readFileSync(targetFile, 'utf8').includes(`id="${fragment}"`)) {
           problems.push(`${page}: якорь #${fragment} не найден в ${abs}`);
         }

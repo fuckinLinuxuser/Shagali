@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const DB_SPECS = /(forms-(api|ui)|site-password)\.spec\.ts/;
+const DB_SPECS = /forms-(api|ui)\.spec\.ts/;
 
 // Против docker-стенда (docker compose up -d → :8080). Другой адрес — STAND_URL.
 export default defineConfig({
@@ -23,13 +23,6 @@ export default defineConfig({
       testMatch: /forms-ui\.spec\.ts/,
       dependencies: ['forms-api'],
       use: { ...devices['iPhone 13'], defaultBrowserType: 'chromium' },
-    },
-    // Проверка пароля на весь домен: на время теста стенд закрывается, поэтому он идёт после всех остальных проектов.
-    {
-      name: 'site-password',
-      testMatch: /site-password\.spec\.ts/,
-      dependencies: ['mobile', 'desktop', 'forms-ui', 'safari'],
-      use: { browserName: 'chromium' },
     },
     // Safari (WebKit) рендерит иначе: на Mac им открывают сайт чаще всего. Гоняем только проверки вёрстки (слайдер спектаклей).
     { name: 'safari', testMatch: /stage-fit\.spec\.ts/, use: { ...devices['Desktop Safari'] } },
