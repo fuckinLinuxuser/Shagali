@@ -333,6 +333,32 @@
                 </div>
             </section>
         </div>
+
+        <!-- Агентские коды и выгрузки (задача 4.3, 4.5): API — /api/admin-agents.php, /api/admin-export.php -->
+        <section id="agentsSection" class="table-section" style="margin-top: 32px;">
+            <h2>Агентские коды</h2>
+            <p style="color:#aaa; margin: 0 0 12px;">Раз в неделю вносите число использований из кабинета cbiletom. При 10 и более пользователю открывается закулисье.</p>
+            <form id="issueForm" style="display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; margin-bottom:16px;">
+                <div class="form-group" style="margin:0;">
+                    <label for="issueEmail">Почта пользователя</label>
+                    <input type="email" id="issueEmail" required placeholder="user@example.com" />
+                </div>
+                <button type="submit" class="btn btn-primary">Выдать код</button>
+            </form>
+            <p data-agents-status class="status-message" role="status"></p>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Почта</th><th>Код</th><th>Использований</th></tr></thead>
+                    <tbody id="agentsBody"><tr><td colspan="3" style="text-align:center; color:#888;">Загрузка…</td></tr></tbody>
+                </table>
+            </div>
+            <h3 style="margin-top:24px;">Выгрузки для заказчика (CSV)</h3>
+            <p style="display:flex; gap:16px; flex-wrap:wrap;">
+                <a href="/api/admin-export.php?type=waitlist">Лист ожидания</a>
+                <a href="/api/admin-export.php?type=feedback">Обратная связь</a>
+                <a href="/api/admin-export.php?type=users">Пользователи кабинета</a>
+            </p>
+        </section>
     </div>
 
     <script>
@@ -596,6 +622,70 @@
                     .replace(/"/g, '&quot;')
                     .replace(/'/g, '&#39;');
             }
+        })();
+    </script>
+
+    <script>
+        // Агентские коды: загружаются, когда панель админа показана. Весь вывод — через textContent.
+        (function () {
+            const panel = document.getElementById('adminPanel');
+            const body = document.getElementById('agentsBody');
+            const statusEl = document.querySelector('[data-agents-status]');
+            let started = false;
+            let csrf = '';
+            const say = (text, ok) => { statusEl.textContent = text; statusEl.style.color = ok ? '#4ade80' : '#f87171'; };
+            const api = (init) => fetch('/api/admin-agents.php', { credentials: 'same-origin', ...init });
+            const post = (data) => api({ method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf }, body: JSON.stringify(data) });
+
+            async function load() {
+                const res = await api();
+                if (!res.ok) { say('Не удалось загрузить коды', false); return; }
+                const { codes } = await res.json();
+                body.replaceChildren();
+                if (!codes.length) {
+                    const tr = body.insertRow();
+                    const td = tr.insertCell(); td.colSpan = 3; td.style.textAlign = 'center'; td.textContent = 'Кодов пока нет';
+                    return;
+                }
+                for (const c of codes) {
+                    const tr = body.insertRow();
+                    tr.insertCell().textContent = c.email;
+                    tr.insertCell().textContent = c.code;
+                    const cell = tr.insertCell();
+                    const input = document.createElement('input');
+                    input.type = 'number'; input.min = '0'; input.max = '100000'; input.step = '1'; input.value = String(c.uses);
+                    input.setAttribute('aria-label', 'Использований: ' + c.code);
+                    input.style.width = '90px';
+                    const btn = document.createElement('button');
+                    btn.type = 'button'; btn.className = 'btn btn-secondary'; btn.textContent = 'Сохранить'; btn.style.marginLeft = '8px';
+                    btn.addEventListener('click', async () => {
+                        const r = await post({ action: 'set_uses', code: c.code, uses: Number(input.value) });
+                        say(r.ok ? 'Сохранено: ' + c.code + ' — ' + input.value : ((await r.json().catch(() => ({}))).error || 'Ошибка'), r.ok);
+                    });
+                    cell.append(input, btn);
+                }
+            }
+
+            async function start() {
+                if (started) return;
+                started = true;
+                const st = await fetch('/api.php?action=status', { credentials: 'same-origin' }).then((r) => r.json());
+                csrf = st.csrf || '';
+                await load();
+            }
+
+            document.getElementById('issueForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('issueEmail').value;
+                const r = await post({ action: 'issue', email });
+                const data = await r.json().catch(() => ({}));
+                if (r.ok) { say('Код выдан: ' + data.code, true); document.getElementById('issueEmail').value = ''; await load(); }
+                else say(r.status === 404 ? 'Пользователь не найден' : r.status === 409 ? 'У пользователя уже есть код' : (data.error || 'Ошибка'), false);
+            });
+
+            const watch = () => { if (panel.style.display !== 'none') start(); };
+            new MutationObserver(watch).observe(panel, { attributes: true, attributeFilter: ['style'] });
+            watch();
         })();
     </script>
 </body>
