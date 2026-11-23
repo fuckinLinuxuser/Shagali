@@ -46,3 +46,10 @@
     Header set Accept-Ranges bytes
   </FilesMatch>
 </IfModule>
+
+# Служебное из веба закрыто: миграции, конфиги с секретами, внутренние файлы API (с «_»)
+RedirectMatch 403 ^/sql(/|$)
+RedirectMatch 403 ^/api/_
+<FilesMatch "^(shagali-config.*|config\..*)\.php$|\.sql$">
+  Require all denied
+</FilesMatch>

@@ -4,7 +4,9 @@
 # dist копируется в контейнер при старте, поэтому запись api.php (posts.json, загрузки) не портит astro/dist.
 services:
   web:
-    image: php:8.3-apache
+    build:
+      context: docker
+      dockerfile: web.Dockerfile
     ports:
       - "8080:80"
     environment:
@@ -12,8 +14,9 @@ services:
     volumes:
       - ./astro/${STAND_DIST:-dist-stand}:/dist-src:ro
       - ./docker/config.local.php:/run/shagali/config.php:ro
+      - ./sql:/migrations:ro
     command: >
-      bash -c "cp -a /dist-src/. /var/www/html/ && chown -R www-data:www-data /var/www/html && apache2-foreground"
+      bash -c "cp -a /dist-src/. /var/www/html/ && chown -R www-data:www-data /var/www/html && php /migrations/migrate.php /var/www/html/api && apache2-foreground"
     depends_on:
       - db
 
