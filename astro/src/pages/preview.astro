@@ -1,0 +1,21 @@
+---
+// /preview — настоящая главная для тех, кто вошёл по паролю. В открытом режиме сайта уходит на /.
+import HomePage from '../components/HomePage.astro';
+import { isClosed } from '../lib/site';
+---
+
+{
+  isClosed() ? (
+    <HomePage />
+  ) : (
+    <html lang="ru">
+      <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="refresh" content="0; url=/" />
+        <meta name="robots" content="noindex" />
+        <title>Мир За Сценой</title>
+      </head>
+      <body></body>
+    </html>
+  )
+}

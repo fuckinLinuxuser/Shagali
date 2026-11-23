@@ -1,0 +1,217 @@
+---
+// Заглушка «Сайт в разработке»: слово-ссылка открывает окно пароля (проверяет /api/gate.php), после входа — на /preview.
+// Свой документ без счётчиков и cookie-плашки: на заглушке ничего не собираем. Закрыта от индексации.
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Мир За Сценой — сайт в разработке</title>
+    <link rel="icon" href="/images/favicon.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;600&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <main data-gate>
+      <p class="brand">Мир за сценой</p>
+      <h1>Сайт в разработке</h1>
+      <p class="text">
+        Мы готовим новый сайт продюсерского центра Елены Шагали. Если у вас есть доступ,
+        <button type="button" class="link" data-gate-open>войдите</button>.
+      </p>
+    </main>
+
+    <dialog class="dialog" data-gate-dialog aria-labelledby="gate-title">
+      <form data-gate-form novalidate>
+        <h2 id="gate-title">Вход</h2>
+        <label for="gate-password">Пароль</label>
+        <input id="gate-password" name="password" type="password" autocomplete="current-password" required />
+        <p class="error" data-gate-error role="alert" hidden></p>
+        <div class="buttons">
+          <button type="submit" class="btn">Войти</button>
+          <button type="button" class="btn btn--ghost" data-gate-close>Отмена</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script>
+      // Уже входили (cookie): заглушку не показываем. Cookie лишь признак «входил», настоящей защиты страниц она не даёт.
+      if (document.cookie.split('; ').includes('shagali_preview=1')) {
+        location.replace('/preview' + location.hash);
+      }
+
+      const dialog = document.querySelector<HTMLDialogElement>('[data-gate-dialog]')!;
+      const form = document.querySelector<HTMLFormElement>('[data-gate-form]')!;
+      const error = document.querySelector<HTMLElement>('[data-gate-error]')!;
+      const input = form.querySelector<HTMLInputElement>('input')!;
+      const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+
+      document.querySelector('[data-gate-open]')!.addEventListener('click', () => {
+        error.hidden = true;
+        dialog.showModal();
+        input.focus();
+      });
+      document.querySelector('[data-gate-close]')!.addEventListener('click', () => dialog.close());
+
+      const MESSAGES: Record<number, string> = {
+        401: 'Неверный пароль.',
+        429: 'Слишком много попыток. Попробуйте позже.',
+      };
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        error.hidden = true;
+        submit.disabled = true;
+        try {
+          const res = await fetch('/api/gate.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password: input.value }),
+          });
+          if (res.ok) {
+            location.assign('/preview' + location.hash);
+            return;
+          }
+          error.textContent = MESSAGES[res.status] ?? 'Не удалось проверить пароль. Попробуйте позже.';
+        } catch {
+          error.textContent = 'Не удалось проверить пароль. Проверьте соединение.';
+        }
+        error.hidden = false;
+        submit.disabled = false;
+        input.select();
+      });
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --ink: #0f0d0a;
+    --gold: #d4af57;
+    --ivory: #f5f0e6;
+  }
+  html,
+  body {
+    margin: 0;
+    min-height: 100%;
+    background: var(--ink);
+    color: var(--ivory);
+    font-family: 'Montserrat', system-ui, sans-serif;
+  }
+  [data-gate] {
+    box-sizing: border-box;
+    min-height: 100dvh;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .brand {
+    margin: 0 0 28px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 22px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  h1 {
+    margin: 0 0 20px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(2.2rem, 8vw, 4.5rem);
+    line-height: 1.1;
+  }
+  .text {
+    max-width: 34rem;
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #d9d2c3;
+  }
+  .link {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--gold);
+    font: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+  .link:hover,
+  .link:focus-visible {
+    color: #e8c97c;
+  }
+  .dialog {
+    box-sizing: border-box;
+    width: min(92vw, 360px);
+    margin: auto;
+    padding: 28px 24px;
+    border: 1px solid rgba(212, 175, 87, 0.4);
+    border-radius: 12px;
+    background: #1a1713;
+    color: var(--ivory);
+  }
+  .dialog::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  .dialog h2 {
+    margin: 0 0 16px;
+    font-family: 'Playfair Display', serif;
+  }
+  .dialog label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--gold);
+  }
+  .dialog input {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(212, 175, 87, 0.35);
+    border-radius: 8px;
+    background: #0f0d0a;
+    color: var(--ivory);
+    font: inherit;
+  }
+  .dialog input:focus {
+    outline: 2px solid var(--gold);
+    outline-offset: 1px;
+  }
+  .error {
+    margin: 12px 0 0;
+    color: #f3c9c2;
+  }
+  .buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 18px;
+  }
+  .btn {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    background: var(--gold);
+    color: var(--ink);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+  .btn--ghost {
+    background: transparent;
+    color: var(--ivory);
+    border-color: rgba(245, 240, 230, 0.35);
+  }
+</style>
