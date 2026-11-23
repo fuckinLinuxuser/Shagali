@@ -1,7 +1,7 @@
 <?php
 // /api/auth.php?action=… — личный кабинет: регистрация, подтверждение почты, вход, выход, сброс пароля.
 //   GET : csrf, me (всегда 200: user = null, если не вошёл)
-//   POST: register, verify, login, logout, reset_request, reset_confirm, delete_account   (все — с заголовком X-CSRF-Token)
+//   POST: register, verify, login, logout, reset_request, reset_confirm, delete_account, update_profile   (все — с заголовком X-CSRF-Token)
 // Ответы: JSON. 201/200 успех · 400 неверный токен · 401 не вошёл/неверные данные · 403 нет CSRF или почта не подтверждена ·
 // 405/404 · 422 ошибки полей · 429 лимит. Пароль — только password_hash; токены писем — в БД только SHA-256.
 require_once __DIR__ . '/_auth.php';
@@ -21,7 +21,7 @@ header('Cache-Control: no-store');
 $action = (string)($_GET['action'] ?? '');
 $method = $_SERVER['REQUEST_METHOD'] ?? '';
 $GET_ACTIONS = ['csrf', 'me'];
-$POST_ACTIONS = ['register', 'verify', 'login', 'logout', 'reset_request', 'reset_confirm', 'delete_account'];
+$POST_ACTIONS = ['register', 'verify', 'login', 'logout', 'reset_request', 'reset_confirm', 'delete_account', 'update_profile'];
 if (!in_array($action, array_merge($GET_ACTIONS, $POST_ACTIONS), true)) auth_json(404, ['error' => 'Unknown action']);
 $expected = in_array($action, $GET_ACTIONS, true) ? 'GET' : 'POST';
 if ($method !== $expected) {
@@ -46,6 +46,7 @@ try {
         'reset_request' => auth_reset_request($pdo, $in, $ip),
         'reset_confirm' => auth_reset_confirm($pdo, $in),
         'delete_account' => auth_delete_account($pdo, $in),
+        'update_profile' => auth_update_profile($pdo, $in),
     };
 } catch (Throwable $e) {
     error_log('auth.php: ' . get_class($e)); // без текста: в нём бывают данные запроса
@@ -76,12 +77,22 @@ function auth_user_public(array $u): array {
 }
 
 function auth_me(PDO $pdo): never {
-    auth_session();
-    $id = (int)($_SESSION['uid'] ?? 0);
+    $id = auth_current_user_id($pdo);
     if ($id > 0) {
-        $q = $pdo->prepare('SELECT email, last_name, first_name, city, phone FROM users WHERE id = ? AND email_verified_at IS NOT NULL');
+        $q = $pdo->prepare('SELECT email, last_name, first_name, city, phone FROM users WHERE id = ?');
         $q->execute([$id]);
-        if ($u = $q->fetch()) auth_json(200, ['user' => auth_user_public($u), 'csrf' => auth_csrf_token()]);
+        if ($u = $q->fetch()) {
+            // Код 12% — только при заполненном профиле (фамилия, имя, город, телефон); сам код — из серверного конфига, не из dist.
+            $missing = auth_profile_missing($u);
+            $code = shagali_config()['promo_codes']['12'] ?? null;
+            auth_json(200, [
+                'user' => auth_user_public($u),
+                'missing' => $missing,
+                'promo12' => ($missing === [] && is_string($code) && $code !== '') ? $code : null,
+                'agent' => auth_agent($pdo, $id),
+                'csrf' => auth_csrf_token(),
+            ]);
+        }
     }
     // 200, а не 401: страницы проверяют сессию на каждой загрузке, и 401 шумел бы в консоли браузера (как /api.php?action=status)
     auth_json(200, ['user' => null, 'csrf' => auth_csrf_token()]);
@@ -94,15 +105,8 @@ function auth_register(PDO $pdo, array $in, string $ip): never {
     if (mb_strlen($email) > 254 || !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors['email'] = 'Укажите корректный email';
     $password = is_string($in['password'] ?? null) ? $in['password'] : '';
     if (mb_strlen($password) < MIN_PASSWORD || mb_strlen($password) > 200) $errors['password'] = 'Пароль — от ' . MIN_PASSWORD . ' символов';
-    $last = auth_str($in, 'last_name');
-    if ($last === '' || mb_strlen($last) > 100) $errors['last_name'] = 'Укажите фамилию';
-    $first = auth_str($in, 'first_name');
-    if ($first === '' || mb_strlen($first) > 100) $errors['first_name'] = 'Укажите имя';
-    $city = auth_str($in, 'city');
-    if ($city === '' || mb_strlen($city) > 120) $errors['city'] = 'Укажите город';
-    $phone = preg_replace('/\D+/', '', auth_str($in, 'phone')) ?? '';
-    if (strlen($phone) === 11 && $phone[0] === '8') $phone = '7' . substr($phone, 1);
-    if (strlen($phone) < 10 || strlen($phone) > 15) $errors['phone'] = 'Укажите телефон';
+    [$last, $first, $city, $phone, $profileErrors] = auth_profile_fields($in);
+    $errors += $profileErrors;
     if (!in_array($in['consent'] ?? null, [true, 1, '1', 'true', 'on'], true)) $errors['consent'] = 'Нужно согласие на обработку персональных данных';
     if ($errors) auth_json(422, ['ok' => false, 'errors' => $errors]);
 
@@ -223,7 +227,32 @@ function auth_delete_account(PDO $pdo, array $in): never {
     $pdo->beginTransaction();
     $pdo->prepare('DELETE FROM waitlist WHERE email = ?')->execute([$u['email']]);
     $pdo->prepare('DELETE FROM feedback WHERE email = ?')->execute([$u['email']]);
+    $pdo->prepare('DELETE FROM agent_codes WHERE user_id = ?')->execute([$id]);
     $pdo->prepare('DELETE FROM users WHERE id = ?')->execute([$id]);
     $pdo->commit();
     auth_logout();
+}
+
+// Поля профиля: [фамилия, имя, город, телефон (только цифры, 8… → 7…), ошибки по полям].
+function auth_profile_fields(array $in): array {
+    $errors = [];
+    $last = auth_str($in, 'last_name');
+    if ($last === '' || mb_strlen($last) > 100) $errors['last_name'] = 'Укажите фамилию';
+    $first = auth_str($in, 'first_name');
+    if ($first === '' || mb_strlen($first) > 100) $errors['first_name'] = 'Укажите имя';
+    $city = auth_str($in, 'city');
+    if ($city === '' || mb_strlen($city) > 120) $errors['city'] = 'Укажите город';
+    $phone = preg_replace('/\D+/', '', auth_str($in, 'phone')) ?? '';
+    if (strlen($phone) === 11 && $phone[0] === '8') $phone = '7' . substr($phone, 1);
+    if (strlen($phone) < 10 || strlen($phone) > 15) $errors['phone'] = 'Укажите телефон';
+    return [$last, $first, $city, $phone, $errors];
+}
+
+function auth_update_profile(PDO $pdo, array $in): never {
+    $id = auth_current_user_id($pdo);
+    if ($id < 1) auth_json(401, ['error' => 'Не выполнен вход']);
+    [$last, $first, $city, $phone, $errors] = auth_profile_fields($in);
+    if ($errors) auth_json(422, ['ok' => false, 'errors' => $errors]);
+    $pdo->prepare('UPDATE users SET last_name = ?, first_name = ?, city = ?, phone = ? WHERE id = ?')->execute([$last, $first, $city, $phone, $id]);
+    auth_json(200, ['ok' => true]);
 }

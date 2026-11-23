@@ -20,6 +20,33 @@ import '../../styles/auth.css';
           <dt>Город</dt><dd data-p="city"></dd>
           <dt>Телефон</dt><dd data-p="phone"></dd>
         </dl>
+
+        <section class="cab" data-promo>
+          <h2>Промокод 12%</h2>
+          <p data-promo-text></p>
+        </section>
+
+        <details class="cab" data-edit-profile>
+          <summary data-edit-summary>Изменить данные</summary>
+          <form class="auth" id="profile-form" novalidate>
+            <div class="auth__group"><label for="p-last_name">Фамилия</label><input type="text" id="p-last_name" name="last_name" maxlength="100" autocomplete="family-name" /></div>
+            <div class="auth__group"><label for="p-first_name">Имя</label><input type="text" id="p-first_name" name="first_name" maxlength="100" autocomplete="given-name" /></div>
+            <div class="auth__group"><label for="p-city">Город</label><input type="text" id="p-city" name="city" maxlength="120" autocomplete="address-level2" /></div>
+            <div class="auth__group"><label for="p-phone">Телефон</label><input type="tel" id="p-phone" name="phone" maxlength="30" autocomplete="tel" /></div>
+            <p class="form-error" data-form-error role="alert" hidden></p>
+            <button type="submit" class="auth__btn">Сохранить</button>
+          </form>
+        </details>
+
+        <section class="cab" data-agent hidden>
+          <h2>Агентский код</h2>
+          <p>Код: <strong data-agent-code></strong>. Использований: <span data-agent-uses></span>.</p>
+          <div data-backstage hidden>
+            <h3>Закулисье</h3>
+            <ul data-backstage-list></ul>
+          </div>
+        </section>
+
         <button type="button" class="auth__btn" data-logout>Выйти</button>
 
         <details class="auth__danger">
@@ -46,21 +73,71 @@ import '../../styles/auth.css';
   const status = document.querySelector<HTMLElement>('[data-profile-status]')!;
   const box = document.querySelector<HTMLElement>('[data-profile]')!;
   const set = (key: string, value: string) => (document.querySelector(`[data-p="${key}"]`)!.textContent = value);
-  authMe()
-    .then((r) => {
-      if (r.status !== 200 || !r.body.user) {
-        location.replace('/lk/login');
-        return;
+  const FIELD_LABELS: Record<string, string> = { last_name: 'фамилию', first_name: 'имя', city: 'город', phone: 'телефон' };
+  const profileForm = document.getElementById('profile-form') as HTMLFormElement;
+
+  async function render() {
+    const r = await authMe();
+    if (r.status !== 200 || !r.body.user) {
+      location.replace('/lk/login');
+      return;
+    }
+    const b = r.body as Record<string, any>;
+    const u = b.user as Record<string, string>;
+    set('name', `${u.first_name} ${u.last_name}`);
+    set('email', u.email);
+    set('city', u.city);
+    set('phone', u.phone);
+    for (const key of ['last_name', 'first_name', 'city', 'phone']) (profileForm.elements.namedItem(key) as HTMLInputElement).value = u[key] ?? '';
+
+    // Код 12%: показываем только при заполненном профиле, иначе — что именно не хватает
+    const promo = document.querySelector<HTMLElement>('[data-promo-text]')!;
+    const missing: string[] = b.missing ?? [];
+    if (b.promo12) promo.textContent = `Ваш промокод: ${b.promo12}`;
+    else if (missing.length) {
+      promo.textContent = `Чтобы увидеть промокод, укажите ${missing.map((k) => FIELD_LABELS[k] ?? k).join(', ')}.`;
+      (document.querySelector('[data-edit-profile]') as HTMLDetailsElement).open = true;
+    } else document.querySelector<HTMLElement>('[data-promo]')!.hidden = true;
+
+    const agent = b.agent as { code: string; uses: number; backstage: boolean } | null;
+    const agentBox = document.querySelector<HTMLElement>('[data-agent]')!;
+    agentBox.hidden = !agent;
+    if (agent) {
+      document.querySelector('[data-agent-code]')!.textContent = agent.code;
+      document.querySelector('[data-agent-uses]')!.textContent = String(agent.uses);
+      const bs = document.querySelector<HTMLElement>('[data-backstage]')!;
+      bs.hidden = !agent.backstage;
+      if (agent.backstage) {
+        const list = await fetch('/api/backstage.php?list=1', { credentials: 'same-origin' }).then((x) => x.json()).catch(() => ({ files: [] }));
+        const ul = document.querySelector('[data-backstage-list]')!;
+        ul.replaceChildren(
+          ...(list.files as string[]).map((f) => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = `/api/backstage.php?file=${encodeURIComponent(f)}`;
+            a.textContent = f;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            li.append(a);
+            return li;
+          }),
+        );
       }
-      const u = r.body.user;
-      set('name', `${u.first_name} ${u.last_name}`);
-      set('email', u.email);
-      set('city', u.city);
-      set('phone', u.phone);
-      status.hidden = true;
-      box.hidden = false;
-    })
-    .catch(() => (status.textContent = 'Не удалось загрузить профиль. Обновите страницу.'));
+    }
+    status.hidden = true;
+    box.hidden = false;
+  }
+
+  render().catch(() => (status.textContent = 'Не удалось загрузить профиль. Обновите страницу.'));
+  bindAuthForm(profileForm, {
+    action: 'update_profile',
+    payload: (d) => Object.fromEntries([...d.entries()].filter(([, v]) => typeof v === 'string')),
+    ok: [200],
+    onOk: () => {
+      (document.querySelector('[data-edit-profile]') as HTMLDetailsElement).open = false;
+      location.reload();
+    },
+  });
   document.querySelector('[data-logout]')!.addEventListener('click', async () => {
     await authPost('logout', {}).catch(() => null);
     location.assign('/lk/login');

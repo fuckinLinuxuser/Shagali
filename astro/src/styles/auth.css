@@ -92,3 +92,15 @@
   cursor: pointer;
   color: #f3c9c2;
 }
+
+.cab {
+  margin: 1.6rem 0;
+}
+.cab h2,
+.cab h3 {
+  margin: 0 0 0.5rem;
+}
+.cab summary {
+  cursor: pointer;
+  color: #d4af57;
+}
