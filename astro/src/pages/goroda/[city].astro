@@ -21,7 +21,7 @@ const description = upcoming.length
 
 <MainLayout title={`${city.name} — спектакли и билеты | Мир За Сценой`} description={description}>
   <SiteHeader />
-  <main class="page">
+  <main class="page" data-goal-view="city_view">
     <div class="page__inner">
       <nav class="crumbs" aria-label="Навигация">
         <a href="/">Главная</a> / <a href="/goroda">Города</a> / {city.name}

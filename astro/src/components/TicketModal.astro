@@ -23,6 +23,7 @@
 
 <script>
   import { FALLBACK_AFTER_MS, eventPageUrl, ticketFrameUrl } from '../lib/tickets';
+  import { reachGoal } from '../lib/counters';
 
   const modal = document.querySelector<HTMLElement>('[data-ticket-modal]')!;
   const panel = modal.querySelector<HTMLElement>('[data-ticket-panel]')!;
@@ -65,6 +66,7 @@
     }
 
     trigger = button;
+    reachGoal('buy_click');
     titleEl.textContent = button.dataset.ticketTitle || 'Билеты';
     subtitleEl.textContent = button.dataset.ticketSubtitle || '';
     subtitleEl.hidden = !subtitleEl.textContent;
@@ -74,6 +76,7 @@
     iframe.src = frameUrl;
     iframe.title = 'Покупка билетов';
     iframe.className = 'ticket__iframe';
+    iframe.addEventListener('load', () => reachGoal('widget_loaded'));
     frameBox.replaceChildren(iframe);
 
     fallbackLink.href = eventUrl;

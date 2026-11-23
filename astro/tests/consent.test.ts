@@ -52,3 +52,10 @@ describe('isCounterCookie: cookie счётчиков, которые удаля�
     expect(COUNTER_COOKIE_PREFIXES.length).toBeGreaterThan(0);
   });
 });
+
+describe('cookie Яндекс.Метрики считаются cookie счётчиков', () => {
+  it('_ym_* удаляются при отказе, свои cookie сайта — нет', () => {
+    for (const name of ['_ym_uid', '_ym_d', '_ym_isad', '_ym_visorc', 'tmr_lvid']) expect(isCounterCookie(name), name).toBe(true);
+    for (const name of ['shagali_cookie_consent', 'shagali_preview', 'PHPSESSID']) expect(isCounterCookie(name), name).toBe(false);
+  });
+});

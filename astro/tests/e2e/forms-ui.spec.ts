@@ -112,3 +112,32 @@ test('на 375px нет горизонтальной прокрутки', async 
     expect(overflow, path).toBeLessThanOrEqual(0);
   }
 });
+
+test.describe('цели Метрики после согласия', () => {
+  test.use({ consent: 'accepted' });
+
+  for (const [path, goal, button] of [
+    ['/waitlist', 'waitlist_submit', /Записаться/],
+    ['/feedback', 'feedback_submit', /Отправить/],
+  ] as const) {
+    test(`${path}: после отправки уходит цель ${goal}`, async ({ page }) => {
+      await page.addInitScript(() => {
+        const calls: unknown[][] = [];
+        (window as unknown as { __ym: unknown[][] }).__ym = calls;
+        (window as unknown as { ym: unknown }).ym = (...a: unknown[]) => void calls.push(a);
+      });
+      await page.goto(path);
+      await page.getByLabel('Имя').fill('Анна');
+      await page.getByLabel('Email').fill('anna@example.com');
+      if (path === '/feedback') await page.getByLabel('Сообщение').fill('Здравствуйте');
+      await page.getByLabel(/Я согласен/).check();
+      await page.waitForTimeout(FILL_WAIT_MS);
+      await page.getByRole('button', { name: button }).click();
+      await expect(page.locator('[data-form-success]')).toBeVisible();
+      const goals = await page.evaluate(() =>
+        (window as unknown as { __ym: unknown[][] }).__ym.filter((c) => c[1] === 'reachGoal').map((c) => c[2]),
+      );
+      expect(goals).toContain(goal);
+    });
+  }
+});
