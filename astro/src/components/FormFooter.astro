@@ -1,0 +1,21 @@
+---
+// Общий низ форм: honeypot, согласие на обработку ПДн (152-ФЗ), блоки ошибки и «Спасибо». Скрипт — src/lib/forms.ts.
+import '../styles/forms.css';
+const { success } = Astro.props;
+---
+
+<div class="hp" aria-hidden="true">
+  <label>Не заполняйте это поле <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+</div>
+
+<label class="form-consent">
+  <input type="checkbox" name="consent" required />
+  <span>
+    Я согласен на обработку персональных данных
+    (<a href="/consent" target="_blank" rel="noopener">согласие</a>,
+    <a href="/privacy" target="_blank" rel="noopener">политика конфиденциальности</a>)
+  </span>
+</label>
+
+<p class="form-error" data-form-error role="alert" hidden></p>
+<p class="form-success" data-form-success role="status" tabindex="-1" hidden>{success}</p>

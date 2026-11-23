@@ -7,6 +7,10 @@ import { fileURLToPath } from 'node:url';
 // Живёт только на сервере (CLAUDE.md: images/, videos/ не в репозитории) — в dist их нет.
 export const SERVER_ONLY_PREFIXES = ['/images/', '/videos/', '/posts.json'];
 
+// Страницы, которых ещё нет, но на которые уже ссылаются формы (согласие на ПДн, 152-ФЗ). Тексты — от заказчика (задача 2.3).
+// Каждый прогон печатает предупреждение; когда страницы появятся, список должен стать пустым.
+export const PENDING_PAGES = { '/consent': 'задача 2.3 (юрблок)', '/privacy': 'задача 2.3 (юрблок)' };
+
 // Осознанные исключения: файл (относительно dist) → причина. Сейчас их нет: href="#" не допускается нигде.
 export const ALLOW_EMPTY_HASH = {};
 
@@ -27,7 +31,7 @@ function resolvesInDist(dist, urlPath) {
   });
 }
 
-export function checkLinks(dist, { allowEmptyHash = ALLOW_EMPTY_HASH } = {}) {
+export function checkLinks(dist, { allowEmptyHash = ALLOW_EMPTY_HASH, pending = PENDING_PAGES } = {}) {
   const problems = [];
   for (const file of walk(dist)) {
     if (!file.endsWith('.html')) continue;
@@ -54,6 +58,7 @@ export function checkLinks(dist, { allowEmptyHash = ALLOW_EMPTY_HASH } = {}) {
       const clean = pathPart.split('?')[0];
       const abs = clean.startsWith('/') ? clean : resolve(pageUrl.endsWith('/') ? pageUrl : dirname(pageUrl) + '/', clean);
       if (SERVER_ONLY_PREFIXES.some((p) => abs.startsWith(p))) continue;
+      if (abs in pending) continue;
       if (!resolvesInDist(dist, abs)) {
         problems.push(`${page}: битая ссылка ${raw}`);
         continue;
@@ -76,6 +81,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     console.error(`Нет ${dist}: сначала npm run build`);
     process.exit(2);
   }
+  for (const [page, why] of Object.entries(PENDING_PAGES)) console.warn(`check:links: ${page} пока не существует — ${why}`);
   const problems = checkLinks(dist);
   if (problems.length) {
     console.error(problems.join('\n'));

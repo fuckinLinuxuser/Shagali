@@ -1,5 +1,5 @@
 // Задача 2.1: API форм /api/forms.php — лист ожидания и обратная связь. Против docker-стенда (PHP + MySQL).
-// Тесты делят одну БД и лимит по IP, поэтому идут по очереди и только в одном проекте.
+// Тесты делят одну БД и лимит по IP, поэтому идут по очереди (отдельный проект forms-api в playwright.config.ts).
 import { expect, test } from './fixtures';
 import { count, sql } from './db';
 
@@ -18,8 +18,7 @@ const valid = (extra: Record<string, unknown> = {}) => ({
 
 test.describe.configure({ mode: 'serial' });
 
-test.beforeEach(async ({}, testInfo) => {
-  test.skip(testInfo.project.name !== 'desktop', 'общая БД: гоняем один раз');
+test.beforeEach(() => {
   sql('TRUNCATE waitlist; TRUNCATE feedback; TRUNCATE rate_limit');
 });
 

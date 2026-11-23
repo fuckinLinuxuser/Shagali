@@ -1,0 +1,115 @@
+---
+// /feedback — форма обратной связи: сообщение уходит в БД (таблица feedback) и на почту заказчика через /api/forms.php.
+// /feedback?city=<id> — со страницы города: город подставляется в поле «Город».
+import Layout from '../layouts/MainLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Footer from '../components/Footer.astro';
+import FormFooter from '../components/FormFooter.astro';
+import { getCollection } from 'astro:content';
+import '../styles/pages.css';
+
+const cityNames = Object.fromEntries((await getCollection('cities')).map((c) => [c.id, c.data.name]));
+---
+
+<Layout title="Написать нам — Мир За Сценой" description="Форма обратной связи продюсерского центра Елены Шагали: вопрос, предложение или идея.">
+  <SiteHeader />
+  <main class="page">
+    <div class="page__inner">
+      <nav class="crumbs" aria-label="Навигация"><a href="/">Главная</a> / Написать нам</nav>
+      <h1 class="page__title">Написать нам</h1>
+      <p class="page__lead">Вопрос, предложение или идея — напишите, мы прочитаем.</p>
+
+      <form class="fb" id="feedback-form" novalidate>
+        <input type="hidden" name="type" value="feedback" />
+        <div class="fb__group">
+          <label for="name">Имя</label>
+          <input type="text" id="name" name="name" maxlength="120" required />
+        </div>
+        <div class="fb__group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" maxlength="254" required />
+        </div>
+        <div class="fb__group">
+          <label for="city">Город (если вопрос о конкретном городе)</label>
+          <input type="text" id="city" name="city" maxlength="120" />
+        </div>
+        <div class="fb__group">
+          <label for="message">Сообщение</label>
+          <textarea id="message" name="message" rows="6" maxlength="5000" required></textarea>
+        </div>
+
+        <FormFooter success="Спасибо! Сообщение отправлено." />
+
+        <button type="submit" class="fb__btn">Отправить</button>
+      </form>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .fb {
+    display: grid;
+    gap: 1.2rem;
+    max-width: 640px;
+    margin-top: 1.5rem;
+  }
+  .fb__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+  .fb label {
+    color: #d4af57;
+    font-weight: 500;
+  }
+  .fb input[type='text'],
+  .fb input[type='email'],
+  .fb textarea {
+    box-sizing: border-box;
+    width: 100%;
+    background: rgba(40, 38, 34, 0.7);
+    border: 1px solid rgba(212, 175, 87, 0.25);
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+    color: #f5f0e6;
+    font: inherit;
+  }
+  .fb input:focus,
+  .fb textarea:focus {
+    outline: none;
+    border-color: #d4af57;
+    box-shadow: 0 0 0 3px rgba(212, 175, 87, 0.15);
+  }
+  .fb textarea {
+    resize: vertical;
+  }
+  .fb__btn {
+    justify-self: start;
+    padding: 14px 32px;
+    background: var(--gold);
+    color: var(--ink);
+    border: 0;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .fb__btn:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+</style>
+
+<script>
+  import { bindForm } from '../lib/forms';
+  const form = document.getElementById('feedback-form') as HTMLFormElement | null;
+  if (form) bindForm(form);
+</script>
+
+<script is:inline define:vars={{ cityNames }}>
+  (() => {
+    const id = new URLSearchParams(location.search).get('city');
+    const input = document.getElementById('city');
+    if (id && input && !input.value && Object.hasOwn(cityNames, id)) input.value = cityNames[id];
+  })();
+</script>
