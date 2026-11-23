@@ -3,6 +3,10 @@
 //   прод: /var/www/u3413841/data/shagali-config.php, стенд/тесты: путь в SHAGALI_CONFIG. Шаблон — shagali-config.example.php.
 // Файл начинается с «_» и закрыт из веба в .htaccess.
 
+// Заголовки безопасности для всех ответов PHP-скриптов, которые подключают этот файл.
+header('X-Content-Type-Options: nosniff');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+
 function shagali_config(): array {
     static $config = null;
     if ($config !== null) return $config;

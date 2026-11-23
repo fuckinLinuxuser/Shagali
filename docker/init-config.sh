@@ -4,7 +4,7 @@
 # Письма на стенде уходят в mailpit (http://localhost:8025), наружу ничего не отправляется (notify_email пуст).
 set -e
 cd "$(dirname "$0")"
-if [ -f config.local.php ] && grep -q "'db'" config.local.php && grep -q "'gate_password_hash'" config.local.php && grep -q "'smtp'" config.local.php && grep -q "'backstage_dir'" config.local.php; then echo "docker/config.local.php уже есть"; exit 0; fi
+if [ -f config.local.php ] && grep -q "'db'" config.local.php && grep -q "'gate_password_hash'" config.local.php && grep -q "'smtp'" config.local.php && grep -q "'backstage_dir'" config.local.php && grep -q "'backup_dir'" config.local.php; then echo "docker/config.local.php уже есть"; exit 0; fi
 HASH=$(php -r 'echo password_hash("local-admin-pw", PASSWORD_DEFAULT);')
 GATE=$(php -r 'echo password_hash("stand-gate-pw", PASSWORD_DEFAULT);')
 cat > config.local.php <<PHP
@@ -20,6 +20,7 @@ return [
     'mail_from' => 'no-reply@localhost',
     'promo_codes' => ['12' => 'STAND12'],
     'backstage_dir' => '/run/shagali/backstage',
+    'backup_dir' => '/tmp/shagali-backups',
     'notify_email' => '',
 ];
 PHP
