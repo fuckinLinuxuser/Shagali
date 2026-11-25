@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const DB_SPECS = /(forms-(api|ui)|auth-(api|ui)|data-export|cabinet-api|smoke-script|backup)\.spec\.ts/;
+const DB_SPECS = /(forms-(api|ui)|auth-(api|ui)|data-export|cabinet-api|smoke-script|backup|admin-ui)\.spec\.ts/;
 
 // Против docker-стенда (docker compose up -d → :8080). Другой адрес — STAND_URL.
 export default defineConfig({
@@ -40,6 +40,8 @@ export default defineConfig({
     { name: 'smoke', testMatch: /smoke-script\.spec\.ts/, dependencies: ['cabinet-api'], use: { browserName: 'chromium' } },
     // Бэкап и восстановление: последним (чистит таблицы и создаёт базу shagali_restore).
     { name: 'backup', testMatch: /backup\.spec\.ts/, dependencies: ['smoke'], use: { browserName: 'chromium' } },
+    // Админка: агентские коды (БД) — после бэкапа.
+    { name: 'admin-ui', testMatch: /admin-ui\.spec\.ts/, dependencies: ['backup'], use: { browserName: 'chromium' } },
     // Safari (WebKit) рендерит иначе: на Mac им открывают сайт чаще всего. Гоняем только проверки вёрстки (слайдер спектаклей).
     { name: 'safari', testMatch: /stage-fit\.spec\.ts/, use: { ...devices['Desktop Safari'] } },
   ],
