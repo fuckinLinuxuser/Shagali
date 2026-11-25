@@ -62,6 +62,19 @@ export async function smoke(base) {
   });
   check('форма: honeypot → 200 {ok:true}', hp.status === 200 && json(hp)?.ok === true, `код ${hp.status}`);
 
+  // Настройка сервера: конфиг, блок db, подключение, таблицы, обязательные ключи (api/health.php — только булевы значения)
+  const health = json(await get('/api/health.php'));
+  if (!health) check('сервер настроен: /api/health.php отвечает JSON', false);
+  else {
+    const bad = [];
+    if (!health.config_file) bad.push('нет shagali-config.php');
+    if (!health.db_config) bad.push('нет блока db в конфиге');
+    if (health.db_config && !health.db_connect) bad.push(`нет подключения к БД (${health.db_error})`);
+    for (const [t, present] of Object.entries(health.tables ?? {})) if (health.db_connect && !present) bad.push(`нет таблицы ${t}`);
+    for (const k of ['rate_salt', 'site_url', 'mail_from']) if (!health.keys?.[k]) bad.push(`нет ключа ${k}`);
+    check('сервер настроен (конфиг, БД, таблицы, ключи)', bad.length === 0, bad.join('; '));
+  }
+
   // Личный кабинет и вход
   const me = await get('/api/auth.php?action=me');
   check('кабинет: /me без входа → 200 с user=null', ok2xx(me) && json(me)?.user === null, `код ${me.status}`);
